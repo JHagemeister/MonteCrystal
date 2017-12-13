@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FerromagnetWindow</class>
+ <widget class="QDialog" name="FerromagnetWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>624</width>
+    <height>212</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>FerromagnetWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{
+background: rgb(214, 219, 233,255);
+}
+
+QComboBox{
+background: rgb(214, 219, 233,255);
+border: none;
+}
+
+QComboBox:hover{
+background: rgb(255, 255, 191,255);
+border:  2px solid rgb(255, 170, 0,255);
+}
+
+QPushButton:hover{
+background: rgb(255, 255, 191,255);
+border:  2px solid rgb(255, 170, 0,255);
+}
+
+QPushButton{
+border: none;
+background: rgb(214, 219, 233,255);
+}
+
+QTableWidget {
+    background: rgb(214, 219, 233,255);
+border: none;
+}
+
+QHeaderView::section{
+background-color: rgb(235, 241, 255, 255);
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="2,1">
+     <item>
+      <widget class="CustomTableWidget" name="tableWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1">
+       <item>
+        <widget class="QPushButton" name="pushButtonApply">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Apply</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonUndo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Undo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonOk">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Ok</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CustomTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>CustomTableWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButtonOk</sender>
+   <signal>released()</signal>
+   <receiver>FerromagnetWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>510</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>311</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonUndo</sender>
+   <signal>released()</signal>
+   <receiver>FerromagnetWindow</receiver>
+   <slot>on_push_button_undo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>275</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonApply</sender>
+   <signal>released()</signal>
+   <receiver>FerromagnetWindow</receiver>
+   <slot>on_push_button_apply()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>209</x>
+     <y>187</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_push_button_undo()</slot>
+  <slot>on_push_button_apply()</slot>
+ </slots>
+</ui>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SpinSpiralWindow</class>
+ <widget class="QDialog" name="SpinSpiralWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>996</width>
+    <height>234</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Spin spiral window</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{
+background: rgb(214, 219, 233,255);
+}
+
+QComboBox{
+background: rgb(214, 219, 233,255);
+border: none;
+}
+
+QComboBox:hover{
+background: rgb(255, 255, 191,255);
+border:  2px solid rgb(255, 170, 0,255);
+}
+
+QPushButton:hover{
+background: rgb(255, 255, 191,255);
+border:  2px solid rgb(255, 170, 0,255);
+}
+
+QPushButton{
+border: none;
+background: rgb(214, 219, 233,255);
+}
+
+QTableWidget {
+    background: rgb(214, 219, 233,255);
+border: none;
+}
+
+QHeaderView::section{
+background-color: rgb(235, 241, 255, 255);
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,1">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,1">
+       <item>
+        <widget class="CustomTableWidget" name="tableWidget">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1">
+         <item>
+          <widget class="QComboBox" name="comboBoxHelicity">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1,1">
+       <item>
+        <widget class="QPushButton" name="pushButtonApply">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Apply</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonUndo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Undo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonOk">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Ok</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CustomTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>CustomTableWidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButtonOk</sender>
+   <signal>released()</signal>
+   <receiver>SpinSpiralWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>739</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>497</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonApply</sender>
+   <signal>released()</signal>
+   <receiver>SpinSpiralWindow</receiver>
+   <slot>on_push_button_apply()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>8</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonUndo</sender>
+   <signal>released()</signal>
+   <receiver>SpinSpiralWindow</receiver>
+   <slot>on_push_button_undo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>409</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>340</x>
+     <y>201</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_push_button_apply()</slot>
+  <slot>on_push_button_undo()</slot>
+ </slots>
+</ui>
