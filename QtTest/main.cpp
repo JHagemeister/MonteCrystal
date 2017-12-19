@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 {
 	QApplication a(argc, argv);
 	MainWindow w;
-	w.setWindowTitle("Monte Crystal 3.0.0");
+	w.setWindowTitle("Monte Crystal 3.1.0");
 	w.showMaximized();
 	w.read_workfolder();
 	return a.exec();
