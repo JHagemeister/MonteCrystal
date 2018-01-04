@@ -326,6 +326,13 @@ void OGLWidget::set_visible_spins_order(int order)
 				int m = (max.y - min.y) * 2. / sqrt(3.);
 				sites = Lattice::get_sites_hexagonal_lattice(m , max.x - min.x);
 			}
+
+			if (sites.size() == 0)
+			{
+				set_all_spins_visible();
+				return;
+			}
+
 			for (auto it = sites.begin(); it != sites.end(); ++it)
 			{
 				*it = MyMath::mult(*it,order);
