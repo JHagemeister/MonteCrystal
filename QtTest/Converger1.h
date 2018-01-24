@@ -10,7 +10,7 @@
 
 #include "SimulationMethod.h"
 
-#include <qsharedpointer.h>
+#include <QSharedPointer>
 
 #include "typedefs.h"
 

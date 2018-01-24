@@ -11,7 +11,7 @@
 #include <memory>
 #include <string>
 
-#include <qsharedpointer.h>
+#include <QSharedPointer>
 
 // own
 #include "typedefs.h"

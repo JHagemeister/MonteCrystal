@@ -3,14 +3,13 @@
 
 class MarkedSpinsRequestWindow;
 
-#include <qsharedpointer.h>
+#include <QSharedPointer>
 #include <vector>
-#include <list>
 #include <unordered_map>
 
 #include "typedefs.h"
 
-#include "qobject"
+#include <QObject>
 
 class OGLWidget;
 class SpinOrientation;

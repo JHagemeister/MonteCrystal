@@ -6,24 +6,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-// standard includes
-#include <memory>
-#include <sstream>
 
 // Qt includes
 #include <QtWidgets/QMainWindow>
-#include <qfiledialog.h>
-#include <qthread.h>
-#include <qsharedpointer.h>
-#include <qfiledialog.h>
-#include <qtreeview.h>
-#include <qmessagebox.h>
-#include <qcheckbox.h>
-#include <qboxlayout.h>
-#include <qstring.h>
-#include <qdebug.h>
+#include <QFileDialog>
+#include <QThread>
+#include <QSharedPointer>
+#include <QFileDialog>
+#include <QTreeView>
+#include <QMessageBox>
+#include <QCheckBox>
+#include <QBoxLayout>
+#include <QString>
 #include <QCloseEvent>
-#include <qkeyevent>
+#include <QKeyEvent>
+
 
 // Form include
 #include "ui_mainWindow.h"

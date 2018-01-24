@@ -26,6 +26,7 @@
 
 #include <sstream> 
 #include <iomanip>
+#include <iostream>
 
 NCMRContrastObservable::NCMRContrastObservable(int numberMeasurements, Threedim* spinArray, int numberAtoms, 
 	int* neighborArray, int nbors): Observable(numberMeasurements)

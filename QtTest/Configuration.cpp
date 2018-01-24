@@ -22,6 +22,8 @@
 
 #include "Configuration.h"
 
+#include <iostream>
+
 Configuration::Configuration(std::string confile)
 {
 	/**

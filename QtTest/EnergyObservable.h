@@ -8,9 +8,7 @@
 #ifndef ENERGYOBSERVABLE_H_
 #define ENERGYOBSERVABLE_H_
 
-#include <memory>
-
-#include <qsharedpointer.h>
+#include <QSharedPointer>
 
 #include "Observable.h"
 

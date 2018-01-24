@@ -1,8 +1,7 @@
 #ifndef MYHEADERVIEW_H
 #define MYHEADERVIEW_H
 
-#include <qheaderview.h>
-#include <qwidget.h>
+#include <QHeaderView>
 
 class QPainter;
 

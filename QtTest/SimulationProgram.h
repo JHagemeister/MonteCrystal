@@ -14,16 +14,13 @@
 #define SIMULATIONPROGRAM_H_
 
 // standard includes
-#include <math.h>
-#include <iostream>
-#include <windows.h>
 #include <memory>
 #include <string>
 
 // Qt includes
-#include <qobject.h>
-#include <qsharedpointer.h>
-#include <qmutex.h>
+#include <QObject>
+#include <QSharedPointer>
+#include <QMutex>
 
 //own
 #include "typedefs.h"

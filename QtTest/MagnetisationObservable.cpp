@@ -26,6 +26,7 @@
 #include "SpinOrientation.h"
 #include "MyMath.h"
 #include <iomanip>
+#include <iostream>
 
 MagnetisationObservable::MagnetisationObservable(int numberMeasurements, SpinOrientation* spinOrientation, 
 	int boolEachSpin) :

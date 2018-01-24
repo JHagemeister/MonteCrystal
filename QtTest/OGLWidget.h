@@ -9,26 +9,21 @@
 #ifndef OGLWIDGET_H
 #define OGLWIDGET_H
 
-#include <map>
 #include <vector>
 #include <unordered_set>
 #include <memory>
 
-// GL Includes
-#include <glew.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtx/norm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 // Qt includes
 #include <QWidget>
-#include <qevent.h>
+#include <QEvent>
 #include <QOpenGLWidget>
-#include <qmutex.h>
-#include <qsharedpointer.h>
-#include <qrubberband.h>
+#include <QMutex>
+#include <QSharedPointer>
+#include <QRubberBand>
+#include <QOpenGLFunctions_3_3_Core>
+
+#include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
 
 // own
 #include "Shader.h"
@@ -204,6 +199,8 @@ protected:
 
 	//Light
 	glm::vec3 _lightPos = glm::vec3(0.0f, 0.0f, 1000.0f); ///< light source
+
+	QOpenGLFunctions_3_3_Core* _glf;
 };
 
 #endif // OGLWIDGET_H

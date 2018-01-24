@@ -10,9 +10,8 @@
 // Form include
 #include "ui_mainWindow.h"
 
-#include "qstring.h"
-#include "qobject.h"
-#include "qsharedpointer.h"
+#include <QObject>
+#include <QSharedPointer>
 
 class Configuration;
 class SpinOrientation;

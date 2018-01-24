@@ -18,26 +18,20 @@
 #define MESH_H
 
 // Std. Includes
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
 #include <vector>
 
-// GL Includes
-#include <glew.h> // Contains all the necessery OpenGL includes
-
 //own
-#include "Shader.h"
 #include "typedefs.h"
+
+#include <QOpenGLFunctions_3_3_Core>
 
 /// Mesh for openGL
 
-class Mesh 
+class Mesh
 {
 public:
-	Mesh(void);
-	Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
+	Mesh(QOpenGLFunctions_3_3_Core *glf);
+	Mesh(QOpenGLFunctions_3_3_Core *glf, std::vector<Vertex> vertices, std::vector<GLuint> indices);
 	void draw(void);
 	void update_buffers(void);
 	void update_mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
@@ -50,6 +44,7 @@ private:
 	GLuint _VAO;
 	GLuint _VBO;
 	GLuint _EBO;
+	QOpenGLFunctions_3_3_Core *_glf;
 };
 
 #endif // MESH_H

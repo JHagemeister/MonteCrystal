@@ -604,7 +604,7 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>OGLWidget</class>
    <extends>QOpenGLWidget</extends>
-   <header>oglwidget.h</header>
+   <header>OGLWidget.h</header>
   </customwidget>
   <customwidget>
    <class>CustomTableWidget</class>

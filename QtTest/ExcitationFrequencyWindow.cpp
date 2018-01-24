@@ -24,7 +24,7 @@
 
 #include "OGLWidget.h"
 
-#include "qfiledialog.h"
+#include "QFileDialog"
 
 #include "MyMath.h"
 #include "Functions.h"

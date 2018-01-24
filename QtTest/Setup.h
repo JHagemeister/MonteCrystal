@@ -12,7 +12,7 @@
 #define SETUP_H_
 
 #include <memory>
-#include <qsharedpointer.h>
+#include <QSharedPointer>
 
 #include "typedefs.h"
 

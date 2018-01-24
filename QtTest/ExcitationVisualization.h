@@ -1,7 +1,7 @@
 #ifndef EXCITATIONVISUALIZATION_H_
 #define EXCITATIONVISUALIZATION_H_
 
-#include <qobject.h>
+#include <QObject>
 
 #include <vector>
 

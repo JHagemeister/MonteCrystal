@@ -23,9 +23,9 @@
 #include "ColorsWindow.h"
 
 #include "MyHeaderView.h"
-#include <qcolor.h>
-#include <qcheckbox.h>
-#include <qmessagebox.h>
+#include <QColor>
+#include <QCheckBox>
+#include <QMessageBox>
 
 #include "OGLWidget.h"
 

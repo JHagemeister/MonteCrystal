@@ -24,7 +24,7 @@
 
 #include "MyMath.h"
 
-SpinMesh::SpinMesh(SpinMeshParams params): Mesh()
+SpinMesh::SpinMesh(QOpenGLFunctions_3_3_Core *glf, SpinMeshParams params): Mesh(glf)
 {
 	adjust_parameters(params);
 	generate_mesh_data();

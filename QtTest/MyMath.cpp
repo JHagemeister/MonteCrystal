@@ -22,6 +22,8 @@
 
 #include "MyMath.h"
 
+#include <iostream>
+
 MyMath::MyMath()
 {
 }

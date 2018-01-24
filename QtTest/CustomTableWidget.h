@@ -2,7 +2,7 @@
 #define CUSTOMTABLEWIDGET_H
 
 // Qt includes
-#include <qtablewidget.h>
+#include <QTableWidget>
 
 #include <typedefs.h>
 

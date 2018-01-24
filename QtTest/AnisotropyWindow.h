@@ -3,16 +3,11 @@
 
 //standard includes
 #include <memory>
-#include <sstream>
 
 // Qt includes
-#include <qdialog.h>
-#include <qcheckbox.h>
-#include <qboxlayout.h>
-#include <qlabel.h>
-#include <qstring.h>
-#include <qstringlistmodel.h>
-#include <qdebug.h>
+#include <QDialog>
+#include <QStringList>
+#include <QStringListModel>
 
 // Form include
 #include "ui_anisotropy.h"

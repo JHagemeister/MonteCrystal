@@ -36,13 +36,17 @@
 
 #include "Shader.h"
 
+#include <fstream>
+#include <sstream>
+
 
 Shader::Shader()
 {
 }
 
-void Shader::setup_shader(std::string vertexPath, std::string fragmentPath)
+void Shader::setup_shader(std::string vertexPath, std::string fragmentPath, QOpenGLFunctions_3_3_Core *glf)
 {
+
 	std::string vertexCode;
 	std::string fragmentCode;
 	
@@ -69,25 +73,31 @@ void Shader::setup_shader(std::string vertexPath, std::string fragmentPath)
 	GLuint vertex;
 	GLuint fragment;
 
-	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vShaderCode, NULL);
-	glCompileShader(vertex);
+	vertex = glf->glCreateShader(GL_VERTEX_SHADER);
+	glf->glShaderSource(vertex, 1, &vShaderCode, NULL);
+	glf->glCompileShader(vertex);
+	GLint isCompiled = 0;
+	glf->glGetShaderiv(vertex, GL_COMPILE_STATUS, &isCompiled);
+	if (isCompiled == GL_FALSE)
+	{
+		exit(0);
+	}
 	
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fShaderCode, NULL);
-	glCompileShader(fragment);
+	fragment = glf->glCreateShader(GL_FRAGMENT_SHADER);
+	glf->glShaderSource(fragment, 1, &fShaderCode, NULL);
+	glf->glCompileShader(fragment);
 	
-	this->_program = glCreateProgram();
-	glAttachShader(this->_program, vertex);
-	glAttachShader(this->_program, fragment);
-	glLinkProgram(this->_program);
+	this->_program = glf->glCreateProgram();
+	glf->glAttachShader(this->_program, vertex);
+	glf->glAttachShader(this->_program, fragment);
+	glf->glLinkProgram(this->_program);
 	
-	glDeleteShader(vertex);
-	glDeleteShader(fragment);
+	glf->glDeleteShader(vertex);
+	glf->glDeleteShader(fragment);
 
 }
 
-void Shader::use()
+void Shader::use(QOpenGLFunctions_3_3_Core *glf)
 {
-	glUseProgram(this->_program);
+	glf->glUseProgram(this->_program);
 }

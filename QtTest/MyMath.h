@@ -8,7 +8,6 @@
 #ifndef MYMATH_H_
 #define MYMATH_H_
 
-#include <iostream>
 #include <cmath>
 #include <vector>
 #include <math.h>

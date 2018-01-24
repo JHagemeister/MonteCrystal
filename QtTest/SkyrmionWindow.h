@@ -1,7 +1,7 @@
 ﻿#ifndef SKYRMION_H
 #define SKYRMION_H
 
-#include <qdialog.h>
+#include <QDialog>
 #include "ui_skyrmion.h"
 
 #include "typedefs.h"

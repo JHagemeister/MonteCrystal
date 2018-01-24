@@ -26,6 +26,7 @@
 #include "SpinOrientation.h"
 
 #include <sstream> 
+#include <iostream>
 #include "MyMath.h"
 
 AbsoluteMagnetisationObservable::AbsoluteMagnetisationObservable(int numberMeasurements, 

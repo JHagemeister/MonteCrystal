@@ -22,9 +22,8 @@
 
 #include "MyHeaderView.h"
 
-#include <qpainter.h>
-#include <qtextdocument.h>
-#include <qstatictext.h>
+#include <QPainter>
+#include <QTextDocument>
 
 MyHeaderView::MyHeaderView(Qt::Orientation orientation, double leftMargin, double topMargin, QWidget *parent):
 	QHeaderView(orientation)

@@ -23,12 +23,19 @@
 //#include <vld.h>
 
 #include "MainWindow.h"
-#include <QtWidgets/QApplication>
+#include <QApplication>
+#include <QSurfaceFormat>
 
 ///Contains the entry of the MonteCrystal program with a GUI.
 int main(int argc, char **argv)
 {
 	QApplication a(argc, argv);
+
+	QSurfaceFormat format;
+	format.setVersion(3, 3);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+	QSurfaceFormat::setDefaultFormat(format);
+
 	MainWindow w;
 	w.setWindowTitle("Monte Crystal 3.1.0");
 	w.showMaximized();

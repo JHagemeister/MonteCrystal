@@ -5,8 +5,6 @@
 *      
 */
 
-#include <Eigen\Eigen>
-
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 
@@ -17,6 +15,8 @@
 
 #include "Configuration.h"
 #include "typedefs.h"
+
+#include <Eigen/Eigen>
 
 #include <gsl/gsl_matrix.h>
 

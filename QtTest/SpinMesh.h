@@ -3,16 +3,14 @@
 
 #include "Mesh.h"
 
-#include <vector>
 #include "typedefs.h"
-#include <glew.h>
 
 #include "Shader.h"
 
 class SpinMesh: public Mesh
 {
 public:
-	SpinMesh(SpinMeshParams params);
+	SpinMesh(QOpenGLFunctions_3_3_Core *glf, SpinMeshParams params);
 	~SpinMesh();
 	void update(SpinMeshParams params);
 

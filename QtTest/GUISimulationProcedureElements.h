@@ -10,10 +10,8 @@
 // Form include
 #include "ui_mainWindow.h"
 
-#include <memory>
-
-#include "qobject.h"
-#include "qsharedpointer.h"
+#include <QObject>
+#include <QSharedPointer>
 
 class Configuration;
 

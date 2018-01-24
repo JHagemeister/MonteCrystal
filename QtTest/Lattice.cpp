@@ -22,7 +22,7 @@
 
 #include "Lattice.h"
 
-#include <CImg\CImg.h>
+#include <CImg/CImg.h>
 
 Lattice::Lattice(LatticeType latticeType, std::vector<int> latticeDimensions, int* millerIndexes, 
 	BoundaryConditions boundaryConditions)

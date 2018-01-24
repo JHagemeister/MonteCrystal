@@ -24,9 +24,10 @@
 
 #include <gsl/gsl_complex.h>
 
-#include <qstring.h>
+#include <QString>
 
 #include <iomanip>
+#include <iostream>
 
 Functions::Functions()
 {
@@ -101,34 +102,58 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 			}
 			else
 			{
+#ifdef WIN
 				_spiece = strtok_s(_cstring, separators, &next_token1);
+#elif LINUNX
+				_spiece = strtok(_cstring, separators);
+#endif
 				if (strcmp(_spiece, "n") == 0)
 				{
+#ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
+#elif LINUNX
+					_spiece = strtok(NULL, separators);
+#endif
 					_parameter = _spiece;
 					params.n = atoi(_spiece);
 				}
 				if (strcmp(_spiece, "r2divr1") == 0)
 				{
+#ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
+#elif LINUNX
+					_spiece = strtok(NULL, separators);
+#endif
 					_parameter = _spiece;
 					params.r2divr1 = atof(_spiece);
 				}
 				if (strcmp(_spiece, "l1divl2") == 0)
 				{
+#ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
+#elif LINUNX
+					_spiece = strtok(NULL, separators);
+#endif
 					_parameter = _spiece;
 					params.l1divl2 = atof(_spiece);
 				}
 				if (strcmp(_spiece, "r2divl2") == 0)
 				{
+#ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
+#elif LINUNX
+					_spiece = strtok(NULL, separators);
+#endif
 					_parameter = _spiece;
 					params.r2divl2 = atof(_spiece);
 				}
 				if (strcmp(_spiece, "scale") == 0)
 				{
+#ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
+#elif LINUNX
+					_spiece = strtok(NULL, separators);
+#endif
 					_parameter = _spiece;
 					params.scale = atof(_spiece);
 				}
@@ -204,10 +229,18 @@ std::string Functions::get_id(std::string workfolder)
 			}
 			else
 			{
+#ifdef WIN
 				_spiece = strtok_s(_cstring, separators, &next_token1);
+#elif LINUNX
+				_spiece = strtok(_cstring, separators);
+#endif
 				if (strcmp(_spiece, "ID") == 0)
 				{
+#ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
+#elif LINUNX
+					_spiece = strtok(NULL, separators);
+#endif
 					_parameter = _spiece;
 					id = atoi(_spiece);
 					++id;

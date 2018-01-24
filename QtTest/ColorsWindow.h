@@ -14,6 +14,9 @@
 class QCheckBox;
 class OGLWidget;
 
+#include <glm/vec4.hpp>
+
+
 /// Specification of parameters for spins and color maps. 
 /**
 * This class implements a window that allows the user to change the representation of the spins and choose

@@ -45,6 +45,13 @@
 #include "Converger1.h"
 
 #include <fstream>
+#include <iostream>
+
+#ifdef WIN
+#include <windows.h>
+#elif LINUNX
+#include <sys/stat.h>
+#endif
 
 SimulationProgram::SimulationProgram(std::string workfolder, QSharedPointer<Configuration> config, 
 	QMutex* mutex, int* terminateThread, QSharedPointer<Lattice> lattice,
@@ -197,7 +204,7 @@ void SimulationProgram::main(void)
 	case temperatureMagneticFieldLoop:
 		// start simulation in temperature and magnetic field loop
 		std::cout << "---------------------------------------------" << std::endl;
-		std::cout << "Metropolis calculations starts." << std::endl;
+		std::cout << "Metropolis calculation starts." << std::endl;
 		// start temperature and magnetic field loop
 		temperature_magnetic_field_loop(setup, ranGen, _config->_boolOutput); 
 		break;
@@ -205,7 +212,7 @@ void SimulationProgram::main(void)
 	case spinSeebeck:
 		// Spin-Seebeck simulation (simulation with a temperature gradient along the crystal)
 		std::cout << "---------------------------------------------" << std::endl;
-		std::cout << "Metropolis calculations sswith tempperature gradient starts." << std::endl;
+		std::cout << "Metropolis calculation with temperature gradient starts." << std::endl;
 		// start Spin-Seebeck simulation
 		spin_seebeck(setup, ranGen, _config->_boolOutput);
 		break;
@@ -909,14 +916,22 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 		simFolder.append("/");
 
 		// create simulation folder
+#ifdef WIN
 		std::wstring widestr = std::wstring(simFolder.begin(), simFolder.end());
 		CreateDirectory(widestr.c_str(), NULL);
-
+#elif LINUNX
+		mkdir(simFolder.cstr(), 0777);
+#endif
+		
 		// create subfolder SYSTEM for output of system information
 		tmpString = simFolder;
 		tmpString.append("SYSTEM/");
+#ifdef WIN
 		widestr = std::wstring(tmpString.begin(), tmpString.end());
 		CreateDirectory(widestr.c_str(), NULL);
+#elif LINUNX
+		mkdir(tmpString.cstr(), 0777);
+#endif	
 
 		// store information about simulation parameters in output folder
 		std::fstream filestr;
@@ -934,8 +949,12 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 		// create subfolder SIMULATION for ouput during simulation
 		tmpString = simFolder;
 		tmpString.append("SIMULATION/");
+#ifdef WIN
 		widestr = std::wstring(tmpString.begin(), tmpString.end());
 		CreateDirectory(widestr.c_str(), NULL);
+#elif LINUNX
+		mkdir(tmpString.cstr(), 0777);
+#endif	
 
 		// write new entry with simulation information into README file
 		Functions::write_README(_workFolder, simFolder, _config.data());

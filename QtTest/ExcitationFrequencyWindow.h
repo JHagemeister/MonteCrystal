@@ -9,7 +9,7 @@
 class OGLWidget;
 class Configuration;
 
-#include <qthread.h>
+#include <QThread>
 
 #include "ExcitationVisualization.h"
 

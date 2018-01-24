@@ -10,9 +10,9 @@
 // Form include
 #include "ui_mainWindow.h"
 
-#include "qstring.h"
-#include "qobject.h"
-#include "qsharedpointer.h"
+#include <QObject>
+#include <QString>
+#include <QSharedPointer>
 
 class LatticeMaskWindow;
 

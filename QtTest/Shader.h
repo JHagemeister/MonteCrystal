@@ -19,12 +19,8 @@
 
 // standard includes
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
 
-// GL Includes
-#include <glew.h>
+#include <QOpenGLFunctions_3_3_Core>
 
 /// Vertex and fragment shader
 
@@ -34,8 +30,8 @@ public:
 	GLuint _program;
 
 	Shader();
-	void setup_shader(std::string vertexPath, std::string fragmentPath);	
-	void use();
+	void setup_shader(std::string vertexPath, std::string fragmentPath, QOpenGLFunctions_3_3_Core *glf);
+	void use(QOpenGLFunctions_3_3_Core *glf);
 };
 
 #endif  // SHADER_H

@@ -25,8 +25,8 @@
 #include "MarkedSpinsHandler.h"
 #include "MyMath.h"
 
-#include <qstringlistmodel.h>
-#include <qstringlist.h>
+#include <QStringListModel>
+#include <QStringList>
 
 MarkedSpinsRequestWindow::MarkedSpinsRequestWindow(MarkedSpinsHandler* markedSpinsHandler, QWidget *parent)
 	: QDialog(parent)

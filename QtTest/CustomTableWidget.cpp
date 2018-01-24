@@ -24,8 +24,8 @@
 
 #include <numeric>
 
-#include <qheaderview.h>
-#include <qscrollbar.h>
+#include <QHeaderView>
+#include <QScrollBar>
 
 CustomTableWidget::CustomTableWidget(QWidget *parent) :
 	QTableWidget(parent)

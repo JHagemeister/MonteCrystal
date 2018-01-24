@@ -24,13 +24,21 @@
 
 // forward and further includes
 #include "Hamiltonian.h"
-#include <MyMath.h>
+#include "MyMath.h"
 #include "Functions.h"
 #include "MarkedSpinsHandler.h"
 #include "Lattice.h"
 
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/norm.hpp>
+
+#include <QMouseEvent>
+
 OGLWidget::OGLWidget(QWidget *parent): 
-	QOpenGLWidget(parent), _spinColor(1.0f,0.0f,0.0f,0.0f), _backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
+	QOpenGLWidget(parent),
+	_spinColor(1.0f,0.0f,0.0f,0.0f), _backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
 {
 	_markedSpinsHandler = NULL;
 
@@ -684,21 +692,25 @@ void OGLWidget::update_color_scale(void)
 
 void OGLWidget::initializeGL()
 {
-	// Initialize GLEW to setup the OpenGL Function pointers
-	glewExperimental = GL_TRUE;
-	glewInit();
+
+	makeCurrent();
+
+	_glf = context()->versionFunctions<QOpenGLFunctions_3_3_Core>();
+	if (!_glf) {
+		exit(1);
+	}
 
 	// Define the viewport dimensions
-	glViewport(0, 0, width(), height());
+	_glf->glViewport(0, 0, width(), height());
 
 	// Setup some OpenGL options
-	glEnable(GL_DEPTH_TEST);
+	_glf->glEnable(GL_DEPTH_TEST);
 
 	// Setup and compile our shaders
-	_shader.setup_shader("lighting.vs", "lighting.frag");
+	_shader.setup_shader("lighting.vs", "lighting.frag", _glf);
 
 	// Load arrow model for representation of spin direction
-	_spinMesh = std::make_shared<SpinMesh>(_spinMeshParams);
+	_spinMesh = std::make_shared<SpinMesh>(_glf, _spinMeshParams);
 
 	// Draw in wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -710,8 +722,8 @@ void OGLWidget::paintGL()
 {
 	_mutex->lock();
 	// Clear the colorbuffer
-	glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	_glf->glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
+	_glf->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -746,27 +758,27 @@ void OGLWidget::paint_spins(void)
 	* Paint spins.
 	*/
 
-	_shader.use();   // <-- Don't forget this one!
+	_shader.use(_glf);   // <-- Don't forget this one!
 
 	// Transformation matrices
 	glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
 	glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
-	glUniformMatrix4fv(glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+	_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
 		glm::value_ptr(projection));
-	glUniformMatrix4fv(glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+	_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
 	for (auto it = _visibleFilledSpins.begin(); it != _visibleFilledSpins.end(); ++it)
 	{
 		paint_single_spin(*it);
 	}
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	_glf->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (auto it = _visibleWireFrameSpins.begin(); it != _visibleWireFrameSpins.end(); ++it)
 	{
 		paint_single_spin(*it);
 	}
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	_glf->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void OGLWidget::paint_single_spin(int index)
@@ -810,17 +822,17 @@ void OGLWidget::paint_single_spin(int index)
 	model = glm::rotate(model, angle, rotDir);
 	model = glm::scale(model, _spinScaleFactor);
 
-	glUniformMatrix4fv(glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+	_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
 		glm::value_ptr(model));
 
-	GLint objectColorLoc = glGetUniformLocation(_shader._program, "objectColor");
-	GLint lightColorLoc = glGetUniformLocation(_shader._program, "lightColor");
-	GLint lightPosLoc = glGetUniformLocation(_shader._program, "lightPos");
+	GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
+	GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
+	GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
 
 	if (_spinsSingleColor)
 	{
 		// mono-colored spins
-		glUniform4f(objectColorLoc, _spinColor.x, _spinColor.y, _spinColor.z, 1.0f);
+		_glf->glUniform4f(objectColorLoc, _spinColor.x, _spinColor.y, _spinColor.z, 1.0f);
 	}
 	else
 	{
@@ -836,11 +848,11 @@ void OGLWidget::paint_single_spin(int index)
 			color.g = 1 + _spinArray[index].z;
 			color.b = -_spinArray[index].z;
 		}
-		glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
+		_glf->glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
 	}
 
-	glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-	glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
+	_glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+	_glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
 
 	_spinMesh->draw();
 }
@@ -853,14 +865,14 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 
 	if (_wignerSeitzCell.size() > 0)
 	{
-		_shader.use();
+		_shader.use(_glf);
 
 		glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
 		glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
-		glUniformMatrix4fv(glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
 			glm::value_ptr(projection));
-		glUniformMatrix4fv(glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));		
+		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
 		std::vector<Vertex> vertices;
 		vertices.push_back({ glm::vec3{ 0.0f, 0.0f, 0.0f }, glm::vec3{ 0.0f, 0.0f, 1.0f } });
@@ -881,7 +893,7 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 		indices.push_back((GLuint)_wignerSeitzCell.size());
 		indices.push_back((GLuint)1);
 
-		Mesh mesh(vertices, indices);
+		Mesh mesh(_glf, vertices, indices);
 		
 
 		double colorMapValue = 0;
@@ -892,12 +904,12 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 			model = glm::translate(model, glm::vec3(_latticeCoordArray[i].x, _latticeCoordArray[i].y,
 				_latticeCoordArray[i].z + _colorMapOffset));
 
-			glUniformMatrix4fv(glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+			_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
 				glm::value_ptr(model));
 
-			GLint objectColorLoc = glGetUniformLocation(_shader._program, "objectColor");
-			GLint lightColorLoc = glGetUniformLocation(_shader._program, "lightColor");
-			GLint lightPosLoc = glGetUniformLocation(_shader._program, "lightPos");
+			GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
+			GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
+			GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
 
 			glm::vec4 color(0.0f, 0.0f, 0.0f, 1.0f);
 			double value = 0;
@@ -935,9 +947,9 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 				break;
 			}
 
-			glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
-			glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-			glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
+			_glf->glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
+			_glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+			_glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
 
 			mesh.draw();
 		}
@@ -959,14 +971,14 @@ void OGLWidget::paint_color_map_topological_charge(void)
 	
 	if (_skNcellNum > 0)
 	{
-		_shader.use();
+		_shader.use(_glf);
 
 		glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
 		glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
-		glUniformMatrix4fv(glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
 			glm::value_ptr(projection));
-		glUniformMatrix4fv(glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
 		// triangles that are used to plot the color map
 		std::vector<Mesh> meshes;
@@ -987,7 +999,7 @@ void OGLWidget::paint_color_map_topological_charge(void)
 			indices.push_back((GLuint) 1);
 			indices.push_back((GLuint) 2);
 
-			meshes.push_back(Mesh(vertices, indices));
+			meshes.push_back(Mesh(_glf, vertices, indices));
 		}
 
 		double colorMapValue = 0; // used for the sum of single color map values
@@ -998,12 +1010,12 @@ void OGLWidget::paint_color_map_topological_charge(void)
 			model = glm::translate(model, glm::vec3(_skNcells[i].position.x, _skNcells[i].position.y,
 				_skNcells[i].position.z + _colorMapOffset));
 
-			glUniformMatrix4fv(glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+			_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
 				glm::value_ptr(model));
 
-			GLint objectColorLoc = glGetUniformLocation(_shader._program, "objectColor");
-			GLint lightColorLoc = glGetUniformLocation(_shader._program, "lightColor");
-			GLint lightPosLoc = glGetUniformLocation(_shader._program, "lightPos");
+			GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
+			GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
+			GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
 
 			glm::vec4 color(0.0f, 0.0f, 0.0f, 1.0f);
 			double value = MyMath::topological_charge(_spinArray[_skNcells[i].i], _spinArray[_skNcells[i].j],
@@ -1011,9 +1023,9 @@ void OGLWidget::paint_color_map_topological_charge(void)
 			scale_map_value(value, color);
 			colorMapValue += value;
 
-			glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
-			glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-			glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
+			_glf->glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
+			_glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+			_glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
 
 			meshes[_skNcells[i].triangleIndex].draw();
 		}
@@ -1025,14 +1037,14 @@ void OGLWidget::paint_points(void)
 {
 	if (_points.size() > 0)
 	{
-		_shader.use();
+		_shader.use(_glf);
 
 		glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
 		glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
-		glUniformMatrix4fv(glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
 			glm::value_ptr(projection));
-		glUniformMatrix4fv(glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
 		std::vector<Vertex> vertices;
 		vertices.push_back({ glm::vec3{ -0.25f, (float) -sqrt(3)/12., -0.499f }, glm::vec3{ 0.0f, 0.0f, 1.0f } });
@@ -1044,7 +1056,7 @@ void OGLWidget::paint_points(void)
 		indices.push_back((GLuint)1);
 		indices.push_back((GLuint)2);
 
-		Mesh mesh(vertices, indices);
+		Mesh mesh(_glf, vertices, indices);
 
 		for (std::vector<int>::iterator it = _points.begin(); it != _points.end(); ++it)
 		{
@@ -1052,18 +1064,18 @@ void OGLWidget::paint_points(void)
 			Threedim point = _latticeCoordArray[*it];
 			model = glm::translate(model, glm::vec3(point.x, point.y, point.z));
 
-			glUniformMatrix4fv(glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+			_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
 				glm::value_ptr(model));
 
-			GLint objectColorLoc = glGetUniformLocation(_shader._program, "objectColor");
-			GLint lightColorLoc = glGetUniformLocation(_shader._program, "lightColor");
-			GLint lightPosLoc = glGetUniformLocation(_shader._program, "lightPos");
+			GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
+			GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
+			GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
 
 			glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
 
-			glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
-			glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-			glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
+			_glf->glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
+			_glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+			_glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
 
 			mesh.draw();
 		}

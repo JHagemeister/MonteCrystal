@@ -1,10 +1,8 @@
-#include <Eigen\Eigen>
-
-
 #ifndef EXCITATIONMODESOLVER_H_
 #define EXCITATIONMODESOLVER_H_
 
-#include <qsharedpointer.h>
+#include <Eigen/Eigen>
+#include <QSharedPointer>
 #include <memory>
 
 #include "typedefs.h"

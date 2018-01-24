@@ -24,7 +24,7 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "CustomTableWidget.h"
-#include "oglwidget.h"
+#include "OGLWidget.h"
 
 QT_BEGIN_NAMESPACE
 
