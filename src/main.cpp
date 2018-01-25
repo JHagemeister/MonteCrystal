@@ -25,15 +25,16 @@
 #include "MainWindow.h"
 #include <QApplication>
 #include <QSurfaceFormat>
-
+#include <iostream>
 ///Contains the entry of the MonteCrystal program with a GUI.
 int main(int argc, char **argv)
 {
 	QApplication a(argc, argv);
 
 	QSurfaceFormat format;
-	format.setVersion(3, 3);
 	format.setProfile(QSurfaceFormat::CoreProfile);
+	format.setVersion(3, 3);
+        std::cout << "OGL " << format.majorVersion() << "." << format.minorVersion();
 	QSurfaceFormat::setDefaultFormat(format);
 
 	MainWindow w;

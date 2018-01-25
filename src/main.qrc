@@ -1,4 +1,4 @@
 <RCC>
-    <qresource prefix="QtTest">
+    <qresource prefix="MonteCrystal">
     </qresource>
 </RCC>

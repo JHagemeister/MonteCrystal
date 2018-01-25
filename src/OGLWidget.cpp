@@ -694,10 +694,11 @@ void OGLWidget::initializeGL()
 {
 
 	makeCurrent();
-
+        std::cout << "OGL "  << format().majorVersion() << "."  << format().minorVersion();
 	_glf = context()->versionFunctions<QOpenGLFunctions_3_3_Core>();
 	if (!_glf) {
-		exit(1);
+	    std::cout << "es geht nicht" << std::endl;
+  //  	    exit(1);
 	}
 
 	// Define the viewport dimensions

@@ -15,6 +15,16 @@ file(GLOB SOURCES "src/*.cpp")
 include_directories(includes /home/julian/libraries)
 # Find includes in corresponding build directories
 
+message("Configuring platform flag")
+if (WIN)
+add_definitions(-DWIN)
+message("win")
+elseif (UNIX)
+add_definitions(-DLINUX)
+message("linux")
+endif()
+
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set ( MOC_HEADERS
@@ -71,12 +81,5 @@ add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS})
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(GSL REQUIRED)
 find_package(X11 REQUIRED)
-find_package(OpenGL)
-# include_directories(${GLEW_INCLUDE_DIRS})
 
-set(CMAKE_PREFIX_PATH "/home/julian/libraries/glew-2.1.0")
-set(CMAKE_LIBRARY_PATH "/home/julian/libraries/glew-2.1.0/lib")
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
-
-target_link_libraries(MonteCrystal Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen ${GSL_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${X11_LIBRARIES})
+target_link_libraries(MonteCrystal Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen ${GSL_LIBRARIES} ${X11_LIBRARIES})

@@ -137,7 +137,12 @@ void ExcitationVisualization::visualize(void)
 	// do visualization forever as long as user does not request termination
 	while (*_parameters.terminate != TRUE)
 	{
-		_sleep(*_parameters.sleepTime); // slow down visualisation
+#ifdef WIN	
+	   _sleep(*_parameters.sleepTime); // slow down visualisation
+#elif LINUX
+           struct timespec ts = {0,(*_parameters.sleepTime)*1000000};
+           nanosleep(&ts,NULL);
+#endif
 		if (*_parameters.pause != TRUE) // pause visualisation
 		{
 			if (*_parameters.rescale) // _rescale is set in ExcitationFrequencyWindow to trigger update of parameters

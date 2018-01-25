@@ -49,7 +49,7 @@
 
 #ifdef WIN
 #include <windows.h>
-#elif LINUNX
+#elif LINUX
 #include <sys/stat.h>
 #endif
 
@@ -919,8 +919,8 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 #ifdef WIN
 		std::wstring widestr = std::wstring(simFolder.begin(), simFolder.end());
 		CreateDirectory(widestr.c_str(), NULL);
-#elif LINUNX
-		mkdir(simFolder.cstr(), 0777);
+#elif LINUX
+		mkdir(simFolder.c_str(), 0777);
 #endif
 		
 		// create subfolder SYSTEM for output of system information
@@ -929,8 +929,8 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 #ifdef WIN
 		widestr = std::wstring(tmpString.begin(), tmpString.end());
 		CreateDirectory(widestr.c_str(), NULL);
-#elif LINUNX
-		mkdir(tmpString.cstr(), 0777);
+#elif LINUX
+		mkdir(tmpString.c_str(), 0777);
 #endif	
 
 		// store information about simulation parameters in output folder
@@ -952,8 +952,8 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 #ifdef WIN
 		widestr = std::wstring(tmpString.begin(), tmpString.end());
 		CreateDirectory(widestr.c_str(), NULL);
-#elif LINUNX
-		mkdir(tmpString.cstr(), 0777);
+#elif LINUX
+		mkdir(tmpString.c_str(), 0777);
 #endif	
 
 		// write new entry with simulation information into README file

@@ -137,7 +137,7 @@ protected:
 	void wheelEvent(QWheelEvent *event);
 	void mouseMoveEvent(QMouseEvent * event);
 
-	double OGLWidget::get_minimal_distance_to_lattice_site(Threedim vector, int &siteIndex);
+	double get_minimal_distance_to_lattice_site(Threedim vector, int &siteIndex);
 
 	Twodim pixel_to_lattice_coordinates(QPoint point);
 

@@ -31,7 +31,14 @@
 
 #include "Configuration.h"
 
+#ifdef WIN
 #include "direct.h"
+#endif
+
+#ifdef LINUX
+#include <sys/stat.h>
+#endif
+
 
 
 ExcitationFrequencyWindow::ExcitationFrequencyWindow(OGLWidget* oglWidget, std::string workfolder, 
@@ -294,7 +301,11 @@ void ExcitationFrequencyWindow::on_button_save_image_sequence(void)
 	*_parameters.videoSequence = TRUE;
 	_ui.pushButtonVideoSeq->setEnabled(FALSE);
 	_currentSubfolder = _outputFolder + QString::number(_outputIndex); // create (hopefully) unique folder
+#ifdef WIN
 	_mkdir(_currentSubfolder.toStdString().c_str());
+#elif LINUX
+        mkdir(_currentSubfolder.toStdString().c_str(), 0777);
+#endif
 	_currentSubfolder.append("/" );
 }
 

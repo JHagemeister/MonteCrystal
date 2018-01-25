@@ -20,9 +20,9 @@
 *
 */
 
-#include <Eigen\SparseCore>
-#include <spectra\MatOp\SparseGenRealShiftSolve.h>
-#include <spectra\GenEigsRealShiftSolver.h>
+#include <Eigen/SparseCore>
+#include <spectra/MatOp/SparseGenRealShiftSolve.h>
+#include <spectra/GenEigsRealShiftSolver.h>
 
 #include "ExcitationModeSolver.h"
 

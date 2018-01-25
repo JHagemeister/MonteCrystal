@@ -42,7 +42,11 @@
 #include "GUIOutputElements.h"
 #include "WorkfolderWindow.h"
 
-#include "direct.h"
+#ifdef WIN
+#include <direct.h>
+#endif
+
+#include <fstream>
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -559,7 +563,12 @@ void MainWindow::write_workfolder(void)
 	filestr << _workfolder;
 	filestr.close();
 	std::string tempString = _workfolder + "Data";
+#ifdef WIN
 	_mkdir(tempString.c_str());
+#elif LINUNX
+        mkdir(tempString.c_str(), 0777);
+#endif
+
 }
 
 void MainWindow::read_parameters_from_ui(QSharedPointer<Configuration> &config)

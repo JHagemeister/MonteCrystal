@@ -29,6 +29,9 @@
 #include <iomanip>
 #include <iostream>
 
+#include <time.h>
+
+
 Functions::Functions()
 {
 }
@@ -45,14 +48,9 @@ std::string Functions::time_stamp(void)
 	* @return std::string containing the time and date.
 	*/
 
-	time_t result = time(NULL);
-	char str[26];
-	ctime_s(str, sizeof str, &result);
-	std::string tmpString(str);
-	std::stringstream ss;
-	ss.str(tmpString);
-	std::string item;
-	std::getline(ss, item);
+        time_t rawtime;
+        time(&rawtime);
+        std::string item(ctime(&rawtime));
 	return item;
 }
 
@@ -104,14 +102,14 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 			{
 #ifdef WIN
 				_spiece = strtok_s(_cstring, separators, &next_token1);
-#elif LINUNX
+#elif LINUX
 				_spiece = strtok(_cstring, separators);
 #endif
 				if (strcmp(_spiece, "n") == 0)
 				{
 #ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUNX
+#elif LINUX
 					_spiece = strtok(NULL, separators);
 #endif
 					_parameter = _spiece;
@@ -121,7 +119,7 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 				{
 #ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUNX
+#elif LINUX
 					_spiece = strtok(NULL, separators);
 #endif
 					_parameter = _spiece;
@@ -131,7 +129,7 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 				{
 #ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUNX
+#elif LINUX
 					_spiece = strtok(NULL, separators);
 #endif
 					_parameter = _spiece;
@@ -141,7 +139,7 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 				{
 #ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUNX
+#elif LINUX
 					_spiece = strtok(NULL, separators);
 #endif
 					_parameter = _spiece;
@@ -151,7 +149,7 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 				{
 #ifdef WIN
 					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUNX
+#elif LINUX
 					_spiece = strtok(NULL, separators);
 #endif
 					_parameter = _spiece;
