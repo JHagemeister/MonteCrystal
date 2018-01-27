@@ -7,12 +7,12 @@ find_package(OpenMP)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
  
-set(Qt5_DIR /opt/Qt/5.10.0/gcc_64/lib/cmake/Qt5)
+set(Qt5_DIR C:/Qt3/5.9.1/msvc2015_64/lib/cmake/Qt5)
 find_package(Qt5 COMPONENTS Core Widgets Gui  REQUIRED)
 
 file(GLOB SOURCES "src/*.cpp")
 
-include_directories(includes /home/julian/libraries)
+include_directories(includes C:/Library/include)
 # Find includes in corresponding build directories
 
 message("Configuring platform flag")
@@ -24,6 +24,7 @@ add_definitions(-DLINUX)
 message("linux")
 endif()
 
+add_definitions(-DCMAKE_BUILD_TYPE=Release)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -79,7 +80,9 @@ QT5_WRAP_CPP(MOC_SRCS ${MOC_HEADERS})
 add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS})
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-find_package(GSL REQUIRED)
 find_package(X11 REQUIRED)
+set(USER_PATH "C:/Library/gsl")
+set(GSL_ROOT_DIR "C:/Library/gsl")
+find_package(GSL REQUIRED)
 
 target_link_libraries(MonteCrystal Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen ${GSL_LIBRARIES} ${X11_LIBRARIES})
