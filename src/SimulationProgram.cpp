@@ -918,7 +918,7 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 		// create simulation folder
 #ifdef WIN
 		std::wstring widestr = std::wstring(simFolder.begin(), simFolder.end());
-		CreateDirectory(widestr.c_str(), NULL);
+		CreateDirectory(simFolder.c_str(), NULL);
 #elif LINUX
 		mkdir(simFolder.c_str(), 0777);
 #endif
@@ -928,7 +928,7 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 		tmpString.append("SYSTEM/");
 #ifdef WIN
 		widestr = std::wstring(tmpString.begin(), tmpString.end());
-		CreateDirectory(widestr.c_str(), NULL);
+		CreateDirectory(tmpString.c_str(), NULL);
 #elif LINUX
 		mkdir(tmpString.c_str(), 0777);
 #endif	
@@ -951,11 +951,10 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 		tmpString.append("SIMULATION/");
 #ifdef WIN
 		widestr = std::wstring(tmpString.begin(), tmpString.end());
-		CreateDirectory(widestr.c_str(), NULL);
+		CreateDirectory(tmpString.c_str(), NULL);
 #elif LINUX
 		mkdir(tmpString.c_str(), 0777);
 #endif	
-
 		// write new entry with simulation information into README file
 		Functions::write_README(_workFolder, simFolder, _config.data());
 	}
