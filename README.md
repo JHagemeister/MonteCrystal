@@ -33,7 +33,7 @@ installation was found. Adjust the include paths and library paths for your syst
 so that the above mentioned third party parts can be found.
 
 After compilation: 
-Copy the lighting.vs and fragment.vs files into the program folder. 
+Copy the lighting.vs and lighting.frag files into the program folder. 
 On a windows machine: Copy from Qt the platforms folder into the program folder.
 
 
