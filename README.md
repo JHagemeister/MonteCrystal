@@ -32,6 +32,11 @@ donwload the MonteCrystal project from github and run cmake on it. Make sure tha
 installation was found. Adjust the include paths and library paths for your system setup,
 so that the above mentioned third party parts can be found.
 
+After compilation: 
+Copy the lighting.vs and fragment.vs files into the program folder. 
+On a windows machine: Copy from Qt the platforms folder into the program folder.
+
+
 If you have any questions about the software or the compilation of it, I will try my best 
 to answer any questions posted on the github page.
 
