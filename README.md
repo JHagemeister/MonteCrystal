@@ -6,7 +6,7 @@ graphical user interface.
 The following simulation algorithms are included:
 
 1) Metropolis Monte Carlo
-2) thermal Landau Lifshitz Gilbert equation
+2) thermal Landau Lifshitz Gilbert equation spin dynamics
 3) excitation mode calculation by diagonalization
 
 All are based on an atomistic classical spin model. The user can choose between different 
