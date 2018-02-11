@@ -48,30 +48,25 @@ UniaxialAnisotropyEnergyDefect::~UniaxialAnisotropyEnergyDefect()
 {
 }
 
-double UniaxialAnisotropyEnergyDefect::single_energy(int position)
+double UniaxialAnisotropyEnergyDefect::single_energy(const int &position) const
 {
 	double energy = 0;
 	if (_anisotropyDefects.count(position) > 0)
 	{
-		double cos = MyMath::dot_product(_spinArray[position], _anisotropyDefects[position].direction);
-		energy = _anisotropyDefects[position].energyParameter * (1 - cos * cos);
+		double cos = MyMath::dot_product(_spinArray[position], _anisotropyDefects.at(position).direction);
+		energy = _anisotropyDefects.at(position).energyParameter * (1 - cos * cos);
 	}
 	return energy;
 }
 
-double UniaxialAnisotropyEnergyDefect::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
-
-Threedim UniaxialAnisotropyEnergyDefect::effective_field(int position)
+Threedim UniaxialAnisotropyEnergyDefect::effective_field(const int &position) const
 {
 	Threedim field{0,0,0};
 	if (_anisotropyDefects.count(position) > 0)
 	{
-		double factor = 2 * _anisotropyDefects[position].energyParameter*
-			MyMath::dot_product(_anisotropyDefects[position].direction, _spinArray[position]);
-		field = MyMath::mult(_anisotropyDefects[position].direction, factor);
+		double factor = 2 * _anisotropyDefects.at(position).energyParameter*
+			MyMath::dot_product(_anisotropyDefects.at(position).direction, _spinArray[position]);
+		field = MyMath::mult(_anisotropyDefects.at(position).direction, factor);
 	}
 	return field;
 }

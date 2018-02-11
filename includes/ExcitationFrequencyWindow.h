@@ -8,8 +8,7 @@
 
 class OGLWidget;
 class Configuration;
-
-#include <QThread>
+class QThread;
 
 #include "ExcitationVisualization.h"
 
@@ -29,15 +28,15 @@ public:
 	void read_parameters(QSharedPointer<Configuration> &config);
 
 	public slots:
-	void on_button_eigenvalues(void);
-	void on_button_eigenvectors(void);
-	void on_button_next(void);
-	void on_button_previous(void);
-	void on_button_pause(void);
-	void on_button_save_image_sequence(void);
-	void on_change_in_table_widget_angle(int row, int column);
-	void on_change_in_table_widget_speed(int row, int column);
-	void on_change_in_table_widget_segmentation(int row, int column);
+	void button_eigenvalues(void);
+	void button_eigenvectors(void);
+	void button_next(void);
+	void button_previous(void);
+	void button_pause(void);
+	void button_save_image_sequence(void);
+	void change_in_table_widget_angle(int row, int column);
+	void change_in_table_widget_speed(int row, int column);
+	void change_in_table_widget_segmentation(int row, int column);
 	void receive_save_image_request(int imageIndex);
 	void receive_points(std::vector<int> points);
 	void receive_video_finished(void);

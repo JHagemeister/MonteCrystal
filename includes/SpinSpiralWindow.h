@@ -12,14 +12,13 @@ class GUISpinElements;
 class SpinSpiralWindow : public QDialog 
 {
 	Q_OBJECT
-
 public:
 	SpinSpiralWindow(GUISpinElements* guiSpinElements, QWidget * parent = Q_NULLPTR);
 	~SpinSpiralWindow();
 
 public slots:
-	void on_push_button_apply(void); ///< make change to spin system to setup spin spiral state
-	void on_push_button_undo(void); ///< restore initial spin configuration
+	void push_button_apply(void); ///< make change to spin system to setup spin spiral state
+	void push_button_undo(void); ///< restore initial spin configuration
 	void receive_mouse_position(Twodim position); ///< mouse click position to specify position of spin spiral
 
 private:

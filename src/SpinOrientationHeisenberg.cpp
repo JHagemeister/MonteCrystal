@@ -144,7 +144,7 @@ void SpinOrientationHeisenberg::restore_single_orientation(void)
 	_spinArray[_position] = _spin;
 }
 
-Threedim SpinOrientationHeisenberg::magnetisation(void)
+Threedim SpinOrientationHeisenberg::magnetisation(void) const
 {
 	/**
 	* This method gives the total magnetisation.

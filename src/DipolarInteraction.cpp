@@ -70,7 +70,7 @@ DipolarInteraction::~DipolarInteraction()
 	_distanceVectors = NULL;
 }
 
-double DipolarInteraction::single_energy(int position)
+double DipolarInteraction::single_energy(const int &position) const
 {
 	double energy = 0;
 	omp_set_num_threads(2);
@@ -85,12 +85,8 @@ double DipolarInteraction::single_energy(int position)
 	return _prefactor * energy;
 }
 
-double DipolarInteraction::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
 
-Threedim DipolarInteraction::effective_field(int position)
+Threedim DipolarInteraction::effective_field(const int &position) const
 {
 	Threedim field = { 0,0,0 };
 	Threedim tmpField = {0,0,0};

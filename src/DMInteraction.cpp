@@ -59,7 +59,7 @@ DMInteraction::~DMInteraction()
 	_DMVectors = NULL;
 }
 
-double DMInteraction::single_energy(int position)
+double DMInteraction::single_energy(const int &position) const
 {
 	Threedim spinProd = {0,0,0};
 	double energy = 0;
@@ -80,12 +80,7 @@ double DMInteraction::single_energy(int position)
 
 }
 
-double DMInteraction::interaction_energy_between_two_spins(int position1, int position2) 
-{
-	return 0;
-}
-
-Threedim DMInteraction::effective_field(int position)
+Threedim DMInteraction::effective_field(const int &position) const
 {
 	Threedim field = { 0,0,0 };
 	Threedim tmpVec = { 0,0,0 };
@@ -104,17 +99,17 @@ Threedim DMInteraction::effective_field(int position)
 	return MyMath::mult(field,-1*_energyParameter);
 }
 
-int DMInteraction::get_nbors(void)
+int DMInteraction::get_nbors(void) const
 {
 	return _nbors;
 }
 
-int * DMInteraction::get_neighbor_array(void)
+int * DMInteraction::get_neighbor_array(void) const
 {
 	return _neighborArray;
 }
 
-Threedim * DMInteraction::get_dm_vectors(void)
+Threedim * DMInteraction::get_dm_vectors(void) const
 {
 	return _DMVectors;
 }

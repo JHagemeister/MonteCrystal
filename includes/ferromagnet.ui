@@ -117,56 +117,7 @@ background-color: rgb(235, 241, 255, 255);
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButtonOk</sender>
-   <signal>released()</signal>
-   <receiver>FerromagnetWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>510</x>
-     <y>165</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>311</x>
-     <y>105</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonUndo</sender>
-   <signal>released()</signal>
-   <receiver>FerromagnetWindow</receiver>
-   <slot>on_push_button_undo()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>275</x>
-     <y>150</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>406</x>
-     <y>186</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonApply</sender>
-   <signal>released()</signal>
-   <receiver>FerromagnetWindow</receiver>
-   <slot>on_push_button_apply()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>168</x>
-     <y>157</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>209</x>
-     <y>187</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_push_button_undo()</slot>
   <slot>on_push_button_apply()</slot>

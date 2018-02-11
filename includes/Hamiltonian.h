@@ -22,16 +22,14 @@ public:
 	Hamiltonian(std::vector<std::shared_ptr<Energy>> energies, int numberAtoms);
 	virtual ~Hamiltonian();
 
-	double single_energy(int position);
-	double single_interaction_energy_between_two_spins(int position1, int position2);
-	double single_non_interaction_energy(int position);
-	double total_energy();
-	double total_energy(int position);
-	double part_energy(std::shared_ptr<Energy> &energy);
-	double part_energy(int index);
-	double single_part_energy(int index, int position);
+	double single_energy(const int &position) const;
+	double total_energy() const;
+	double total_energy(const int &position) const;
+	double part_energy(std::shared_ptr<Energy> &energy)  const;
+	double part_energy(const int &index) const;
+	double single_part_energy(const int &index,const int &position) const;
 
-	Threedim effectiveField(int position);
+	Threedim effectiveField(const int &position) const;
 
 	void set_spin_array(Threedim* spinArray);
 	

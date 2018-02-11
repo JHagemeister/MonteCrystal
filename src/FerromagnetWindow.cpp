@@ -49,6 +49,10 @@ FerromagnetWindow::FerromagnetWindow(GUISpinElements* guiSpinElements, QWidget *
 	QTableWidgetItem* dir_z = new QTableWidgetItem();
 	dir_z->setText(QString::number(_direction.z));
 	_ui.tableWidget->setItem(0, 2, dir_z);
+
+	connect(_ui.pushButtonApply, &QAbstractButton::released, this, &FerromagnetWindow::push_button_apply);
+	connect(_ui.pushButtonUndo, &QAbstractButton::released, this, &FerromagnetWindow::push_button_undo);
+	connect(_ui.pushButtonOk, &QAbstractButton::released, this, &QDialog::close);
 }
 
 FerromagnetWindow::~FerromagnetWindow() 
@@ -56,14 +60,14 @@ FerromagnetWindow::~FerromagnetWindow()
 	
 }
 
-void FerromagnetWindow::on_push_button_apply(void)
+void FerromagnetWindow::push_button_apply(void)
 {
 	read_parameters();
 	_direction = MyMath::normalize(_direction);
 	_guiSpinElements->ferromagnet(_direction);
 }
 
-void FerromagnetWindow::on_push_button_undo(void)
+void FerromagnetWindow::push_button_undo(void)
 {
 	_guiSpinElements->restore_spin_configuration();
 }

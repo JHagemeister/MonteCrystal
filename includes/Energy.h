@@ -25,14 +25,10 @@ public:
 	
 	/// energy of single spin/ total energy of bonds connected to a spin
 	/** @param[in] position Index of lattice site @return The energy of the single atom.*/
-	virtual double single_energy(int position) = 0;
-	/// interaction energy of two spins
-	/** @param[in] position1 Index of lattice site1 @param[in] position2 Index of lattice site2
-	@return The interaction energy between the spins sitting at the two sites.*/
-	virtual double interaction_energy_between_two_spins(int position1, int position2) = 0;
+	virtual double single_energy(const int &position) const = 0;
 
 	/// effective field acting on a spin
-	virtual Threedim effective_field(int position) = 0;
+	virtual Threedim effective_field(const int &position) const = 0;
 	
 	/// return member _factor
 	double get_factor(void) const;

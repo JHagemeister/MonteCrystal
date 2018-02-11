@@ -18,8 +18,8 @@ public:
 	~FerromagnetWindow();
 
 	public slots:
-	void on_push_button_apply(void);
-	void on_push_button_undo(void);
+	void push_button_apply(void);
+	void push_button_undo(void);
 
 private:
 	void read_parameters(void);

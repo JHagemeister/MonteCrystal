@@ -40,7 +40,7 @@ public:
 	/// set ferromagnetic state
 	virtual void set_ferromagnet(Threedim direction) = 0;
 	/// obtain magnetization
-	virtual Threedim magnetisation(void) = 0;
+	virtual Threedim magnetisation(void) const = 0;
 	/// perform random reorientation of spin direction
 	virtual void single_orientation(int position) = 0;
 	/// restore latest random reorientation
@@ -50,7 +50,7 @@ public:
 	void read_spin_configuration(std::string fname);
 
 	/// show spin directions on console
-	void show_spin_configuraion(void);
+	void show_spin_configuraion(void) const;
 	
 	/// activate spin for update during simulation
 	void set_active_site(int position);
@@ -79,7 +79,7 @@ public:
 	/// get number of sites inactive for update during simulation
 	int get_number_inactive_sites(void) const;
 	/// get information about activity status of each spin
-	int* get_activity_list();
+	int* get_activity_list() const;
 
 protected:
 
@@ -92,8 +92,6 @@ protected:
 
 	int* _inactiveSites; ///< indexes of lattice sites which are not updated during simulation
 	int _numberInactiveSites; ///< number of inactive lattice sites
-
-	int* _siteList; ///< array with number of atoms size; (0,1) activity value for each spin
 
 	Threedim _spin;  ///< to store latest changed spin
 	int _position; ///< index of latest changed spin

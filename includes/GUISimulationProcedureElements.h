@@ -28,13 +28,13 @@ public:
 	void read_parameters(QSharedPointer<Configuration> &config); ///< simulation procedure parameters from GUI
 
 	public slots:
-	void on_change_in_magnetic_field_table(int row, int column);
-	void on_change_in_temperature_table(int row, int column);
-	void on_change_in_simulation_table(int row, int column);
-	void on_change_in_simulation_table_two(int row, int column);
-	void on_change_in_ui_update_table(int row, int column);
-	void on_change_in_simulation_type(QString qString);
-	void on_change_in_program_type(QString qString);
+	void change_in_magnetic_field_table(int row, int column);
+	void change_in_temperature_table(int row, int column);
+	void change_in_simulation_table(int row, int column);
+	void change_in_simulation_table_two(int row, int column);
+	void change_in_ui_update_table(int row, int column);
+	void change_in_simulation_type(QString qString);
+	void change_in_program_type(QString qString);
 
 protected:
 	Ui::QtMainWindow* _ui; ///< ui elements

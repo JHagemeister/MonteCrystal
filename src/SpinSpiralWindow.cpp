@@ -69,6 +69,10 @@ SpinSpiralWindow::SpinSpiralWindow(GUISpinElements* guiSpinElements, QWidget * p
 
 	_ui.comboBoxHelicity->addItem((tr("helicity +1")));
 	_ui.comboBoxHelicity->addItem((tr("helicity -1")));
+
+	connect(_ui.pushButtonApply, &QAbstractButton::released, this, &SpinSpiralWindow::push_button_apply);
+	connect(_ui.pushButtonUndo, &QAbstractButton::released, this, &SpinSpiralWindow::push_button_undo);
+	connect(_ui.pushButtonOk, &QAbstractButton::released, this, &QDialog::close);
 }
 
 SpinSpiralWindow::~SpinSpiralWindow() 
@@ -76,7 +80,7 @@ SpinSpiralWindow::~SpinSpiralWindow()
 	
 }
 
-void SpinSpiralWindow::on_push_button_apply(void)
+void SpinSpiralWindow::push_button_apply(void)
 {
 	/**
 	* Apply spin spiral state according to specified parameters
@@ -93,7 +97,7 @@ void SpinSpiralWindow::on_push_button_apply(void)
 	_guiSpinElements->spin_spiral(kVector, position, _helicity);
 }
 
-void SpinSpiralWindow::on_push_button_undo(void)
+void SpinSpiralWindow::push_button_undo(void)
 {
 	/**
 	* Restore initial spin configuration.

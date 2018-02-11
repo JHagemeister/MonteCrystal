@@ -38,35 +38,35 @@ GUISimulationProcedureElements::GUISimulationProcedureElements(Ui::QtMainWindow*
 
 	_ui->tableWidgetSimulation->item(0, 0)->setText("10");
 
-	connect(_ui->comboBoxProgramType, SIGNAL(currentIndexChanged(QString)), this,
-		SLOT(on_change_in_program_type(QString)));
-	connect(_ui->comboBoxSimulationType, SIGNAL(currentIndexChanged(QString)), this, 
-		SLOT(on_change_in_simulation_type(QString)));
+	connect(_ui->comboBoxProgramType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+		this, &GUISimulationProcedureElements::change_in_program_type);
+	connect(_ui->comboBoxSimulationType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
+		this, &GUISimulationProcedureElements::change_in_simulation_type);
 
 	_llgMagneticFieldParameters = new MagneticFieldStruct({ 0,0,1,Threedim{0,0,1} });
 	_monteCarloMagneticFieldParameters = new MagneticFieldStruct({ 0,0,1,Threedim{ 0,0,1 } });
 	_converger1MagneticFieldParameters = new MagneticFieldStruct({ 0,0,1,Threedim{ 0,0,1 } });
-	connect(_ui->tableWidgetMagneticField, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_magnetic_field_table(int, int)));
+	connect(_ui->tableWidgetMagneticField, &QTableWidget::cellChanged, this,
+		&GUISimulationProcedureElements::change_in_magnetic_field_table);
 
 	_llgTemperature = new TemperatureStruct({ 0,0,1,Threedim{ 0,0,1 } });
 	_monteCarloTemperature = new TemperatureStruct({ 100,1,10,Threedim{ 0,0,1 } });
 	_converger1Temperature = new TemperatureStruct({ 0,0,1,Threedim{ 0,0,1 } });
-	connect(_ui->tableWidgetTemperature, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_temperature_table(int, int)));
+	connect(_ui->tableWidgetTemperature, &QTableWidget::cellChanged,
+		this, &GUISimulationProcedureElements::change_in_temperature_table);
 
 	_llgSimParameters = new SimulationProcedureParameters({10000,25,20,0.1,0.001});
 	_monteCarloSimParameters = new SimulationProcedureParameters({ 50000,100,20,0,0 });
 	_converger1SimParameters = new SimulationProcedureParameters({ 10000, 25, 30, 0,0});
-	connect(_ui->tableWidgetSimulation, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_simulation_table(int, int)));
-	connect(_ui->tableWidgetSimulation2, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_simulation_table_two(int, int)));
-	connect(_ui->tableWidgetUIUpdate, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_ui_update_table(int, int)));
+	connect(_ui->tableWidgetSimulation, &QTableWidget::cellChanged,
+		this, &GUISimulationProcedureElements::change_in_simulation_table);
+	connect(_ui->tableWidgetSimulation2, &QTableWidget::cellChanged,
+		this, &GUISimulationProcedureElements::change_in_simulation_table_two);
+	connect(_ui->tableWidgetUIUpdate, &QTableWidget::cellChanged,
+		this, &GUISimulationProcedureElements::change_in_ui_update_table);
 
-	on_change_in_program_type("temperature-magnetic-field-loop");
-	on_change_in_simulation_type("Metropolis Monte Carlo");
+	change_in_program_type("temperature-magnetic-field-loop");
+	change_in_simulation_type("Metropolis Monte Carlo");
 }
 
 GUISimulationProcedureElements::~GUISimulationProcedureElements()
@@ -220,7 +220,7 @@ void GUISimulationProcedureElements::read_parameters(QSharedPointer<Configuratio
 	}
 }
 
-void GUISimulationProcedureElements::on_change_in_simulation_type(QString qString)
+void GUISimulationProcedureElements::change_in_simulation_type(QString qString)
 {
 	set_gui_magnetic_field_elements(qString);
 
@@ -280,7 +280,7 @@ void GUISimulationProcedureElements::on_change_in_simulation_type(QString qStrin
 	}
 }
 
-void GUISimulationProcedureElements::on_change_in_program_type(QString qString)
+void GUISimulationProcedureElements::change_in_program_type(QString qString)
 {
 	if (qString.compare("temperature-magnetic-field-loop") == 0
 		|| qString.compare("eigenFreq") == 0)
@@ -327,7 +327,7 @@ e<font size=4><sub>y</sub>;e<font size=4><sub>z</sub>").split(";"));
 	set_gui_temperature_elements(qString);
 }
 
-void GUISimulationProcedureElements::on_change_in_magnetic_field_table(int row, int column)
+void GUISimulationProcedureElements::change_in_magnetic_field_table(int row, int column)
 {
 	if (_ui->tableWidgetMagneticField->item(row, column))
 	{
@@ -361,7 +361,7 @@ void GUISimulationProcedureElements::on_change_in_magnetic_field_table(int row, 
 	}
 }
 
-void GUISimulationProcedureElements::on_change_in_temperature_table(int row, int column)
+void GUISimulationProcedureElements::change_in_temperature_table(int row, int column)
 {
 	if (_ui->tableWidgetTemperature->item(row, column))
 	{
@@ -396,7 +396,7 @@ void GUISimulationProcedureElements::on_change_in_temperature_table(int row, int
 	}
 }
 
-void GUISimulationProcedureElements::on_change_in_simulation_table(int row, int column)
+void GUISimulationProcedureElements::change_in_simulation_table(int row, int column)
 {
 	if (_ui->tableWidgetSimulation->item(row, column))
 	{
@@ -426,7 +426,7 @@ void GUISimulationProcedureElements::on_change_in_simulation_table(int row, int 
 		}
 	}
 }
-void GUISimulationProcedureElements::on_change_in_simulation_table_two(int row, int column)
+void GUISimulationProcedureElements::change_in_simulation_table_two(int row, int column)
 {
 	if (_ui->tableWidgetSimulation2->item(row, column))
 	{
@@ -457,7 +457,7 @@ void GUISimulationProcedureElements::on_change_in_simulation_table_two(int row, 
 	}
 }
 
-void GUISimulationProcedureElements::on_change_in_ui_update_table(int row, int column)
+void GUISimulationProcedureElements::change_in_ui_update_table(int row, int column)
 {
 	if (_ui->tableWidgetUIUpdate->item(row, column))
 	{

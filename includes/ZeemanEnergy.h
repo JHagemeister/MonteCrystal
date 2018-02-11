@@ -19,13 +19,11 @@ class ZeemanEnergy : public Energy
 public:
 	ZeemanEnergy(Threedim* spinArray, double energyParameter, Threedim direction);
 	virtual ~ZeemanEnergy();
-	virtual double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-
-	virtual Threedim effective_field(int position);
+	virtual double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 
 	void set_direction(Threedim direction); ///< set direction of magnetic field
-	Threedim get_direction(void);
+	Threedim get_direction(void) const;
 
 protected:
 	Threedim _direction; ///< direction of homogeneous magnetic field

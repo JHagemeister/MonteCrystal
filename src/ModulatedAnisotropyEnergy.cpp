@@ -60,7 +60,7 @@ ModulatedAnisotropyEnergy::~ModulatedAnisotropyEnergy()
 	delete[] _anisotropyArrayDefectLine;
 }
 
-double ModulatedAnisotropyEnergy::single_energy(int position)
+double ModulatedAnisotropyEnergy::single_energy(const int &position) const
 {
 	/**
 	* The function evaluates the exchange energy of the atom at a  given
@@ -76,12 +76,7 @@ double ModulatedAnisotropyEnergy::single_energy(int position)
 		+ _anisotropyArrayDefectLine[position] * (1 - cos2 * cos2));
 }
 
-double ModulatedAnisotropyEnergy::interaction_energy_between_two_spins(int position1, int position2) 
-{
-	return 0;
-}
-
-Threedim ModulatedAnisotropyEnergy::effective_field(int position)
+Threedim ModulatedAnisotropyEnergy::effective_field(const int &position) const
 {
 	return Threedim{ 0,0,0 };
 }

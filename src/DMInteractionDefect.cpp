@@ -57,7 +57,7 @@ DMInteractionDefect::~DMInteractionDefect()
 {
 }
 
-double DMInteractionDefect::single_energy(int position)
+double DMInteractionDefect::single_energy(const int &position) const
 {
 	double energy = 0;
 	if (_dmVectors.count(position) != 0)
@@ -72,7 +72,7 @@ double DMInteractionDefect::single_energy(int position)
 			{
 				neighbor = _neighborArray[index + i]; // index of neighbor atom
 				spinProd = MyMath::vector_product(_spinArray[position], _spinArray[neighbor]);
-				energy -= MyMath::dot_product(_dmVectors[position][i], spinProd);
+				energy -= MyMath::dot_product(_dmVectors.at(position)[i], spinProd);
 			}
 		}
 	}
@@ -80,12 +80,7 @@ double DMInteractionDefect::single_energy(int position)
 
 }
 
-double DMInteractionDefect::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
-
-Threedim DMInteractionDefect::effective_field(int position)
+Threedim DMInteractionDefect::effective_field(const int &position) const
 {
 	Threedim field = { 0,0,0 };
 	if (_dmVectors.count(position) != 0)
@@ -99,7 +94,7 @@ Threedim DMInteractionDefect::effective_field(int position)
 			if (_neighborArray[index + i] != -1) // -1 refers to empty entry
 			{
 				neighbor = _neighborArray[index + i]; // index of neighbor atom
-				tmpVec = MyMath::vector_product(_dmVectors[position][i], _spinArray[neighbor]);
+				tmpVec = MyMath::vector_product(_dmVectors.at(position)[i], _spinArray[neighbor]);
 				field = MyMath::add(field, tmpVec);
 			}
 		}

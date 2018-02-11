@@ -32,46 +32,46 @@ public:
 	void error_box(void);
 
 	public slots:
-	void on_change_in_background_color_table_widget(int row, int column);
-	void on_change_in_color_map_table_widget(int row, int column);
-	void on_change_in_spin_color_table_widget(int row, int column);
+	void change_in_background_color_table_widget(int row, int column);
+	void change_in_color_map_table_widget(int row, int column);
+	void change_in_spin_color_table_widget(int row, int column);
 	
-	void on_change_in_magnetization_table_theta_color_map(int row, int column);
-	void on_change_in_magnetization_table_phi_color_map(int row, int column);
-	void on_change_in_spin_model_table(int row, int column);
+	void change_in_magnetization_table_theta_color_map(int row, int column);
+	void change_in_magnetization_table_phi_color_map(int row, int column);
+	void change_in_spin_model_table(int row, int column);
 
-	void on_check_state_changed_checkBoxSpinVectors(int state);
-	void on_check_state_changed_checkBoxSpinVectorSingleColor(int state);
-	void on_check_state_changed_checkBoxSpinVectorRGB(int state);
+	void check_state_changed_checkBoxSpinVectors(int state);
+	void check_state_changed_checkBoxSpinVectorSingleColor(int state);
+	void check_state_changed_checkBoxSpinVectorRGB(int state);
 
-	void on_pushButton_add_spins(void);
-	void on_pushButton_remove_spins(void);
+	void pushButton_add_spins(void);
+	void pushButton_remove_spins(void);
 	
 	// react to changes in check boxes for color map
-	void on_check_state_changed_checkBox_E(int state);
-	void on_check_state_changed_checkBox_J1(int state);
-	void on_check_state_changed_checkBox_J2(int state);
-	void on_check_state_changed_checkBox_J3(int state);
-	void on_check_state_changed_checkBox_J4(int state);
-	void on_check_state_changed_checkBox_J5(int state);
-	void on_check_state_changed_checkBox_J6(int state);
-	void on_check_state_changed_checkBox_J7(int state);
-	void on_check_state_changed_checkBox_J8(int state);
-	void on_check_state_changed_checkBox_D1(int state);
-	void on_check_state_changed_checkBox_D2(int state);
-	void on_check_state_changed_checkBox_D3(int state);
-	void on_check_state_changed_checkBox_D4(int state);
-	void on_check_state_changed_checkBox_D5(int state);
-	void on_check_state_changed_checkBox_Dipol(int state);
-	void on_check_state_changed_checkBox_Anisotropy(int state);
-	void on_check_state_changed_checkBox_BiQ(int state);
-	void on_check_state_changed_checkBox_4Spin(int state);
-	void on_check_state_changed_checkBox_Zeeman(int state);
-	void on_check_state_changed_checkBox_M(int state);
-	void on_check_state_changed_checkBox_Skn(int state);
+	void check_state_changed_checkBox_E(int state);
+	void check_state_changed_checkBox_J1(int state);
+	void check_state_changed_checkBox_J2(int state);
+	void check_state_changed_checkBox_J3(int state);
+	void check_state_changed_checkBox_J4(int state);
+	void check_state_changed_checkBox_J5(int state);
+	void check_state_changed_checkBox_J6(int state);
+	void check_state_changed_checkBox_J7(int state);
+	void check_state_changed_checkBox_J8(int state);
+	void check_state_changed_checkBox_D1(int state);
+	void check_state_changed_checkBox_D2(int state);
+	void check_state_changed_checkBox_D3(int state);
+	void check_state_changed_checkBox_D4(int state);
+	void check_state_changed_checkBox_D5(int state);
+	void check_state_changed_checkBox_Dipol(int state);
+	void check_state_changed_checkBox_Anisotropy(int state);
+	void check_state_changed_checkBox_BiQ(int state);
+	void check_state_changed_checkBox_4Spin(int state);
+	void check_state_changed_checkBox_Zeeman(int state);
+	void check_state_changed_checkBox_M(int state);
+	void check_state_changed_checkBox_Skn(int state);
 
-	void on_apply_button(void); ///< apply user specifications to widget
-	void on_apply_and_close_button(void); ///< apply user specifications and close window
+	void apply_button(void); ///< apply user specifications to widget
+	void apply_and_close_button(void); ///< apply user specifications and close window
 
 signals:
 	void send_repaint_request(void);

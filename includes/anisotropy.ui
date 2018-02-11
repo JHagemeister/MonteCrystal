@@ -180,56 +180,7 @@ background-color: rgb(235, 241, 255, 255);
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>addButton</sender>
-   <signal>released()</signal>
-   <receiver>Dialog</receiver>
-   <slot>on_add_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>180</x>
-     <y>660</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>478</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>deleteButton</sender>
-   <signal>released()</signal>
-   <receiver>Dialog</receiver>
-   <slot>on_delete_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>644</x>
-     <y>660</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>445</x>
-     <y>130</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonOk</sender>
-   <signal>released()</signal>
-   <receiver>Dialog</receiver>
-   <slot>on_ok_clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>32</x>
-     <y>692</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>7</x>
-     <y>635</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_add_clicked()</slot>
   <slot>on_delete_clicked()</slot>

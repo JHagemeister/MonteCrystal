@@ -51,7 +51,7 @@ ModulatedExchangeInteraction::~ModulatedExchangeInteraction()
 	delete[] _modulationArray;
 }
 
-double ModulatedExchangeInteraction::single_energy(int position)
+double ModulatedExchangeInteraction::single_energy(const int &position) const
 {
 	/**
 	* The function evaluates the exchange energy of the atom at site _position.
@@ -75,24 +75,7 @@ double ModulatedExchangeInteraction::single_energy(int position)
 	return -1 * energy; // energy of single atom
 }
 
-double ModulatedExchangeInteraction::interaction_energy_between_two_spins(int position1, int position2)
-{
-	/**
-	* @param[in] _position lattice
-	*/
-	double energy = 0;
-	for (int i = 0; i < _nbors; ++i) // -1 refers to empty entry
-	{
-		if (_neighborArray[_nbors * position1 + i] == position2) // -1 refers to empty entry
-		{
-			energy = -_modulationArray[_nbors * position1 + i]
-				* MyMath::dot_product(_spinArray[position1], _spinArray[position2]);
-		}
-	}
-	return energy; // energy of single atom
-}
-
-Threedim ModulatedExchangeInteraction::effective_field(int position)
+Threedim ModulatedExchangeInteraction::effective_field(const int &position) const
 {
 	return Threedim{ 0,0,0 };
 }

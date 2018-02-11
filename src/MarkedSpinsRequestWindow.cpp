@@ -78,24 +78,26 @@ MarkedSpinsRequestWindow::MarkedSpinsRequestWindow(MarkedSpinsHandler* markedSpi
 	ui.tableWidget_KDefect->setItem(0, 2, new QTableWidgetItem("0"));
 	ui.tableWidget_KDefect->setItem(0, 3, new QTableWidgetItem("1"));
 
-	connect(ui.pushButton_lock, SIGNAL(released()), this, SLOT(on_lock_button()));
-	connect(ui.pushButton_unlock, SIGNAL(released()), this, SLOT(on_unlock_button()));
+	connect(ui.pushButton_lock, &QAbstractButton::released, this, &MarkedSpinsRequestWindow::lock_button);
+	connect(ui.pushButton_unlock, &QAbstractButton::released, this, &MarkedSpinsRequestWindow::unlock_button);
 
-	connect(ui.tableWidget_direction, SIGNAL(cellChanged(int, int)), this, 
-		SLOT(on_table_direction(int, int)));
-
+	connect(ui.tableWidget_direction, &QTableWidget::cellChanged, 
+		this, &MarkedSpinsRequestWindow::table_direction);
 	
-	connect(ui.pushButton_showDefects, SIGNAL(released()), this, SLOT(on_button_show_defects()));
-	connect(ui.pushButton_showLockedSpins, SIGNAL(released()), this, SLOT(on_button_show_locked_spins()));
+	connect(ui.pushButton_showDefects, &QAbstractButton::released, 
+		this, &MarkedSpinsRequestWindow::button_show_defects);
+	connect(ui.pushButton_showLockedSpins, &QAbstractButton::released, 
+		this, &MarkedSpinsRequestWindow::button_show_locked_spins);
 
-	connect(ui.pushButton_undo, SIGNAL(released()), this, SLOT(on_button_undo()));
+	connect(ui.pushButton_undo, &QAbstractButton::released, 
+		this, &MarkedSpinsRequestWindow::button_undo);
 }
 
 MarkedSpinsRequestWindow::~MarkedSpinsRequestWindow()
 {
 }
 
-void MarkedSpinsRequestWindow::get_exchange_defect_parameters(int & order, double & parameter)
+void MarkedSpinsRequestWindow::get_exchange_defect_parameters(int & order, double & parameter) const
 {
 	if (ui.tableWidget_JDefect->item(0, 0))
 	{
@@ -107,7 +109,7 @@ void MarkedSpinsRequestWindow::get_exchange_defect_parameters(int & order, doubl
 	}
 }
 
-void MarkedSpinsRequestWindow::get_dm_defect_parameters(int & order, double & parameter)
+void MarkedSpinsRequestWindow::get_dm_defect_parameters(int & order, double & parameter) const
 {
 	if (ui.tableWidget_DDefect->item(0, 0))
 	{
@@ -119,7 +121,7 @@ void MarkedSpinsRequestWindow::get_dm_defect_parameters(int & order, double & pa
 	}
 }
 
-void MarkedSpinsRequestWindow::get_anisotropy_defect_parameters(UniaxialAnisotropyStruct & anisotropy)
+void MarkedSpinsRequestWindow::get_anisotropy_defect_parameters(UniaxialAnisotropyStruct & anisotropy) const
 {
 	if (ui.tableWidget_KDefect->item(0, 0))
 	{
@@ -179,12 +181,12 @@ void MarkedSpinsRequestWindow::clear_tables(void)
 }
 
 
-void MarkedSpinsRequestWindow::on_unlock_button(void)
+void MarkedSpinsRequestWindow::unlock_button(void)
 {
 	_markedSpinsHandler->unlock_spins();
 }
 
-void MarkedSpinsRequestWindow::on_table_direction(int row, int column)
+void MarkedSpinsRequestWindow::table_direction(int row, int column)
 {
 	Threedim direction{ 0,0,0 };
 	if (ui.tableWidget_direction->item(0, 0))
@@ -206,22 +208,22 @@ void MarkedSpinsRequestWindow::on_table_direction(int row, int column)
 	}
 }
 
-void MarkedSpinsRequestWindow::on_button_show_defects(void)
+void MarkedSpinsRequestWindow::button_show_defects(void)
 {
 	_markedSpinsHandler->show_defects();
 }
 
-void MarkedSpinsRequestWindow::on_button_show_locked_spins(void)
+void MarkedSpinsRequestWindow::button_show_locked_spins(void)
 {
 	_markedSpinsHandler->show_locked_spins();
 }
 
-void MarkedSpinsRequestWindow::on_button_undo(void)
+void MarkedSpinsRequestWindow::button_undo(void)
 {
 	_markedSpinsHandler->clear_defects_and_unlock_all();
 }
 
-void MarkedSpinsRequestWindow::on_lock_button(void)
+void MarkedSpinsRequestWindow::lock_button(void)
 {
 	_markedSpinsHandler->lock_spins();
 }

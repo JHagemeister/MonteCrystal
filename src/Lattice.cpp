@@ -88,7 +88,7 @@ Lattice::~Lattice()
 	delete[] _eighthNeighborArray;
 }
 
-int Lattice::parameter_consistency(void) 
+int Lattice::parameter_consistency(void) const
 {
 	/**
 	* Checks if parameters given in constructer are suitable for lattice creation.
@@ -114,7 +114,6 @@ int Lattice::parameter_consistency(void)
 		{
 			consistency = FALSE;
 		}
-		create_miller_plane();
 		break;
 
 	case triangularHexagonal:
@@ -1043,7 +1042,7 @@ void Lattice::finish_cutting_process(int* belongsToCutSystem, int numberCutAtoms
 	assign_neighbors();
 }
 
-std::vector<Threedim> Lattice::get_sites_square_lattice(int m, int n)
+std::vector<Threedim> Lattice::get_sites_square_lattice(const int &m, const int &n)
 {
 	Threedim a1 = { 1, 0, 0 };
 	Threedim a2 = { 0, 1, 0 };
@@ -1064,7 +1063,7 @@ std::vector<Threedim> Lattice::get_sites_square_lattice(int m, int n)
 	return latticeSites;
 }
 
-std::vector<Threedim> Lattice::get_sites_hexagonal_lattice(int m, int n)
+std::vector<Threedim> Lattice::get_sites_hexagonal_lattice(const int &m, const int &n)
 {
 	Threedim a1 = { 1, 0, 0 };
 	double y = sqrt(3) / 2;
@@ -2038,7 +2037,7 @@ void Lattice::assign_neighbors(void)
 	}
 }
 
-int Lattice::is_neighbor(int _pos1, int _pos2)
+int Lattice::is_neighbor(const int &pos1, const int &pos2) const
 {
 	/*
 	* This function checks whether two lattice sites are (nearest) neighbors.
@@ -2053,7 +2052,7 @@ int Lattice::is_neighbor(int _pos1, int _pos2)
 	// iterate over all neighbors of lattice site with index _pos1
 	for (int i = 0; i < _numberNthNeighbors[0]; i++)
 	{
-		if (_pos2 == _firstNeighborArray[_numberNthNeighbors[0] * _pos1 + i])
+		if (pos2 == _firstNeighborArray[_numberNthNeighbors[0] * pos1 + i])
 		{
 			isneigh = TRUE;
 		}
@@ -2061,7 +2060,7 @@ int Lattice::is_neighbor(int _pos1, int _pos2)
 	return isneigh;
 }
 
-void Lattice::show_lattice_coordinates(void)
+void Lattice::show_lattice_coordinates(void) const
 {
 	/*
 	* Prints out the Lattice Coordinates of the created or given Lattice.
@@ -2081,7 +2080,7 @@ void Lattice::show_lattice_coordinates(void)
 	}
 }
 
-void Lattice::show_neighbor_distances(void)
+void Lattice::show_neighbor_distances(void) const
 {
 	if (!_distanceArray)
 	{
@@ -2096,7 +2095,7 @@ void Lattice::show_neighbor_distances(void)
 	}
 	std::cout << std::endl;
 }
-void Lattice::show_distance_neigh(void)
+void Lattice::show_distance_neigh(void) const
 {
 	if (!_distanceNeigh)
 	{
@@ -2112,7 +2111,7 @@ void Lattice::show_distance_neigh(void)
 	std::cout << std::endl;
 }
 
-void Lattice::show_neighbors(int index)
+void Lattice::show_neighbors(const int &index) const
 {
 	if (_firstNeighborArray != NULL)
 	{
@@ -2187,7 +2186,7 @@ void Lattice::show_skyrmion_number_cells(void) const {
 
 }
 
-int* Lattice::get_neighbor_array(int order) const
+int* Lattice::get_neighbor_array(const int &order) const
 {
 	switch (order)
 	{
@@ -2212,7 +2211,7 @@ int* Lattice::get_neighbor_array(int order) const
 	}
 }
 
-int Lattice::get_number_nth_neighbors(int order) const
+int Lattice::get_number_nth_neighbors(const int &order) const
 {
 	return _numberNthNeighbors[order-1];
 }
@@ -2222,7 +2221,7 @@ Threedim* Lattice::get_lattice_coordinate_array(void) const
 	return _latticeCoordArray;
 }
 
-Threedim* Lattice::get_neighbor_vector_array(int order) const
+Threedim* Lattice::get_neighbor_vector_array(const int &order) const
 {
 	switch (order)
 	{

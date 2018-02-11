@@ -42,7 +42,7 @@ FourSpinInteraction::~FourSpinInteraction()
 {
 }
 
-double FourSpinInteraction::single_energy(int position)
+double FourSpinInteraction::single_energy(const int &position) const
 {
 	double energy = 0;
 	for (int i = 0; i < _nCellsPerAtom; ++i)
@@ -62,12 +62,7 @@ double FourSpinInteraction::single_energy(int position)
 	return -_energyParameter * energy;
 }
 
-double FourSpinInteraction::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
-
-Threedim FourSpinInteraction::effective_field(int position)
+Threedim FourSpinInteraction::effective_field(const int &position) const
 {
 	Threedim field = { 0,0,0 };
 	double dotProd = 0;

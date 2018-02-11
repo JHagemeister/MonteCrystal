@@ -82,6 +82,10 @@ SkyrmionWindow::SkyrmionWindow(GUISpinElements* guiSpinElements, SkyrmionWindowP
 	{
 		_ui.comboBox_Handedness->setCurrentIndex(1);
 	}
+
+	connect(_ui.pushButton_undo, &QAbstractButton::released, this, &SkyrmionWindow::push_button_undo);
+	connect(_ui.pushButton_apply, &QAbstractButton::released, this, &SkyrmionWindow::push_button_apply);
+	connect(_ui.pushButton_ok, &QAbstractButton::released, this, &QDialog::close);
 }
 
 SkyrmionWindow::~SkyrmionWindow()
@@ -89,13 +93,13 @@ SkyrmionWindow::~SkyrmionWindow()
 	
 }
 
-void SkyrmionWindow::on_push_button_apply()
+void SkyrmionWindow::push_button_apply()
 {
 	read_parameters();
 	_guiSpinElements->skyrmion(_parameters);
 }
 
-void SkyrmionWindow::on_push_button_undo()
+void SkyrmionWindow::push_button_undo()
 {
 	_guiSpinElements->restore_spin_configuration();
 }

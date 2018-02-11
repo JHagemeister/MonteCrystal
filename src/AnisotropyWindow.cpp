@@ -21,7 +21,8 @@
 */
 
 #include "AnisotropyWindow.h"
-
+#include <QStringList>
+#include <QStringListModel>
 #include "MyHeaderView.h"
 
 AnisotropyWindow::AnisotropyWindow(std::shared_ptr<std::vector<double>> hexAnisotropies,
@@ -145,14 +146,17 @@ eX;eY;eZ").split(";"));
 	_ui.tableWidgetHexagonal->item(0, 3)->setFlags(0);
 	_ui.tableWidgetHexagonal->item(0, 4)->setFlags(0);
 	_ui.tableWidgetHexagonal->item(0, 5)->setFlags(0);
+
+	connect(_ui.pushButtonOk, &QAbstractButton::released, this, &AnisotropyWindow::ok_clicked);
+	connect(_ui.addButton, &QAbstractButton::released, this, &AnisotropyWindow::add_clicked);
+	connect(_ui.deleteButton, &QAbstractButton::released, this, &AnisotropyWindow::delete_clicked);
 }
 
 AnisotropyWindow::~AnisotropyWindow()
 {
-
 }
 
-void AnisotropyWindow::on_add_clicked()
+void AnisotropyWindow::add_clicked()
 {
 	/**
 	* Add button clicked. Add current specified anisotropy energy to end of existing anisotropy list. If a 
@@ -191,7 +195,7 @@ void AnisotropyWindow::on_add_clicked()
 	_model->setStringList(*_list);
 }
 
-void AnisotropyWindow::on_delete_clicked()
+void AnisotropyWindow::delete_clicked()
 {
 	/**
 	* Current selected anisotropy energy is removed.
@@ -203,7 +207,7 @@ void AnisotropyWindow::on_delete_clicked()
 	_anisotropies->erase(_anisotropies->begin() + index);
 }
 
-void AnisotropyWindow::on_ok_clicked()
+void AnisotropyWindow::ok_clicked()
 {
 	if (_ui.tableWidgetHexagonal->item(0, 0))
 	{

@@ -22,10 +22,8 @@ public:
 	Tip(Threedim* spinArray, double energyParameter, Threedim tipPosition, Threedim tipDirection, 
 		Lattice* lattice);
 	virtual ~Tip();
-	virtual double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-
-	virtual Threedim effective_field(int position);
+	virtual double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 
 	void set_position(Threedim position); ///< set tip position
 	void set_direction(Threedim tipDirection); ///< set magnetization direction

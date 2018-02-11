@@ -54,7 +54,7 @@ NCMRContrastObservable::~NCMRContrastObservable()
 	_ncmrValues = NULL;
 }
 
-std::string NCMRContrastObservable::get_steps_header(void)
+std::string NCMRContrastObservable::get_steps_header(void) const
 {
 	std::string header;
 	for (int i = 0; i < _numberAtoms; i++)
@@ -64,7 +64,7 @@ std::string NCMRContrastObservable::get_steps_header(void)
 	return header;
 }
 
-std::string NCMRContrastObservable::get_mean_header(void)
+std::string NCMRContrastObservable::get_mean_header(void) const
 {
 	return get_steps_header();
 }
@@ -80,7 +80,7 @@ void NCMRContrastObservable::take_value(void)
 	++_measurementIndex;
 }
 
-std::string NCMRContrastObservable::get_step_value(int index)
+std::string NCMRContrastObservable::get_step_value(const int &index) const
 {
 	std::stringstream stream;
 	stream << std::setprecision(15);
@@ -102,7 +102,7 @@ std::string NCMRContrastObservable::get_step_value(int index)
 	return stream.str();
 }
 
-std::string NCMRContrastObservable::get_mean_value(double temperature)
+std::string NCMRContrastObservable::get_mean_value(const double &temperature) const
 {
 	std::stringstream stream;
 	stream << std::setprecision(15);

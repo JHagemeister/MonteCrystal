@@ -39,7 +39,7 @@ WindingNumber::WindingNumber(int numberMeasurements, Threedim* spinArray, Topolo
 	_localWindingNumber = new double[cellNum];
 	_windingNumber = new double[numberMeasurements];
 	_areaUnitSphere = 4 * Pi;
-	evaluate_winding_number();
+	evaluate_local_winding_number();
 }
 
 WindingNumber::~WindingNumber()
@@ -48,23 +48,23 @@ WindingNumber::~WindingNumber()
 	delete[] _localWindingNumber;
 }
 
-std::string WindingNumber::get_steps_header(void)
+std::string WindingNumber::get_steps_header(void) const
 {
 	return "WindingNumber ";
 }
 
-std::string WindingNumber::get_mean_header(void)
+std::string WindingNumber::get_mean_header(void) const
 {
 	return "WindingNumber WindingNumber_SUS ";
 }
 
 void WindingNumber::take_value(void)
 {
-	_windingNumber[_measurementIndex] = evaluate_winding_number();
+	winding_number(_windingNumber[_measurementIndex]);
 	++_measurementIndex;
 }
 
-std::string WindingNumber::get_step_value(int index)
+std::string WindingNumber::get_step_value(const int &index) const
 {
 	std::stringstream stream;
 	if (index < _numberMeasurements)
@@ -79,7 +79,7 @@ std::string WindingNumber::get_step_value(int index)
 	return stream.str();
 }
 
-std::string WindingNumber::get_mean_value(double temperature)
+std::string WindingNumber::get_mean_value(const double &temperature) const
 {
 	std::stringstream stream;
 	if (_measurementIndex == _numberMeasurements)
@@ -100,7 +100,7 @@ void WindingNumber::clear_storage(void)
 	_windingNumber = new double[_numberMeasurements];
 }
 
-double WindingNumber::evaluate_winding_number(void)
+void WindingNumber::winding_number(double &value)
 {
 	double N = 0;
 	double D = 0;
@@ -108,7 +108,27 @@ double WindingNumber::evaluate_winding_number(void)
 	Threedim spin2 = { 0,0,0 };
 	Threedim spin3 = { 0,0,0 };
 
-	double windN = 0;
+	for (int i = 0; i < _cellNum; ++i)
+	{
+		spin1 = _spinArray[_cells[i].i];
+		spin2 = _spinArray[_cells[i].j];
+		spin3 = _spinArray[_cells[i].k];
+		N = MyMath::dot_product(spin1, MyMath::vector_product(spin2, spin3));
+		D = 1 + MyMath::dot_product(spin1, spin2) + MyMath::dot_product(spin1, spin3)
+			+ MyMath::dot_product(spin2, spin3);
+		value += 2 * atan2(N, D);
+	}
+	value /= _areaUnitSphere;
+}
+
+void WindingNumber::evaluate_local_winding_number()
+{
+	double N = 0;
+	double D = 0;
+	Threedim spin1 = { 0,0,0 };
+	Threedim spin2 = { 0,0,0 };
+	Threedim spin3 = { 0,0,0 };
+
 	for (int i = 0; i < _cellNum; ++i)
 	{
 		spin1 = _spinArray[_cells[i].i];
@@ -118,12 +138,10 @@ double WindingNumber::evaluate_winding_number(void)
 		D = 1 + MyMath::dot_product(spin1, spin2) + MyMath::dot_product(spin1, spin3)
 			+ MyMath::dot_product(spin2, spin3);
 		_localWindingNumber[i] = 2 * atan2(N, D);
-		windN += _localWindingNumber[i];
 	}
-	return windN / _areaUnitSphere;
 }
 
-double* WindingNumber::get_local_winding_number(void)
+double* WindingNumber::get_local_winding_number(void) const
 {
 	return _localWindingNumber;
 }

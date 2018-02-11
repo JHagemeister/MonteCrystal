@@ -22,10 +22,8 @@ public:
 	DipolarInteraction(Threedim* spinArray, double magneticMoment, double latticeConstant, Lattice* lattice);
 	virtual ~DipolarInteraction();
 
-	virtual double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-
-	virtual Threedim effective_field(int position);
+	virtual double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 
 protected:
 	void setup_distance_array(Lattice* lattice); ///< calculate all distances between spins once at creation

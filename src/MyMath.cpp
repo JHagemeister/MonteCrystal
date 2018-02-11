@@ -66,7 +66,7 @@ double MyMath::round(double value, int digits)
 	return floor(value * v[digits] + 0.5) / v[digits];
 }
 
-double MyMath::norm(Threedim vec)
+double MyMath::norm(const Threedim &vec)
 {
 	/**
 	* Calculate norm of a vector.
@@ -79,7 +79,7 @@ double MyMath::norm(Threedim vec)
 	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
-Threedim MyMath::normalize(Threedim vec)
+Threedim MyMath::normalize(const Threedim &vec)
 {
 	/**
 	* Normalize a vector.
@@ -102,7 +102,7 @@ Threedim MyMath::normalize(Threedim vec)
 	return normVec;
 }
 
-Threedim MyMath::add(Threedim vec1, Threedim vec2)
+Threedim MyMath::add(const Threedim &vec1, const Threedim &vec2)
 {
 	/**
 	* Add two vectors.
@@ -120,7 +120,7 @@ Threedim MyMath::add(Threedim vec1, Threedim vec2)
 	return vec;
 }
 
-Threedim MyMath::mult(Threedim vec, double mult)
+Threedim MyMath::mult(const Threedim &vec, const double &mult)
 {
 	/**
 	* Multiplication of a vector with a scalar.
@@ -138,7 +138,7 @@ Threedim MyMath::mult(Threedim vec, double mult)
 	return vector;
 }
 
-double MyMath::dot_product(Threedim vec1, Threedim vec2)
+double MyMath::dot_product(const Threedim &vec1, const Threedim &vec2)
 {
 	/**
 	* Calculate the dot/scalar product of two vectors.
@@ -154,7 +154,7 @@ double MyMath::dot_product(Threedim vec1, Threedim vec2)
 	return vecproduct;
 }
 
-Threedim MyMath::vector_product(Threedim vec1, Threedim vec2)
+Threedim MyMath::vector_product(const Threedim &vec1, const Threedim &vec2)
 {
 	/**
 	* Calculate the vector product of two vectors.
@@ -172,7 +172,7 @@ Threedim MyMath::vector_product(Threedim vec1, Threedim vec2)
 	return prod;
 }
 
-Threedim MyMath::difference(Threedim vec1, Threedim vec2)
+Threedim MyMath::difference(const Threedim &vec1, const Threedim &vec2)
 {
 	/**
 	* Calculate the vector difference vec1 - vec2.
@@ -190,7 +190,7 @@ Threedim MyMath::difference(Threedim vec1, Threedim vec2)
 	return diff;
 }
 
-double MyMath::cosine_vectors(Threedim vec1, Threedim vec2)
+double MyMath::cosine_vectors(const Threedim &vec1, const Threedim &vec2)
 {
 	/**
 	* Calculate the cosine of the angle between two vectos.
@@ -204,7 +204,7 @@ double MyMath::cosine_vectors(Threedim vec1, Threedim vec2)
 	return dot_product(vec1, vec2) / (norm(vec1) * norm(vec2));
 }
 
-Threedim MyMath::matrix_vector_product(gsl_matrix* matrix, Threedim vec)
+Threedim MyMath::matrix_vector_product(gsl_matrix* matrix, const Threedim &vec)
 {
 	/**
 	* matrix * vector.
@@ -223,7 +223,7 @@ Threedim MyMath::matrix_vector_product(gsl_matrix* matrix, Threedim vec)
 	return result;
 }
 
-gsl_matrix * MyMath::get_rotation_matrix(Threedim * array1, int index)
+gsl_matrix * MyMath::get_rotation_matrix(Threedim * array1, const int &index)
 {
 	/**
 	* Get rotation matrix for transformation to coordinate system in which
@@ -277,7 +277,7 @@ gsl_matrix * MyMath::get_rotation_matrix(Threedim * array1, int index)
 	return matrix;
 }
 
-Twodim MyMath::two_point_equation(double x1, double y1, double x2, double y2)
+Twodim MyMath::two_point_equation(const double &x1, const double &y1, const double &x2, const double &y2)
 {
 	/**
 	* Determines the slope and the offset of a linear function through points
@@ -295,7 +295,7 @@ Twodim MyMath::two_point_equation(double x1, double y1, double x2, double y2)
 	return solution;
 }
 
-double MyMath::gauss(double sigma, double mu, double x)
+double MyMath::gauss(const double &sigma, const double &mu, const double &x)
 {
 	/**
 	* Gauss function with expectation value mu and variance sigma**2
@@ -312,7 +312,7 @@ double MyMath::gauss(double sigma, double mu, double x)
 	return f * exp(-0.5 * pow(s, 2));
 }
 
-double MyMath::mean_value(double* values, int num)
+double MyMath::mean_value(double* values, const int &num)
 {
 	/**
 	* Evaluate mean value.
@@ -331,7 +331,7 @@ double MyMath::mean_value(double* values, int num)
 	return mean / num;
 }
 
-double MyMath::variance(double* values, int num)
+double MyMath::variance(double* values, const int &num)
 {
 	/**
 	* Evaluate variance.
@@ -355,7 +355,7 @@ double MyMath::variance(double* values, int num)
 	return variance;
 }
 
-double MyMath::periodic_function1(double x)
+double MyMath::periodic_function1(const double &x)
 {
 	/**
 	*  2 Pi -periodic function. approximating a periodic rectangle function.
@@ -375,7 +375,7 @@ double MyMath::periodic_function1(double x)
 		+ 1.0 / (10 * Pi) * sin(5 * x));
 }
 
-double MyMath::rectangular_function(double t0, double T, int n, double t) 
+double MyMath::rectangular_function(const double &t0, const double &T, const int &n, const double &t) 
 {
 	/**
 	* The function is 1 from -t0/2 to + t0/2; otherwise zero and T periodic.
@@ -395,7 +395,7 @@ double MyMath::rectangular_function(double t0, double T, int n, double t)
 	return f;
 }
 
-void MyMath::min_max_threedim(Threedim* threedimArray, int size, Threedim &min, Threedim &max)
+void MyMath::min_max_threedim(Threedim* threedimArray, const int &size, Threedim &min, Threedim &max)
 {
 	/**
 	* Determines x_min, y_min, z_min and x_max, y_max, z_max from a array of three dimensional vectors
@@ -438,7 +438,7 @@ void MyMath::min_max_threedim(Threedim* threedimArray, int size, Threedim &min, 
 	}
 }
 
-void MyMath::min_max_double(double * a, int size, double &min, double &max)
+void MyMath::min_max_double(double * a, const int &size, double &min, double &max)
 {
 	/**
 	* Determines minimal and maximal number in an array of double values.
@@ -459,7 +459,7 @@ void MyMath::min_max_double(double * a, int size, double &min, double &max)
 	}
 }
 
-std::vector<double> MyMath::linspace(double a, double b, int n)
+std::vector<double> MyMath::linspace(const double &a, const double &b, const int &n)
 {
 	/**
 	* Intended to be similar to Python numpy::linspace function. Creates array of values between a and b
@@ -477,19 +477,20 @@ std::vector<double> MyMath::linspace(double a, double b, int n)
 		array.push_back(a);
 	}
 	else {
+		double value = a;
 		double step = (b - a) / (n - 1);
 
-		while (abs(a - b) > 0.0000001)
+		while (abs(value - b) > 0.0000001)
 		{
-			array.push_back(a);
-			a += step;
+			array.push_back(value);
+			value += step;
 		}
 		array.push_back(b);
 	}
 	return array;
 }
 
-int MyMath::contains_value(int* array, int size, int value)
+int MyMath::contains_value(int* array, const int &size, const int &value)
 {
 	/**
 	* Check whether array contains a value
@@ -512,7 +513,7 @@ int MyMath::contains_value(int* array, int size, int value)
 	return found;
 }
 
-void MyMath::remove_value(int* &array, int &size, int value)
+void MyMath::remove_value(int* &array, int &size, const int &value)
 {
 	/**
 	* If array contains value, removes value from array
@@ -541,7 +542,7 @@ void MyMath::remove_value(int* &array, int &size, int value)
 	}
 }
 
-void MyMath::add_value(int* &array, int &size, int value)
+void MyMath::add_value(int* &array, int &size, const int &value)
 {
 	/**
 	* If array does not contain value, add value to array
@@ -568,7 +569,7 @@ void MyMath::add_value(int* &array, int &size, int value)
 	}
 }
 
-double MyMath::topological_charge(Threedim x1, Threedim x2, Threedim x3)
+double MyMath::topological_charge(const Threedim &x1, const Threedim &x2, const Threedim &x3)
 {
 	/**
 	* Calculate projection of area spanned by three vectors onto unit sphere.

@@ -107,7 +107,8 @@ void GUISpinElements::open_ferromagnet_window(Threedim* latticeCoordArray, Three
 
 	_ferromagnetWindow = new FerromagnetWindow(this);
 	_ferromagnetWindow->setAttribute(Qt::WA_DeleteOnClose, true);
-	connect(_ferromagnetWindow, SIGNAL(destroyed()), this, SLOT(on_ferromagnet_window_destroyed()));
+	connect(_ferromagnetWindow, &QObject::destroyed, this, 
+		&GUISpinElements::ferromagnet_window_destroyed);
 	_ferromagnetWindow->open();
 }
 
@@ -131,9 +132,10 @@ void GUISpinElements::open_skyrmion_window(OGLWidget* oglWidget, Threedim* latti
 	_skyrmionWindow = new SkyrmionWindow(this, _skyrmionParameters);
 	_skyrmionWindow->setAttribute(Qt::WA_DeleteOnClose, true);
 
-	connect(oglWidget, SIGNAL(mouse_position_changed(Twodim)), _skyrmionWindow,
-		SLOT(receive_skyrmion_center(Twodim)));
-	connect(_skyrmionWindow, SIGNAL(destroyed()), this, SLOT(on_skyrmion_window_destroyed()));
+	connect(oglWidget, &OGLWidget::mouse_position_changed, _skyrmionWindow,
+		&SkyrmionWindow::receive_skyrmion_center);
+	connect(_skyrmionWindow, &SkyrmionWindow::destroyed, this, 
+		&GUISpinElements::skyrmion_window_destroyed);
 
 	_skyrmionWindow->open();
 }
@@ -158,9 +160,10 @@ void GUISpinElements::open_spin_spiral_window(OGLWidget * oglWidget, Threedim * 
 	_spinSpiralWindow = new SpinSpiralWindow(this);
 	_spinSpiralWindow->setAttribute(Qt::WA_DeleteOnClose, true);
 
-	connect(oglWidget, SIGNAL(mouse_position_changed(Twodim)), _spinSpiralWindow,
-		SLOT(receive_mouse_position(Twodim)));
-	connect(_spinSpiralWindow, SIGNAL(destroyed()), this, SLOT(on_spin_spiral_window_destroyed()));
+	connect(oglWidget, &OGLWidget::mouse_position_changed, _spinSpiralWindow,
+		&SpinSpiralWindow::receive_mouse_position);
+	connect(_spinSpiralWindow, &QObject::destroyed, this, 
+		&GUISpinElements::spin_spiral_window_destroyed);
 
 	_spinSpiralWindow->open();
 }
@@ -245,17 +248,17 @@ void GUISpinElements::restore_spin_configuration(void)
 	_ui->openGLWidget->repaint();
 }
 
-void GUISpinElements::on_ferromagnet_window_destroyed(void)
+void GUISpinElements::ferromagnet_window_destroyed(void)
 {
 	_ferromagnetWindow = NULL;
 }
 
-void GUISpinElements::on_skyrmion_window_destroyed(void)
+void GUISpinElements::skyrmion_window_destroyed(void)
 {
 	_skyrmionWindow = NULL;
 }
 
-void GUISpinElements::on_spin_spiral_window_destroyed(void)
+void GUISpinElements::spin_spiral_window_destroyed(void)
 {
 	_spinSpiralWindow = NULL;
 }

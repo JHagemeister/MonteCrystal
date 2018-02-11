@@ -41,7 +41,7 @@ Hamiltonian::~Hamiltonian()
 {
 }
 
-double Hamiltonian::single_energy(int position)
+double Hamiltonian::single_energy(const int &position) const
 {
 	/**
 	* This function evaluates the TOTAL energy of a single atom AND of the bonds that it contributes to.
@@ -53,48 +53,16 @@ double Hamiltonian::single_energy(int position)
 	* @return Total energy of the single atom.
 	*/
 	double energy = 0;
-	for (std::vector<std::shared_ptr<Energy> >::iterator it = _energies.begin(); it != _energies.end(); ++it)
+	for (auto it = _energies.begin(); it != _energies.end(); ++it)
 	{
 		energy += (*it)->single_energy(position);
 	}
 	return energy;
 }
 
-double Hamiltonian::single_interaction_energy_between_two_spins(int position1, int position2)
-{
-	/**
-	* This function evaluates the total interaction energy of a single
-	* atom with its neighbors.
-	*
-	* @param[in] _position lattice site
-	*
-	* @return The total energy of the single atom.
-	*/
-	double energy = 0;
-	for (std::vector<std::shared_ptr<Energy> >::iterator it = _energies.begin(); it != _energies.end(); ++it)
-	{
-		if ((*it)->get_factor() < 0.9)
-		{
-			energy += (*it)->interaction_energy_between_two_spins(position1, position2);
-		}
-	}
-	return energy;
-}
 
-double Hamiltonian::single_non_interaction_energy(int position)
-{
-	double energy = 0;
-	for (std::vector<std::shared_ptr<Energy> >::iterator it = _energies.begin(); it != _energies.end(); ++it)
-	{
-		if ((*it)->get_factor() > 0.9)
-		{
-			energy += (*it)->single_energy(position);
-		}
-	}
-	return energy;
-}
 
-double Hamiltonian::total_energy(void)
+double Hamiltonian::total_energy(void) const
 {
 	/**
 	* This function evaluates the total energy of the system. The energy is not
@@ -111,7 +79,7 @@ double Hamiltonian::total_energy(void)
 	return totalEnergy;
 }
 
-double Hamiltonian::total_energy(int position)
+double Hamiltonian::total_energy(const int &position) const
 {
 	double totalEnergy = 0;
 	// summation over all energies.
@@ -122,7 +90,7 @@ double Hamiltonian::total_energy(int position)
 	return totalEnergy;
 }
 
-double Hamiltonian::part_energy(std::shared_ptr<Energy> &energy)
+double Hamiltonian::part_energy(std::shared_ptr<Energy> &energy) const
 {
 	/**
 	* This function evaluates the energy of the whole system for a given term of the Hamiltonian.
@@ -140,7 +108,7 @@ double Hamiltonian::part_energy(std::shared_ptr<Energy> &energy)
 	return (double)partEnergy * energy->get_factor();
 }
 
-double Hamiltonian::part_energy(int index)
+double Hamiltonian::part_energy(const int &index) const
 {
 	/**
 	* This function evaluates the energy of the whole system for a given term of the Hamiltonian.
@@ -165,7 +133,7 @@ double Hamiltonian::part_energy(int index)
 	return (double)partEnergy * _energies[index]->get_factor();
 }
 
-double Hamiltonian::single_part_energy(int index, int position)
+double Hamiltonian::single_part_energy(const int &index, const int &position) const
 {
 	/**
 	* This function evaluates part of the energy of a given atom. The energy object used for the 
@@ -201,7 +169,7 @@ void Hamiltonian::set_spin_array(Threedim* spinArray)
 	}
 }
 
-Threedim Hamiltonian::effectiveField(int position)
+Threedim Hamiltonian::effectiveField(const int &position) const
 {
 	/**
 	*  @param[in] position The effective field by all energies acting on spin with index "position"

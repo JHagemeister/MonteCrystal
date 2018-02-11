@@ -26,7 +26,7 @@ public:
 		int* millerIndexes, BoundaryConditions boundaryConditions);
 	virtual ~Lattice();
 
-	int parameter_consistency(void);
+	int parameter_consistency(void) const;
 
 	void read_lattice(std::string fname);
 	void create_lattice(void);
@@ -36,19 +36,19 @@ public:
 	void find_center_site(void);
 	void neighbor_distances(void);
 	void assign_neighbors(void);
-	int is_neighbor(int pos1, int pos2);
+	int is_neighbor(const int &pos1, const int &pos2) const;
 
-	void show_lattice_coordinates(void);
-	void show_neighbor_distances(void);
-	void show_distance_neigh(void);
-	void show_neighbors(int index);
+	void show_lattice_coordinates(void) const;
+	void show_neighbor_distances(void) const;
+	void show_distance_neigh(void) const;
+	void show_neighbors(const int &index) const;
 	void show_skyrmion_number_cells(void) const;
 	
 
-	int* get_neighbor_array(int order) const;
-	int get_number_nth_neighbors(int order) const;
+	int* get_neighbor_array(const int &order) const;
+	int get_number_nth_neighbors(const int &order) const;
 	Threedim* get_lattice_coordinate_array(void) const;
-	Threedim* get_neighbor_vector_array(int order) const;
+	Threedim* get_neighbor_vector_array(const int &order) const;
 	double* get_distance_array(void) const;
 	int* get_distance_neigh(void) const;
 	int get_radius_max(void) const;
@@ -61,8 +61,8 @@ public:
 	int get_center_site(void);
 	std::vector<Threedim> get_wigner_seitz_cell(void) const;
 
-	static std::vector<Threedim> get_sites_square_lattice(int m, int n);
-	static std::vector<Threedim> get_sites_hexagonal_lattice(int m, int n);
+	static std::vector<Threedim> get_sites_square_lattice(const int &m, const int &n);
+	static std::vector<Threedim> get_sites_hexagonal_lattice(const int &m, const int &n);
 
 	LatticeType _latticeType;
 	std::vector<int> _latticeDimensions;

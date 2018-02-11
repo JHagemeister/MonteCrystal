@@ -44,7 +44,7 @@ HexagonalAnisotropyEnergy::~HexagonalAnisotropyEnergy()
 {
 }
 
-double HexagonalAnisotropyEnergy::single_energy(int position)
+double HexagonalAnisotropyEnergy::single_energy(const int &position) const
 {
 	double sinTheta = MyMath::norm(MyMath::vector_product(_spinArray[position], {0.,0.,1.}));
 	double phi = atan2(_spinArray[position].y, _spinArray[position].x);
@@ -52,12 +52,7 @@ double HexagonalAnisotropyEnergy::single_energy(int position)
 		_energyParameter3*pow(sinTheta,6)*cos(6*phi);
 }
 
-double HexagonalAnisotropyEnergy::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
-
-Threedim HexagonalAnisotropyEnergy::effective_field(int position)
+Threedim HexagonalAnisotropyEnergy::effective_field(const int &position) const
 {
 	double cosTheta = _spinArray[position].z;
 	double sinTheta = MyMath::norm(MyMath::vector_product(_spinArray[position], { 0.,0.,1. }));

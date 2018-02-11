@@ -48,12 +48,12 @@ AbsoluteMagnetisationObservable::~AbsoluteMagnetisationObservable()
 	delete[] _absoluteMagnetisation;
 }
 
-std::string AbsoluteMagnetisationObservable::get_steps_header(void)
+std::string AbsoluteMagnetisationObservable::get_steps_header(void) const
 {
 	return ""; // no output during Monte-Carlo-Steps.
 }
 
-std::string AbsoluteMagnetisationObservable::get_mean_header(void)
+std::string AbsoluteMagnetisationObservable::get_mean_header(void) const
 {
 	std::string header = "<|SiX|> <|SiY|> <|SiZ|> ";
 	return header;
@@ -73,7 +73,7 @@ void AbsoluteMagnetisationObservable::take_value(void)
 	++_measurementIndex;
 }
 
-std::string AbsoluteMagnetisationObservable::get_step_value(int index)
+std::string AbsoluteMagnetisationObservable::get_step_value(const int &index) const
 {
 	/**
 	* @return empty std::string
@@ -81,7 +81,7 @@ std::string AbsoluteMagnetisationObservable::get_step_value(int index)
 	return ""; // no output during Monte-Carlo-Steps
 }
 
-std::string AbsoluteMagnetisationObservable::get_mean_value(double temperature)
+std::string AbsoluteMagnetisationObservable::get_mean_value(const double &temperature) const
 {
 	std::stringstream stream;
 	if (_measurementIndex == _numberMeasurements)

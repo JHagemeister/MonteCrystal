@@ -115,7 +115,7 @@ void SpinOrientationIsing::restore_single_orientation(void)
 	_spinArray[_position].x = -_spinArray[_position].x;
 }
 
-Threedim SpinOrientationIsing::magnetisation(void)
+Threedim SpinOrientationIsing::magnetisation(void) const
 {
 	/**
 	* This function returns the total energy.

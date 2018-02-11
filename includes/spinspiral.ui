@@ -148,56 +148,7 @@ background-color: rgb(235, 241, 255, 255);
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButtonOk</sender>
-   <signal>released()</signal>
-   <receiver>SpinSpiralWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>739</x>
-     <y>191</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>497</x>
-     <y>116</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonApply</sender>
-   <signal>released()</signal>
-   <receiver>SpinSpiralWindow</receiver>
-   <slot>on_push_button_apply()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>77</x>
-     <y>179</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>8</x>
-     <y>151</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonUndo</sender>
-   <signal>released()</signal>
-   <receiver>SpinSpiralWindow</receiver>
-   <slot>on_push_button_undo()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>409</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>340</x>
-     <y>201</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_push_button_apply()</slot>
   <slot>on_push_button_undo()</slot>

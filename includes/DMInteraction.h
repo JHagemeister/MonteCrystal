@@ -19,14 +19,12 @@ public:
 		Lattice* lattice, int order);
 	virtual ~DMInteraction();
 
-	virtual double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-	
-	virtual Threedim effective_field(int position);
+	virtual double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 
-	int get_nbors(void);
-	int* get_neighbor_array(void);
-	Threedim* get_dm_vectors(void);
+	int get_nbors(void) const;
+	int* get_neighbor_array(void) const;
+	Threedim* get_dm_vectors(void) const;
 
 protected:
 	void set_DM_vectors(Lattice* lattice); ///< setup DM vectors

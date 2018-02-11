@@ -44,7 +44,7 @@ LatticeMaskWindow::LatticeMaskWindow(GUILatticeElements* guiLatticeElements, QWi
 	ui.comboBox_Type->addItem(tr("square"));
 	ui.comboBox_Type->addItem(tr("triangular"));
 
-	connect(ui.pushButton_Ok, SIGNAL(released()), this, SLOT(on_ok_button()));
+	connect(ui.pushButton_Ok, &QAbstractButton::released, this, &LatticeMaskWindow::ok_button);
 }
 
 LatticeMaskWindow::~LatticeMaskWindow()
@@ -74,7 +74,7 @@ void LatticeMaskWindow::read_parameters(void)
 	}
 }
 
-void LatticeMaskWindow::on_ok_button(void)
+void LatticeMaskWindow::ok_button(void)
 {
 	read_parameters();
 	_guiLatticeElements->_latticeMaskParameters = _latticeMaskParameters;

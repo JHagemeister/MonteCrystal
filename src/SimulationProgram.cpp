@@ -34,6 +34,8 @@
 #include "Setup.h"
 #include "Mersenne.h"
 
+#include <QMutex>;
+
 #include "Hamiltonian.h"
 #include "Energy.h"
 #include "Measurement.h"
@@ -303,7 +305,7 @@ void SimulationProgram::save_local_winding_number(const std::shared_ptr<Setup> &
 	// Calculate winding number/topological charge for the given spin configuration
 	auto windNum = std::make_shared<WindingNumber>(1, setup->_spinOrientation->get_spin_array(), cells, 
 		cellNum);
-	windNum->evaluate_winding_number();
+	windNum->evaluate_local_winding_number();
 
 	// header for the file in which the winding number will be stored
 	tmpstream << "x y WindN \n ";

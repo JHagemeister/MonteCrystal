@@ -22,9 +22,12 @@
 
 #include "WorkfolderWindow.h"
 
-WorkfolderWindow::WorkfolderWindow(QWidget * parent) : QDialog(parent)
+WorkfolderWindow::WorkfolderWindow(QWidget *parent) : QDialog(parent)
 {
-	ui.setupUi(this);
+	_ui.setupUi(this);
+	connect(_ui.pushButtonSelectOther, &QAbstractButton::released, this, &WorkfolderWindow::push_button_select_other);
+	connect(_ui.pushButtonOk, &QAbstractButton::released, this, &WorkfolderWindow::close);
+	connect(_ui.pushButtonSelectOther, &QAbstractButton::released, this, &WorkfolderWindow::close);
 }
 
 WorkfolderWindow::~WorkfolderWindow()
@@ -34,10 +37,10 @@ WorkfolderWindow::~WorkfolderWindow()
 
 void WorkfolderWindow::set_text_edit(QString qString)
 {
-	ui.textEdit->setText("Workfolder: " + qString);
+	_ui.textEdit->setText("Workfolder: " + qString);
 }
 
-void WorkfolderWindow::on_push_button_select_other(void)
+void WorkfolderWindow::push_button_select_other(void)
 {
 	emit send_select_other();
 }

@@ -60,57 +60,60 @@ _spinColor(0.8f, 0.8f, 0.8f, 1.0f)
 	// set values as defined previously in _oglWidget
 	set_values();
 
-	connect(_ui.tableWidgetBackgroundColor, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_background_color_table_widget(int, int)));
-	connect(_ui.tableWidgetColorMap, SIGNAL(cellChanged(int, int)), this, 
-		SLOT(on_change_in_color_map_table_widget(int, int)));
-	connect(_ui.tableWidgetSpinColor, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_spin_color_table_widget(int, int)));
+	connect(_ui.tableWidgetBackgroundColor, &QTableWidget::cellChanged, this,
+		&ColorsWindow::change_in_background_color_table_widget);
+	connect(_ui.tableWidgetColorMap, &QTableWidget::cellChanged, this, 
+		&ColorsWindow::change_in_color_map_table_widget);
+	connect(_ui.tableWidgetSpinColor, &QTableWidget::cellChanged, this,
+		&ColorsWindow::change_in_spin_color_table_widget);
 
-	connect(_ui.checkBoxSpinVectors, SIGNAL(stateChanged(int)), this, 
-		SLOT(on_check_state_changed_checkBoxSpinVectors(int)));
-	connect(_ui.checkBoxSpinVectorRGB, SIGNAL(stateChanged(int)), this,
-		SLOT(on_check_state_changed_checkBoxSpinVectorRGB(int)));
-	connect(_ui.checkBoxSpinVectorSingleColor, SIGNAL(stateChanged(int)), this,
-		SLOT(on_check_state_changed_checkBoxSpinVectorSingleColor(int)));
+	connect(_ui.checkBoxSpinVectors, &QCheckBox::stateChanged, this, 
+		&ColorsWindow::check_state_changed_checkBoxSpinVectors);
+	connect(_ui.checkBoxSpinVectorRGB, &QCheckBox::stateChanged, this,
+		&ColorsWindow::check_state_changed_checkBoxSpinVectorRGB);
+	connect(_ui.checkBoxSpinVectorSingleColor, &QCheckBox::stateChanged, this,
+		&ColorsWindow::check_state_changed_checkBoxSpinVectorSingleColor);
 
-	connect(_ui.pushButton_addSpins, SIGNAL(released()), this,
-		SLOT(on_pushButton_add_spins()));
-	connect(_ui.pushButton_removeSpins, SIGNAL(released()), this,
-		SLOT(on_pushButton_remove_spins()));
+	connect(_ui.pushButton_addSpins, &QAbstractButton::released, this,
+		&ColorsWindow::pushButton_add_spins);
+	connect(_ui.pushButton_removeSpins, &QAbstractButton::released, this,
+		&ColorsWindow::pushButton_remove_spins);
 
-	connect(_checkBox_E, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_E(int)));
-	connect(_checkBox_J1, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J1(int)));
-	connect(_checkBox_J2, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J2(int)));
-	connect(_checkBox_J3, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J3(int)));
-	connect(_checkBox_J4, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J4(int)));
-	connect(_checkBox_J5, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J5(int)));
-	connect(_checkBox_J6, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J6(int)));
-	connect(_checkBox_J7, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J7(int)));
-	connect(_checkBox_J8, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_J8(int)));
-	connect(_checkBox_D1, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_D1(int)));
-	connect(_checkBox_D2, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_D2(int)));
-	connect(_checkBox_D3, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_D3(int)));
-	connect(_checkBox_D4, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_D4(int)));
-	connect(_checkBox_D5, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_D5(int)));
-	connect(_checkBox_Dipol, SIGNAL(stateChanged(int)), this, 
-		SLOT(on_check_state_changed_checkBox_Dipol(int)));
-	connect(_checkBox_Anisotropy, SIGNAL(stateChanged(int)), this, 
-		SLOT(on_check_state_changed_checkBox_Anisotropy(int)));
-	connect(_checkBox_BiQ, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_BiQ(int)));
-	connect(_checkBox_4Spin, SIGNAL(stateChanged(int)), this, 
-		SLOT(on_check_state_changed_checkBox_4Spin(int)));
-	connect(_checkBox_Zeeman, SIGNAL(stateChanged(int)), this, 
-		SLOT(on_check_state_changed_checkBox_Zeeman(int)));
-	connect(_checkBox_M, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_M(int)));
-	connect(_checkBox_Skn, SIGNAL(stateChanged(int)), this, SLOT(on_check_state_changed_checkBox_Skn(int)));
+	connect(_checkBox_E, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_E);
+	connect(_checkBox_J1, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J1);
+	connect(_checkBox_J2, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J2);
+	connect(_checkBox_J3, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J3);
+	connect(_checkBox_J4, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J4);
+	connect(_checkBox_J5, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J5);
+	connect(_checkBox_J6, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J6);
+	connect(_checkBox_J7, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J7);
+	connect(_checkBox_J8, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_J8);
+	connect(_checkBox_D1, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_D1);
+	connect(_checkBox_D2, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_D2);
+	connect(_checkBox_D3, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_D3);
+	connect(_checkBox_D4, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_D4);
+	connect(_checkBox_D5, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_D5);
+	connect(_checkBox_Dipol, &QCheckBox::stateChanged, this, 
+		&ColorsWindow::check_state_changed_checkBox_Dipol);
+	connect(_checkBox_Anisotropy, &QCheckBox::stateChanged, this, 
+		&ColorsWindow::check_state_changed_checkBox_Anisotropy);
+	connect(_checkBox_BiQ, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_BiQ);
+	connect(_checkBox_4Spin, &QCheckBox::stateChanged, this, 
+		&ColorsWindow::check_state_changed_checkBox_4Spin);
+	connect(_checkBox_Zeeman, &QCheckBox::stateChanged, this, 
+		&ColorsWindow::check_state_changed_checkBox_Zeeman);
+	connect(_checkBox_M, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_M);
+	connect(_checkBox_Skn, &QCheckBox::stateChanged, this, &ColorsWindow::check_state_changed_checkBox_Skn);
 
-	connect(_ui.tableWidgetMTheta, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_magnetization_table_theta_color_map(int, int)));
-	connect(_ui.tableWidgetMPhi, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_magnetization_table_phi_color_map(int, int)));
-	connect(_ui.tableWidget_SpinMesh, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_spin_model_table(int, int)));
+	connect(_ui.tableWidgetMTheta, &QTableWidget::cellChanged, this,
+		&ColorsWindow::change_in_magnetization_table_theta_color_map);
+	connect(_ui.tableWidgetMPhi, &QTableWidget::cellChanged, this,
+		&ColorsWindow::change_in_magnetization_table_phi_color_map);
+	connect(_ui.tableWidget_SpinMesh, &QTableWidget::cellChanged, this,
+		&ColorsWindow::change_in_spin_model_table);
+
+	connect(_ui.pushButtonOk, &QAbstractButton::released, this, &ColorsWindow::apply_and_close_button);
+	connect(_ui.pushButtonApply, &QAbstractButton::released, this, &ColorsWindow::apply_button);
 }
 
 ColorsWindow::~ColorsWindow() {
@@ -123,7 +126,7 @@ void ColorsWindow::error_box(void)
 		"Close colors window prior to starting new simulation.");
 }
 
-void ColorsWindow::on_change_in_background_color_table_widget(int row, int column)
+void ColorsWindow::change_in_background_color_table_widget(int row, int column)
 {
 	/**
 	* React to change in table containing color values for color map
@@ -145,7 +148,7 @@ void ColorsWindow::on_change_in_background_color_table_widget(int row, int colum
 	_oglWidget->repaint();
 }
 
-void ColorsWindow::on_change_in_color_map_table_widget(int row, int column)
+void ColorsWindow::change_in_color_map_table_widget(int row, int column)
 {
 	/**
 	* React to change in table containing color values for color map
@@ -155,7 +158,7 @@ void ColorsWindow::on_change_in_color_map_table_widget(int row, int column)
 	update_display_colors_table_widget_color_map();
 }
 
-void ColorsWindow::on_change_in_spin_color_table_widget(int row, int column)
+void ColorsWindow::change_in_spin_color_table_widget(int row, int column)
 {
 	/**
 	* React to change in table containing color values for spin color.
@@ -165,7 +168,7 @@ void ColorsWindow::on_change_in_spin_color_table_widget(int row, int column)
 	update_display_color_table_widget_spin_color();
 }
 
-void ColorsWindow::on_change_in_magnetization_table_theta_color_map(int row, int column)
+void ColorsWindow::change_in_magnetization_table_theta_color_map(int row, int column)
 {
 
 	if (_ui.tableWidgetMTheta->item(0, 0))
@@ -192,7 +195,7 @@ void ColorsWindow::on_change_in_magnetization_table_theta_color_map(int row, int
 	}
 }
 
-void ColorsWindow::on_change_in_magnetization_table_phi_color_map(int row, int column)
+void ColorsWindow::change_in_magnetization_table_phi_color_map(int row, int column)
 {
 	if (_ui.tableWidgetMPhi->item(0, 0))
 	{
@@ -218,7 +221,7 @@ void ColorsWindow::on_change_in_magnetization_table_phi_color_map(int row, int c
 	}
 }
 
-void ColorsWindow::on_change_in_spin_model_table(int row, int column)
+void ColorsWindow::change_in_spin_model_table(int row, int column)
 {
 	if (_ui.tableWidget_SpinMesh->item(row, column))
 	{
@@ -290,7 +293,7 @@ void ColorsWindow::on_change_in_spin_model_table(int row, int column)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBoxSpinVectors(int state)
+void ColorsWindow::check_state_changed_checkBoxSpinVectors(int state)
 {
 	_boolWorkingCheckBoxes = 1;
 	if (state == 0)
@@ -306,7 +309,7 @@ void ColorsWindow::on_check_state_changed_checkBoxSpinVectors(int state)
 	_boolWorkingCheckBoxes = 0;
 }
 
-void ColorsWindow::on_check_state_changed_checkBoxSpinVectorSingleColor(int state)
+void ColorsWindow::check_state_changed_checkBoxSpinVectorSingleColor(int state)
 {
 	if (_boolWorkingCheckBoxes == 0)
 	{
@@ -327,7 +330,7 @@ void ColorsWindow::on_check_state_changed_checkBoxSpinVectorSingleColor(int stat
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBoxSpinVectorRGB(int state)
+void ColorsWindow::check_state_changed_checkBoxSpinVectorRGB(int state)
 {
 	if (_boolWorkingCheckBoxes == 0)
 	{
@@ -347,7 +350,7 @@ void ColorsWindow::on_check_state_changed_checkBoxSpinVectorRGB(int state)
 	}
 }
 
-void ColorsWindow::on_pushButton_add_spins(void)
+void ColorsWindow::pushButton_add_spins(void)
 {
 	if (_visibleSpinOrder > 1)
 	{
@@ -357,14 +360,14 @@ void ColorsWindow::on_pushButton_add_spins(void)
 	_oglWidget->repaint();
 }
 
-void ColorsWindow::on_pushButton_remove_spins(void)
+void ColorsWindow::pushButton_remove_spins(void)
 {
 	++_visibleSpinOrder;
 	_oglWidget->set_visible_spins_order(_visibleSpinOrder);
 	_oglWidget->repaint();
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_E(int state)
+void ColorsWindow::check_state_changed_checkBox_E(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -390,7 +393,7 @@ void ColorsWindow::on_check_state_changed_checkBox_E(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J1(int state)
+void ColorsWindow::check_state_changed_checkBox_J1(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -416,7 +419,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J1(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J2(int state)
+void ColorsWindow::check_state_changed_checkBox_J2(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -442,7 +445,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J2(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J3(int state)
+void ColorsWindow::check_state_changed_checkBox_J3(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -468,7 +471,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J3(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J4(int state)
+void ColorsWindow::check_state_changed_checkBox_J4(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -494,7 +497,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J4(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J5(int state)
+void ColorsWindow::check_state_changed_checkBox_J5(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -520,7 +523,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J5(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J6(int state)
+void ColorsWindow::check_state_changed_checkBox_J6(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -546,7 +549,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J6(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J7(int state)
+void ColorsWindow::check_state_changed_checkBox_J7(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -572,7 +575,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J7(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_J8(int state)
+void ColorsWindow::check_state_changed_checkBox_J8(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -598,7 +601,7 @@ void ColorsWindow::on_check_state_changed_checkBox_J8(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_D1(int state)
+void ColorsWindow::check_state_changed_checkBox_D1(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -624,7 +627,7 @@ void ColorsWindow::on_check_state_changed_checkBox_D1(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_D2(int state)
+void ColorsWindow::check_state_changed_checkBox_D2(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -650,7 +653,7 @@ void ColorsWindow::on_check_state_changed_checkBox_D2(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_D3(int state)
+void ColorsWindow::check_state_changed_checkBox_D3(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -676,7 +679,7 @@ void ColorsWindow::on_check_state_changed_checkBox_D3(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_D4(int state)
+void ColorsWindow::check_state_changed_checkBox_D4(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -702,7 +705,7 @@ void ColorsWindow::on_check_state_changed_checkBox_D4(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_D5(int state)
+void ColorsWindow::check_state_changed_checkBox_D5(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -728,7 +731,7 @@ void ColorsWindow::on_check_state_changed_checkBox_D5(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_Dipol(int state)
+void ColorsWindow::check_state_changed_checkBox_Dipol(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -754,7 +757,7 @@ void ColorsWindow::on_check_state_changed_checkBox_Dipol(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_Anisotropy(int state)
+void ColorsWindow::check_state_changed_checkBox_Anisotropy(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -780,7 +783,7 @@ void ColorsWindow::on_check_state_changed_checkBox_Anisotropy(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_BiQ(int state)
+void ColorsWindow::check_state_changed_checkBox_BiQ(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -806,7 +809,7 @@ void ColorsWindow::on_check_state_changed_checkBox_BiQ(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_4Spin(int state)
+void ColorsWindow::check_state_changed_checkBox_4Spin(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -832,7 +835,7 @@ void ColorsWindow::on_check_state_changed_checkBox_4Spin(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_Zeeman(int state)
+void ColorsWindow::check_state_changed_checkBox_Zeeman(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -858,7 +861,7 @@ void ColorsWindow::on_check_state_changed_checkBox_Zeeman(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_M(int state)
+void ColorsWindow::check_state_changed_checkBox_M(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -881,7 +884,7 @@ void ColorsWindow::on_check_state_changed_checkBox_M(int state)
 	}
 }
 
-void ColorsWindow::on_check_state_changed_checkBox_Skn(int state)
+void ColorsWindow::check_state_changed_checkBox_Skn(int state)
 {
 	if (_boolWorkingColorMapCheckBoxes == 0 && state == 2)
 	{
@@ -907,7 +910,7 @@ void ColorsWindow::on_check_state_changed_checkBox_Skn(int state)
 	}
 }
 
-void ColorsWindow::on_apply_button(void)
+void ColorsWindow::apply_button(void)
 {
 	_oglWidget->set_color_map_type(_colorMapType, _colorMapIdentifier);
 	_oglWidget->set_color_map_colors(_colorMapColors);
@@ -954,9 +957,9 @@ void ColorsWindow::on_apply_button(void)
 	emit send_repaint_request();
 }
 
-void ColorsWindow::on_apply_and_close_button(void)
+void ColorsWindow::apply_and_close_button(void)
 {
-	on_apply_button();
+	apply_button();
 	this->close();
 }
 

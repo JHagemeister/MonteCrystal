@@ -28,12 +28,20 @@
 #include "Experiment01Window.h"
 #include "ExcitationFrequencyWindow.h"
 
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QThread>
+#include <QCloseEvent>
+#include <QKeyEvent>
+#include <QMutex>
+
 #include "MarkedSpinsHandler.h"
 
 #include "Configuration.h"
 #include "Lattice.h"
 #include "SpinOrientation.h"
 #include "SimulationProgram.h"
+#include "Hamiltonian.h"
 #include "GUIProgramTypeElement.h"
 #include "GUIEnergyElements.h"
 #include "GUILatticeElements.h"
@@ -91,8 +99,21 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// output of color map information to the GUI
 	_ui->textEditColorMap->setFontPointSize(12);
-	connect(_ui->openGLWidget, SIGNAL(color_map_text(QString)), _ui->textEditColorMap, 
-		SLOT(setText(QString)), Qt::DirectConnection);
+	connect(_ui->openGLWidget, &OGLWidget::color_map_text, _ui->textEditColorMap, 
+		&QTextEdit::setText, Qt::DirectConnection);
+	connect(_ui->pushButtonColor, &QAbstractButton::released, this, &MainWindow::push_button_colors);
+	connect(_ui->pushButtonWorkfolder, &QAbstractButton::released, this, &MainWindow::push_button_workfolder);
+	connect(_ui->pushButtonStartStop, &QAbstractButton::released, this, &MainWindow::start_stop_simulation);
+	connect(_ui->pushButtonSpinSpiral, &QAbstractButton::released, this, &MainWindow::push_button_spin_spiral);
+	connect(_ui->pushButtonSkyrmions, &QAbstractButton::released, this, &MainWindow::push_button_skyrmions);
+	connect(_ui->pushButtonFerromagnet, &QAbstractButton::released, this, &MainWindow::push_button_ferromagnet);
+	connect(_ui->pushButtonRandomSpin, &QAbstractButton::released, this, &MainWindow::push_button_random_spin);
+	connect(_ui->pushButtonAnisotropy, &QAbstractButton::released, this, &MainWindow::push_button_anisotropy);
+	connect(_ui->comboBoxProgramType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
+		this, &MainWindow::program_type_selected);
+	connect(_ui->comboBoxLatticeType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
+		this, &MainWindow::lattice_type_selected);
+	connect(_ui->actionClose, &QAction::triggered, this, &QMainWindow::close);
 }
 
 MainWindow::~MainWindow()
@@ -135,49 +156,48 @@ void MainWindow::start_stop_simulation(void)
 		_simulationThread = new QThread(); // Thread to run simulation in.
 
 		// Connect start of thread with the start of simulation.
-		connect(_simulationThread, SIGNAL(started()), simulationProgram, SLOT(main()));
+		connect(_simulationThread, &QThread::started, simulationProgram, &SimulationProgram::main);
 
 		// obtain lattice and spin configuration in GUI thread for graphical output during simulation and as
 		// cache for graphical output until next simulation starts.
-		connect(simulationProgram, 
-			SIGNAL(send_crystal_structure(QSharedPointer<Lattice>, QSharedPointer<SpinOrientation>, int)), this,
-			SLOT(receive_system_cache(QSharedPointer<Lattice>, QSharedPointer<SpinOrientation>, int)),
-			Qt::DirectConnection);
+		connect(simulationProgram, &SimulationProgram::send_crystal_structure, this,
+			&MainWindow::receive_system_cache, Qt::DirectConnection);
 
-		connect(simulationProgram, SIGNAL(send_hamiltonian(QSharedPointer<Hamiltonian>)), this,
-			SLOT(receive_hamiltonian(QSharedPointer<Hamiltonian>)), Qt::DirectConnection);
+		connect(simulationProgram, &SimulationProgram::send_hamiltonian, this,
+			&MainWindow::receive_hamiltonian, Qt::DirectConnection);
 		
 		// Adjustment of camera postion in openGLWidget to lattice dimensions
-		connect(simulationProgram, SIGNAL(send_camera_adjustment_request()), _ui->openGLWidget, 
-			SLOT(adjust_camera_to_lattice()), Qt::DirectConnection);
+		connect(simulationProgram, &SimulationProgram::send_camera_adjustment_request, 
+			_ui->openGLWidget, &OGLWidget::adjust_camera_to_lattice, Qt::DirectConnection);
 		
 		// Trigger repaint of openGLWidget
-		connect(simulationProgram, SIGNAL(send_repaint_request()), _ui->openGLWidget, SLOT(repaint()));
+		connect(simulationProgram, &SimulationProgram::send_repaint_request, 
+			_ui->openGLWidget, static_cast<void (QWidget::*)()>(&QWidget::repaint));
 		
 		// Update Status information of simulation in GUI
-		connect(simulationProgram, SIGNAL(send_simulation_info(QString)), _ui->textEditSimulationInfo,
-			SLOT(setText(QString)));
+		connect(simulationProgram, &SimulationProgram::send_simulation_info, 
+			_ui->textEditSimulationInfo, &QTextEdit::setText);
 
 		// Update Status of simulation number in GUI
-		connect(simulationProgram, SIGNAL(send_simulation_step(QString)), _ui->textEditSimulationStep, 
-			SLOT(setText(QString)));
+		connect(simulationProgram, &SimulationProgram::send_simulation_step, 
+			_ui->textEditSimulationStep, &QTextEdit::setText);
 
 		// Update value of convergence criterion in GUI
-		connect(simulationProgram, SIGNAL(send_simulation_convergence_criterion(QString)), _ui->textEditConvergence,
-			SLOT(setText(QString)));
+		connect(simulationProgram, &SimulationProgram::send_simulation_convergence_criterion, 
+			_ui->textEditConvergence, &QTextEdit::setText);
 
 		// Save QWidget to image
-		connect(simulationProgram, SIGNAL(send_save_image_request(QString)), _ui->openGLWidget, 
-			SLOT(receive_save_request(QString)), Qt::BlockingQueuedConnection);
+		connect(simulationProgram, &SimulationProgram::send_save_image_request, 
+			_ui->openGLWidget, &OGLWidget::receive_save_request, Qt::BlockingQueuedConnection);
 
 		// Quit Thread when simulation is done.
-		connect(simulationProgram, SIGNAL(send_finished()), _simulationThread, SLOT(quit()));
+		connect(simulationProgram, &SimulationProgram::send_finished, _simulationThread, &QThread::quit);
 
-		connect(simulationProgram, SIGNAL(send_finished()), simulationProgram, SLOT(deleteLater()));
+		connect(simulationProgram, &SimulationProgram::send_finished, simulationProgram, &QObject::deleteLater);
 
-		connect(_simulationThread, SIGNAL(finished()), _simulationThread, SLOT(deleteLater()));
+		connect(_simulationThread, &QThread::finished, _simulationThread, &QThread::deleteLater);
 		
-		connect(_simulationThread, SIGNAL(destroyed()), this, SLOT(on_program_done()));
+		connect(_simulationThread, &QThread::destroyed, this, &MainWindow::program_done);
 		
 		// Move simulation to separate thread
 		simulationProgram->moveToThread(_simulationThread);
@@ -222,7 +242,7 @@ void MainWindow::receive_hamiltonian(QSharedPointer<Hamiltonian> hamiltonian)
 	_ui->openGLWidget->set_hamiltonian(hamiltonian);
 }
 
-void MainWindow::on_program_done(void)
+void MainWindow::program_done(void)
 {
 	/**
 	Clean-up work after Thread with simulation is done.
@@ -239,7 +259,7 @@ void MainWindow::on_program_done(void)
 	}
 }
 
-void MainWindow::on_program_type_selected(QString qString)
+void MainWindow::program_type_selected(const QString &qString)
 {
 	/**
 	* enable/disable GUI elements according to selected program type.
@@ -253,7 +273,8 @@ void MainWindow::on_program_type_selected(QString qString)
 		{
 			_experiment01Window = new Experiment01Window(this);
 			_experiment01Window->setAttribute(Qt::WA_DeleteOnClose);
-			connect(_experiment01Window, SIGNAL(destroyed()), this, SLOT(on_experiment01_window_destroyed()));
+			connect(_experiment01Window, &Experiment01Window::destroyed, 
+				this, &MainWindow::experiment01_window_destroyed);
 			_experiment01Window->show();
 		}
 	}
@@ -269,7 +290,8 @@ void MainWindow::on_program_type_selected(QString qString)
 				_excitationFreqWindow->set_spin_array(_spinOrientation->get_spin_array(),
 								_spinOrientation->get_number_atoms());
 			}
-			connect(_excitationFreqWindow, SIGNAL(destroyed()), this, SLOT(on_excitation_freq_window_destroyed()));
+			connect(_excitationFreqWindow, &ExcitationFrequencyWindow::destroyed, 
+				this, &MainWindow::excitation_freq_window_destroyed);
 			_excitationFreqWindow->show();
 		}
 	}
@@ -324,7 +346,7 @@ void MainWindow::on_program_type_selected(QString qString)
 	}
 }
 
-void MainWindow::on_push_button_colors(void)
+void MainWindow::push_button_colors(void)
 {
 	/**
 	Open window to specify graphical output in the GUI (Spins, color maps).
@@ -335,14 +357,15 @@ void MainWindow::on_push_button_colors(void)
 		_colorsWindow = new ColorsWindow(_ui->openGLWidget, this);
 		_colorsWindow->setAttribute(Qt::WA_DeleteOnClose, true);
 
-		connect(_colorsWindow, SIGNAL(send_repaint_request()), _ui->openGLWidget, SLOT(repaint()));
+		connect(_colorsWindow, &ColorsWindow::send_repaint_request, 
+			_ui->openGLWidget, static_cast<void (QWidget::*)()>(&QWidget::repaint));
 
-		connect(_colorsWindow, SIGNAL(destroyed()), this, SLOT(on_colors_window_destroyed()));
+		connect(_colorsWindow, &ColorsWindow::destroyed, this, &MainWindow::colors_window_destroyed);
 		_colorsWindow->open();
 	}
 }
 
-void MainWindow::on_colors_window_destroyed()
+void MainWindow::colors_window_destroyed()
 {
 	/**
 	Reset member pointer to zero after window deletion.
@@ -351,19 +374,19 @@ void MainWindow::on_colors_window_destroyed()
 	_colorsWindow = NULL;
 }
 
-void MainWindow::on_experiment01_window_destroyed()
+void MainWindow::experiment01_window_destroyed()
 {
 	_experiment01Window = NULL;
 	_ui->comboBoxProgramType->setCurrentIndex(0);
 }
 
-void MainWindow::on_excitation_freq_window_destroyed()
+void MainWindow::excitation_freq_window_destroyed()
 {
 	_excitationFreqWindow = NULL;
 	_ui->comboBoxProgramType->setCurrentIndex(0);
 }
 
-void MainWindow::on_anisotropy_button(void)
+void MainWindow::push_button_anisotropy(void)
 {
 	/**
 	Open window for specification of anisotropy energies.
@@ -372,7 +395,7 @@ void MainWindow::on_anisotropy_button(void)
 	_guiEnergyElements->open_anisotropy_window();
 }
 
-void MainWindow::on_push_button_workfolder(void)
+void MainWindow::push_button_workfolder(void)
 {
 	/**
 	Open dialog to specify a workfolder (used for text output).
@@ -381,7 +404,7 @@ void MainWindow::on_push_button_workfolder(void)
 	read_workfolder();
 }
 
-void MainWindow::on_push_button_random_spin(void)
+void MainWindow::push_button_random_spin(void)
 {
 	/**
 	When a spin configuration has been displayed to the GUI and a simulation is stopped, this button can be
@@ -394,7 +417,7 @@ void MainWindow::on_push_button_random_spin(void)
 	}
 }
 
-void MainWindow::on_push_button_ferromagnet(void)
+void MainWindow::push_button_ferromagnet(void)
 {
 	/**
 	When a spin configuration has been displayed to the GUI and a simulation is stopped, this button can be
@@ -408,7 +431,7 @@ void MainWindow::on_push_button_ferromagnet(void)
 	}
 }
 
-void MainWindow::on_push_button_spin_spiral(void)
+void MainWindow::push_button_spin_spiral(void)
 {
 	/**
 	When a spin configuration has been displayed to the GUI and a simulation is stopped, this button can be
@@ -422,7 +445,7 @@ void MainWindow::on_push_button_spin_spiral(void)
 	}
 }
 
-void MainWindow::on_push_button_skyrmions(void)
+void MainWindow::push_button_skyrmions(void)
 {
 	/**
 	When a spin configuration has been displayed to the GUI and a simulation is stopped, this button can be
@@ -436,7 +459,7 @@ void MainWindow::on_push_button_skyrmions(void)
 	}
 }
 
-void MainWindow::on_lattice_type_selected(QString qString)
+void MainWindow::lattice_type_selected(const QString &qString)
 {
 	_guiLatticeElements->update_to_lattice_type(qString);
 }
@@ -503,7 +526,7 @@ void MainWindow::unblock_simulation_start(void)
 	}
 }
 
-int MainWindow::simulation_running(void)
+int MainWindow::simulation_running(void) const
 {
 	if (_simulationThread == NULL)
 	{
@@ -544,8 +567,7 @@ void MainWindow::read_workfolder(void)
 		}
 		WorkfolderWindow* workfolder = new WorkfolderWindow();
 		workfolder->setAttribute(Qt::WA_DeleteOnClose, true);
-		connect(workfolder, SIGNAL(send_select_other()), this,
-			SLOT(open_workfolder_dialog()));
+		connect(workfolder, &WorkfolderWindow::send_select_other, this, &MainWindow::open_workfolder_dialog);
 		workfolder->set_text_edit(QString::fromStdString(_workfolder));
 		workfolder->exec();
 	}

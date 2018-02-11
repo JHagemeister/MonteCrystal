@@ -6,8 +6,8 @@
 
 // Qt includes
 #include <QDialog>
-#include <QStringList>
-#include <QStringListModel>
+class QStringList;
+class QStringListModel;
 
 // Form include
 #include "ui_anisotropy.h"
@@ -26,9 +26,9 @@ public:
 	~AnisotropyWindow();
 
 	public slots:
-	void on_add_clicked(); ///< add anisotropy energy
-	void on_delete_clicked(); ///< remove selected anisotropy energy
-	void on_ok_clicked(); ///< read parameters and close window
+	void add_clicked(); ///< add anisotropy energy
+	void delete_clicked(); ///< remove selected anisotropy energy
+	void ok_clicked(); ///< read parameters and close window
 
 protected:
 	Ui::Dialog _ui; ///< ui elements

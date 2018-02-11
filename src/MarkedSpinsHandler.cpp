@@ -27,6 +27,8 @@
 #include "OGLWidget.h"
 #include "MarkedSpinsRequestWindow.h"
 
+#include <QMessageBox>
+
 #include "MyMath.h"
 
 #include "MainWindow.h"
@@ -61,7 +63,8 @@ void MarkedSpinsHandler::process_spins(std::vector<int> indexes)
 		if (_requestWindow == NULL)
 		{
 			_requestWindow = new MarkedSpinsRequestWindow(this, _mainWindow);
-			connect(_requestWindow, SIGNAL(rejected()), this, SLOT(on_request_window_rejected()));
+			connect(_requestWindow, &QDialog::rejected,
+				this, &MarkedSpinsHandler::request_window_rejected);
 			_mainWindow->block_simulation_start();
 		}
 		else
@@ -179,7 +182,7 @@ void MarkedSpinsHandler::clear_defects_and_unlock_all(void)
 	_oglWidget->repaint();
 }
 
-void MarkedSpinsHandler::show_defects(void)
+void MarkedSpinsHandler::show_defects(void) const
 {
 	QMessageBox messageBox;
 	QString qString("Defects: ");
@@ -216,7 +219,7 @@ void MarkedSpinsHandler::show_defects(void)
 	messageBox.exec();
 }
 
-void MarkedSpinsHandler::show_locked_spins(void)
+void MarkedSpinsHandler::show_locked_spins(void) const
 {
 	QMessageBox messageBox;
 	QString qString("Inactive sites: ");
@@ -244,7 +247,7 @@ std::unordered_map <int, UniaxialAnisotropyStruct> MarkedSpinsHandler::get_aniso
 	return _anisotropyDefects;
 }
 
-void MarkedSpinsHandler::on_request_window_rejected(void)
+void MarkedSpinsHandler::request_window_rejected(void)
 {
 	int order = 0;
 	double parameter = 0;

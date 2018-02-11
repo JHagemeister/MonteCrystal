@@ -47,9 +47,9 @@ public:
 	void restore_spin_configuration(void);
 
 	public slots:
-	void on_ferromagnet_window_destroyed(void);
-	void on_skyrmion_window_destroyed(void);
-	void on_spin_spiral_window_destroyed(void);
+	void ferromagnet_window_destroyed(void);
+	void skyrmion_window_destroyed(void);
+	void spin_spiral_window_destroyed(void);
 
 protected:
 	void close_all_spin_state_windows(void);

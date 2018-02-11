@@ -9,17 +9,11 @@
 
 // Qt includes
 #include <QtWidgets/QMainWindow>
-#include <QFileDialog>
-#include <QThread>
 #include <QSharedPointer>
-#include <QFileDialog>
-#include <QTreeView>
-#include <QMessageBox>
-#include <QCheckBox>
-#include <QBoxLayout>
 #include <QString>
-#include <QCloseEvent>
-#include <QKeyEvent>
+class QThread;
+class QCloseEvent;
+class QKeyEvent;
 
 
 // Form include
@@ -70,32 +64,32 @@ public:
 	void block_simulation_start(void);
 	void unblock_simulation_start(void);
 
-	int simulation_running(void);
+	int simulation_running(void) const;
 
 public slots:
 	void start_stop_simulation(void); ///< start new simulation or stop currently running simulation 
 
-	void on_push_button_colors(void);
-	void on_colors_window_destroyed();
+	void push_button_colors(void);
+	void colors_window_destroyed();
 
-	void on_experiment01_window_destroyed();
-	void on_excitation_freq_window_destroyed();
+	void experiment01_window_destroyed();
+	void excitation_freq_window_destroyed();
 	
-	void on_anisotropy_button(void); ///< open window for specification of anisotropy energies
+	void push_button_anisotropy(void); ///< open window for specification of anisotropy energies
 	
-	void on_push_button_workfolder(void); ///< open file dialogue to specify workfolder for ouput
+	void push_button_workfolder(void); ///< open file dialogue to specify workfolder for ouput
 	
-	void on_push_button_random_spin(void); ///< generate random spin configuration
-	void on_push_button_ferromagnet(void); ///< set ferromagnetic state
-	void on_push_button_spin_spiral(void); ///< open dialogue to set spin spiral
-	void on_push_button_skyrmions(void); ///< open dialogue to add skymrion
+	void push_button_random_spin(void); ///< generate random spin configuration
+	void push_button_ferromagnet(void); ///< set ferromagnetic state
+	void push_button_spin_spiral(void); ///< open dialogue to set spin spiral
+	void push_button_skyrmions(void); ///< open dialogue to add skymrion
 	
-	void on_lattice_type_selected(QString qString); ///< update lattice parameter to selected lattice type
-	void on_program_type_selected(QString qString); ///< update parameters to selected program type
+	void lattice_type_selected(const QString &qString); ///< update lattice parameter to selected lattice type
+	void program_type_selected(const QString &qString); ///< update parameters to selected program type
 	void receive_system_cache(QSharedPointer<Lattice> lattice,
 		QSharedPointer<SpinOrientation> spinOrientation, int boolNew); ///< keep lattice and spins of last simulation
 	void receive_hamiltonian(QSharedPointer<Hamiltonian> hamiltonian);
-	void on_program_done(void); ///< do clean-up work when simulation program is done or aborted
+	void program_done(void); ///< do clean-up work when simulation program is done or aborted
 
 	void open_workfolder_dialog(); ///< open directory dialog to specify working directory
 

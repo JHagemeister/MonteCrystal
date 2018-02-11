@@ -54,19 +54,14 @@ Tip::~Tip()
 	_distanceArray = NULL;
 }
 
-double Tip::single_energy(int position)
+double Tip::single_energy(const int &position) const
 {
 	double energy = 0;
 	energy = -MyMath::dot_product(_tipDirection, _spinArray[position]);
 	return energy * _distanceArray[position];
 }
 
-double Tip::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
-
-Threedim Tip::effective_field(int position)
+Threedim Tip::effective_field(const int &position) const
 {
 	return MyMath::mult(_tipDirection, _distanceArray[position]);
 }

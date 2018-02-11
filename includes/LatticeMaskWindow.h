@@ -21,7 +21,7 @@ public:
 	~LatticeMaskWindow();
 
 	public slots:
-	void on_ok_button(void);
+	void ok_button(void);
 
 private:
 	Ui::LatticeMaskWindow ui;

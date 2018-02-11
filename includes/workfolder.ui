@@ -152,56 +152,7 @@ background-color: rgb(235, 241, 255, 255);
   <tabstop>textEdit</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButtonOk</sender>
-   <signal>released()</signal>
-   <receiver>Workfolder</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>223</x>
-     <y>342</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>432</x>
-     <y>197</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectOther</sender>
-   <signal>released()</signal>
-   <receiver>Workfolder</receiver>
-   <slot>on_push_button_select_other()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>701</x>
-     <y>320</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>860</x>
-     <y>315</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectOther</sender>
-   <signal>released()</signal>
-   <receiver>Workfolder</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>642</x>
-     <y>342</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>432</x>
-     <y>197</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_push_button_select_other()</slot>
  </slots>

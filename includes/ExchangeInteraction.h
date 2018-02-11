@@ -17,10 +17,8 @@ public:
 	ExchangeInteraction(Threedim* spinArray, double energyParameter, int* neighborArray, int nbors, 
 		std::string order);
 	virtual ~ExchangeInteraction();
-	double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-
-	virtual Threedim effective_field(int position);
+	double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 
 	int get_nbors(void) const;
 	int* get_neighbor_array(void) const;

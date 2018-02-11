@@ -35,6 +35,8 @@
 #include <glm/gtx/norm.hpp>
 
 #include <QMouseEvent>
+#include <QMutex>
+#include <QRubberBand>
 
 OGLWidget::OGLWidget(QWidget *parent): 
 	QOpenGLWidget(parent),

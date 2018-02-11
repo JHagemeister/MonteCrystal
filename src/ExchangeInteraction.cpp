@@ -42,7 +42,7 @@ ExchangeInteraction::~ExchangeInteraction()
 {
 }
 
-double ExchangeInteraction::single_energy(int position)
+double ExchangeInteraction::single_energy(const int &position) const
 {
 	double energy = 0;
 	int neighbor = 0; // index of neighbor atom
@@ -60,14 +60,7 @@ double ExchangeInteraction::single_energy(int position)
 	return energy; // energy of single atom
 }
 
-double ExchangeInteraction::interaction_energy_between_two_spins(int position1, int position2)
-{
-	double energy = 0;
-	energy = -_energyParameter * MyMath::dot_product(_spinArray[position1], _spinArray[position2]);
-	return energy; // energy of single atom
-}
-
-Threedim ExchangeInteraction::effective_field(int position)
+Threedim ExchangeInteraction::effective_field(const int &position) const
 {
 	Threedim field = {0,0,0};
 	int neighbor = 0; // index of neighbor atom

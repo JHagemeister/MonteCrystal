@@ -14,13 +14,12 @@
 #include <memory>
 
 // Qt includes
-#include <QWidget>
-#include <QEvent>
+class QWidget;
+class QMutex;
+class QRubberBand;
+class QOpenGLFunctions_3_3_Core;
 #include <QOpenGLWidget>
-#include <QMutex>
 #include <QSharedPointer>
-#include <QRubberBand>
-#include <QOpenGLFunctions_3_3_Core>
 
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>

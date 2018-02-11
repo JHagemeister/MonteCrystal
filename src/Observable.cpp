@@ -39,24 +39,24 @@ Observable::~Observable()
 {
 }
 
-void Observable::set_measurement_index(int measurementIndex)
+void Observable::set_measurement_index(const int &measurementIndex)
 {
 	_measurementIndex = measurementIndex;
 }
 
-void Observable::set_number_measurements(int numberMeasurements)
+void Observable::set_number_measurements(const int &numberMeasurements)
 {
 	_numberMeasurements = numberMeasurements;
 	clear_storage();
 	set_measurement_index(0);
 }
 
-int Observable::get_measurement_index(void)
+int Observable::get_measurement_index(void) const
 {
 	return _measurementIndex;
 }
 
-int Observable::get_num_measurements(void)
+int Observable::get_num_measurements(void) const
 {
 	return _numberMeasurements;
 }

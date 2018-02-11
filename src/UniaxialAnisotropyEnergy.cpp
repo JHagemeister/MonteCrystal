@@ -43,18 +43,13 @@ UniaxialAnisotropyEnergy::~UniaxialAnisotropyEnergy()
 {
 }
 
-double UniaxialAnisotropyEnergy::single_energy(int position)
+double UniaxialAnisotropyEnergy::single_energy(const int &position) const
 {
 	double cos = MyMath::dot_product(_spinArray[position], _direction);
 	return (_energyParameter * (1 - cos * cos));
 }
 
-double UniaxialAnisotropyEnergy::interaction_energy_between_two_spins(int position1, int position2)
-{
-	return 0;
-}
-
-Threedim UniaxialAnisotropyEnergy::effective_field(int position)
+Threedim UniaxialAnisotropyEnergy::effective_field(const int &position) const
 {
 	double factor = 2*_energyParameter*MyMath::dot_product(_direction,_spinArray[position]);
 	Threedim field = MyMath::mult(_direction,factor);

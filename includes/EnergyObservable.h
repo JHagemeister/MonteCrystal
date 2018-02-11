@@ -21,11 +21,11 @@ class EnergyObservable : public Observable
 public:
 	EnergyObservable(int numberMeasurements, QSharedPointer<Hamiltonian> hamilton,	int numberAtoms);
 	virtual ~EnergyObservable();
-	virtual std::string get_steps_header(void);
-	virtual std::string get_mean_header(void);
+	virtual std::string get_steps_header(void) const;
+	virtual std::string get_mean_header(void) const;
 	virtual void take_value(void);
-	virtual std::string get_step_value(int index);
-	virtual std::string get_mean_value(double temperature);
+	virtual std::string get_step_value(const int &index) const;
+	virtual std::string get_mean_value(const double &temperature) const;
 	virtual void clear_storage();
 
 protected:

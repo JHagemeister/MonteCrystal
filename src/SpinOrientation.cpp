@@ -55,8 +55,6 @@ SpinOrientation::SpinOrientation(int numberAtoms, std::shared_ptr<RanGen> ranGen
 	_inactiveSites = NULL;
 	// number of inactive sites
 	_numberInactiveSites = 0;
-
-	_siteList = NULL;
 	
 	// store a single spin in cache. needed for Monte Carlo single spin update mechanism
 	// position of lattice site on which latest trial change is performed
@@ -70,7 +68,6 @@ SpinOrientation::~SpinOrientation()
 	delete[] _spinArray;
 	delete[] _activeSites;
 	delete[] _inactiveSites;
-	delete[] _siteList;
 }
 
 void SpinOrientation::read_spin_configuration(std::string fname)
@@ -205,7 +202,7 @@ void SpinOrientation::read_spin_configuration(std::string fname)
 	delete[] activeSitesTmp;
 }
 
-void SpinOrientation::show_spin_configuraion(void)
+void SpinOrientation::show_spin_configuraion(void) const
 {
 	/**
 	* Show spin orientations on console.
@@ -359,17 +356,16 @@ int SpinOrientation::get_number_inactive_sites(void) const
 	return _numberInactiveSites;
 }
 
-int* SpinOrientation::get_activity_list()
+int* SpinOrientation::get_activity_list() const
 {
-	delete[] _siteList;
-	_siteList = new int[_numberAtoms];
+	int *siteList = new int[_numberAtoms];
 	for (int i = 0; i < _numberAtoms; ++i)
 	{
-		_siteList[i] = 0; // inactive site
+		siteList[i] = 0; // inactive site
 	}
 	for (int i = 0; i < _numberActiveSites; ++i)
 	{
-		_siteList[_activeSites[i]] = 1;
+		siteList[_activeSites[i]] = 1;
 	}
-	return _siteList;
+	return siteList;
 }

@@ -22,6 +22,8 @@
 
 #include "SimulationMethod.h"
 
+#include <QMutex>
+
 // forward includes
 #include "SpinOrientation.h"
 #include "Hamiltonian.h"

@@ -25,7 +25,7 @@ public:
 		Lattice* lattice);
 	virtual void set_spin_spiral(Threedim kVector, Threedim position, int helicity, Lattice* lattice);
 	virtual void set_ferromagnet(Threedim direction);
-	virtual Threedim magnetisation(void);
+	virtual Threedim magnetisation(void) const;
 
 	virtual void single_orientation(int position);
 	virtual void restore_single_orientation(void);;

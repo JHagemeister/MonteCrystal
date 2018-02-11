@@ -41,7 +41,7 @@ BiquadraticInteraction::~BiquadraticInteraction()
 {
 }
 
-double BiquadraticInteraction::single_energy(int position)
+double BiquadraticInteraction::single_energy(const int &position) const
 {
 	double energy = 0;
 	int neighbor = 0; // index of neighbor atom
@@ -57,14 +57,7 @@ double BiquadraticInteraction::single_energy(int position)
 	return energy; // energy of single atom
 }
 
-double BiquadraticInteraction::interaction_energy_between_two_spins(int position1, int position2)
-{
-	double energy = 0;
-	energy = -_energyParameter * pow(MyMath::dot_product(_spinArray[position1], _spinArray[position2]), 2);
-	return energy; // energy of single atom
-}
-
-Threedim BiquadraticInteraction::effective_field(int position)
+Threedim BiquadraticInteraction::effective_field(const int &position) const
 {
 	Threedim field = { 0,0,0 };
 	int neighbor = 0; // index of neighbor atom

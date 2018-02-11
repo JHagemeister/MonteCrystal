@@ -553,7 +553,7 @@ background-color: rgb(235, 241, 255, 255);
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pushButtonApply">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
            <horstretch>0</horstretch>
@@ -593,40 +593,7 @@ background-color: rgb(235, 241, 255, 255);
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButtonOk</sender>
-   <signal>released()</signal>
-   <receiver>Colors</receiver>
-   <slot>on_apply_and_close_button()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1059</x>
-     <y>1010</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>458</x>
-     <y>849</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>released()</signal>
-   <receiver>Colors</receiver>
-   <slot>on_apply_button()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>182</x>
-     <y>965</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>96</x>
-     <y>884</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_change_in_spin_color_table_widget(int,int)</slot>
   <slot>on_change_in_color_map_table_widget(int,int)</slot>

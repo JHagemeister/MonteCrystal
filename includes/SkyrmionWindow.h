@@ -18,8 +18,8 @@ public:
 	~SkyrmionWindow();
 
 public slots:
-	void on_push_button_apply(void); ///< update spin configuration to add specified skyrmion
-	void on_push_button_undo(void); ///< reset initial spin configuration
+	void push_button_apply(void); ///< update spin configuration to add specified skyrmion
+	void push_button_undo(void); ///< reset initial spin configuration
 	void receive_skyrmion_center(Twodim center); ///< receive skyrmion center postition from mouse click
 
 private:

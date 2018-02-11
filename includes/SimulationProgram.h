@@ -20,7 +20,7 @@
 // Qt includes
 #include <QObject>
 #include <QSharedPointer>
-#include <QMutex>
+class QMutex;
 
 //own
 #include "typedefs.h"

@@ -21,10 +21,9 @@ public:
 	UniaxialAnisotropyEnergy(Threedim* spinArray, double energyParameter, Threedim direction);
 	virtual ~UniaxialAnisotropyEnergy();
 	
-	virtual double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
+	virtual double single_energy(const int &position) const;
 	
-	virtual Threedim effective_field(int position);
+	virtual Threedim effective_field(const int &position) const;
 
 protected:
 	Threedim _direction; ///< spatial orientation of anisotropy axis

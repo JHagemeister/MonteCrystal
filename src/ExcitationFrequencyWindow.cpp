@@ -22,13 +22,11 @@
 
 #include "ExcitationFrequencyWindow.h"
 
+#include <QThread>
 #include "OGLWidget.h"
-
 #include "QFileDialog"
-
 #include "MyMath.h"
 #include "Functions.h"
-
 #include "Configuration.h"
 
 #ifdef WIN
@@ -71,6 +69,14 @@ ExcitationFrequencyWindow::ExcitationFrequencyWindow(OGLWidget* oglWidget, std::
 	setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
 
 	setup_elements();
+
+	connect(_ui.pushButtonClose, &QAbstractButton::released, this, &ExcitationFrequencyWindow::stop_visualization);
+	connect(_ui.pushButtonNext, &QAbstractButton::released, this, &ExcitationFrequencyWindow::button_next);
+	connect(_ui.pushButtonPause, &QAbstractButton::released, this, &ExcitationFrequencyWindow::button_pause);
+	connect(_ui.pushButtonPrevious, &QAbstractButton::released, this, &ExcitationFrequencyWindow::button_previous);
+	connect(_ui.pushButtonVideoSeq, &QAbstractButton::released, this, &ExcitationFrequencyWindow::button_save_image_sequence);
+	connect(_ui.pushButton_Eigenvalues, &QAbstractButton::released, this, &ExcitationFrequencyWindow::button_eigenvalues);
+	connect(_ui.pushButton_Eigenvectors, &QAbstractButton::released, this, &ExcitationFrequencyWindow::button_eigenvectors);
 }
 
 ExcitationFrequencyWindow::~ExcitationFrequencyWindow() 
@@ -128,26 +134,27 @@ void ExcitationFrequencyWindow::start_visualization()
 		
 		_visualizationThread = new QThread();
 
-		connect(_visualizationThread, SIGNAL(started()), excitationVisualization, SLOT(visualize()));
+		connect(_visualizationThread, &QThread::started, excitationVisualization, &ExcitationVisualization::visualize);
 
-		connect(excitationVisualization, SIGNAL(send_repaint_request()), _oglWidget, SLOT(repaint()));
+		connect(excitationVisualization, &ExcitationVisualization::send_repaint_request, _oglWidget, 
+			static_cast<void (QWidget::*)()>(&QWidget::repaint));
 		
-		connect(excitationVisualization, SIGNAL(send_save_image_request(int)), this,
-			SLOT(receive_save_image_request(int)));
+		connect(excitationVisualization, &ExcitationVisualization::send_save_image_request, this,
+			&ExcitationFrequencyWindow::receive_save_image_request);
 
-		connect(excitationVisualization, SIGNAL(send_points(std::vector<int>)), this,
-			SLOT(receive_points(std::vector<int>)), Qt::DirectConnection);
+		connect(excitationVisualization, &ExcitationVisualization::send_points, this,
+			&ExcitationFrequencyWindow::receive_points, Qt::DirectConnection);
 
-		connect(excitationVisualization, SIGNAL(send_video_sequence_finished()), this,
-			SLOT(receive_video_finished()));
+		connect(excitationVisualization, &ExcitationVisualization::send_video_sequence_finished, this,
+			&ExcitationFrequencyWindow::receive_video_finished);
 
 		connect(_visualizationThread, &QThread::finished, excitationVisualization, &QObject::deleteLater);
 
-		connect(excitationVisualization, SIGNAL(send_finished()), _visualizationThread, SLOT(quit()));
+		connect(excitationVisualization, &ExcitationVisualization::send_finished, _visualizationThread, &QThread::quit);
 
-		connect(_visualizationThread, SIGNAL(finished()), _visualizationThread, SLOT(deleteLater()));
+		connect(_visualizationThread, &QThread::finished, _visualizationThread, &QThread::deleteLater);
 
-		connect(_visualizationThread, SIGNAL(destroyed()), this, SLOT(close()));
+		connect(_visualizationThread, &QObject::destroyed, this, &QWidget::close);
 		
 		excitationVisualization->moveToThread(_visualizationThread);
 		_visualizationThread->start();
@@ -178,7 +185,7 @@ void ExcitationFrequencyWindow::stop_visualization()
 	}
 }
 
-void ExcitationFrequencyWindow::on_button_eigenvalues(void)
+void ExcitationFrequencyWindow::button_eigenvalues(void)
 {
 	/**
 	Open window to allow specification of file to read eigenvalues in from.
@@ -207,7 +214,7 @@ void ExcitationFrequencyWindow::on_button_eigenvalues(void)
 	}
 }
 
-void ExcitationFrequencyWindow::on_button_eigenvectors(void)
+void ExcitationFrequencyWindow::button_eigenvectors(void)
 {
 	/**
 	Open window to specify file for eigenvector read-in.
@@ -234,7 +241,7 @@ void ExcitationFrequencyWindow::on_button_eigenvectors(void)
 	}
 }
 
-void ExcitationFrequencyWindow::on_button_next(void)
+void ExcitationFrequencyWindow::button_next(void)
 {
 	/**
 	Change to next eigenstate.
@@ -259,7 +266,7 @@ void ExcitationFrequencyWindow::on_button_next(void)
 	}
 }
 
-void ExcitationFrequencyWindow::on_button_previous(void)
+void ExcitationFrequencyWindow::button_previous(void)
 {
 	/**
 	Show previous eigenstate if it is not already the first eigenstate.
@@ -273,7 +280,7 @@ void ExcitationFrequencyWindow::on_button_previous(void)
 	}
 }
 
-void ExcitationFrequencyWindow::on_button_pause(void)
+void ExcitationFrequencyWindow::button_pause(void)
 {
 	/**
 	Pause or continue visualization of eigenstates.
@@ -292,7 +299,7 @@ void ExcitationFrequencyWindow::on_button_pause(void)
 
 }
 
-void ExcitationFrequencyWindow::on_button_save_image_sequence(void)
+void ExcitationFrequencyWindow::button_save_image_sequence(void)
 {
 	/**
 	Trigger output of image sequence of currently visualized eigenstate.
@@ -309,7 +316,7 @@ void ExcitationFrequencyWindow::on_button_save_image_sequence(void)
 	_currentSubfolder.append("/" );
 }
 
-void ExcitationFrequencyWindow::on_change_in_table_widget_angle(int row, int column)
+void ExcitationFrequencyWindow::change_in_table_widget_angle(int row, int column)
 {
 	/**
 	Respond to user triggered rescale request of eigenvector.
@@ -322,7 +329,7 @@ void ExcitationFrequencyWindow::on_change_in_table_widget_angle(int row, int col
 	*_parameters.rescale = 1;
 }
 
-void ExcitationFrequencyWindow::on_change_in_table_widget_speed(int row, int column)
+void ExcitationFrequencyWindow::change_in_table_widget_speed(int row, int column)
 {
 	/**
 	Change delay time in visualization loop.
@@ -334,7 +341,7 @@ void ExcitationFrequencyWindow::on_change_in_table_widget_speed(int row, int col
 	}
 }
 
-void ExcitationFrequencyWindow::on_change_in_table_widget_segmentation(int row, int column)
+void ExcitationFrequencyWindow::change_in_table_widget_segmentation(int row, int column)
 {
 	if (_ui.tableWidgetSegmentation->item(row, column))
 	{
@@ -417,14 +424,14 @@ void ExcitationFrequencyWindow::setup_elements(void)
 
 	_ui.tableWidgetSegmentation->setItem(0, 0, new QTableWidgetItem(QString::number(*_parameters.segmentationThreshold)));
 
-	connect(_ui.tableWidgetAngle, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_table_widget_angle(int, int)));
+	connect(_ui.tableWidgetAngle, &QTableWidget::cellChanged, this,
+		&ExcitationFrequencyWindow::change_in_table_widget_angle);
 
-	connect(_ui.tableWidgetSpeed, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_table_widget_speed(int, int)));
+	connect(_ui.tableWidgetSpeed, &QTableWidget::cellChanged, this,
+		&ExcitationFrequencyWindow::change_in_table_widget_speed);
 
-	connect(_ui.tableWidgetSegmentation, SIGNAL(cellChanged(int, int)), this,
-		SLOT(on_change_in_table_widget_segmentation(int, int)));
+	connect(_ui.tableWidgetSegmentation, &QTableWidget::cellChanged, this,
+		&ExcitationFrequencyWindow::change_in_table_widget_segmentation);
 }
 
 void ExcitationFrequencyWindow::update_GUI()

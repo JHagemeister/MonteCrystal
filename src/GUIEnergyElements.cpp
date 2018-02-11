@@ -114,8 +114,10 @@ void GUIEnergyElements::setup_elements(void)
 	ratio.push_back(40);
 	_ui->tableWidgetDMEnergy->set_row_ratio(ratio);
 
-	connect(_ui->pushButtonNeel, SIGNAL(released()), this, SLOT(on_push_button_neel()));
-	connect(_ui->pushButtonChiral, SIGNAL(released()), this, SLOT(on_push_button_chiral()));
+	connect(_ui->pushButtonNeel, &QAbstractButton::released, 
+		this, &GUIEnergyElements::push_button_neel);
+	connect(_ui->pushButtonChiral, &QAbstractButton::released, 
+		this, &GUIEnergyElements::push_button_chiral);
 }
 
 void GUIEnergyElements::set_default_values(void)
@@ -231,7 +233,7 @@ void GUIEnergyElements::open_anisotropy_window(void)
 	{
 		_anisoWindow = new AnisotropyWindow(_hexAnisotropies, _anisotropies);
 		_anisoWindow->setAttribute(Qt::WA_DeleteOnClose, true);
-		connect(_anisoWindow, SIGNAL(destroyed()), this, SLOT(on_anisotropy_window_destroyed()));
+		connect(_anisoWindow, &QObject::destroyed, this, &GUIEnergyElements::anisotropy_window_destroyed);
 		_anisoWindow->open();
 	}
 	else
@@ -240,7 +242,7 @@ void GUIEnergyElements::open_anisotropy_window(void)
 	}
 }
 
-void GUIEnergyElements::on_push_button_neel(void)
+void GUIEnergyElements::push_button_neel(void)
 {
 	QString styleSheet = "background: rgb(255, 254, 242)";
 	_ui->pushButtonNeel->setStyleSheet(styleSheet);
@@ -250,7 +252,7 @@ void GUIEnergyElements::on_push_button_neel(void)
 	_ui->pushButtonChiral->setStyleSheet(styleSheet);
 }
 
-void GUIEnergyElements::on_push_button_chiral(void)
+void GUIEnergyElements::push_button_chiral(void)
 {
 	QString styleSheet = "background: rgb(255, 254, 242)";
 	_ui->pushButtonChiral->setStyleSheet(styleSheet);
@@ -260,7 +262,7 @@ void GUIEnergyElements::on_push_button_chiral(void)
 	_ui->pushButtonNeel->setStyleSheet(styleSheet);
 }
 
-void GUIEnergyElements::on_anisotropy_window_destroyed(void)
+void GUIEnergyElements::anisotropy_window_destroyed(void)
 {
 	_anisoWindow = NULL;
 }

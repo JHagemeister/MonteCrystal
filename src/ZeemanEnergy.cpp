@@ -40,17 +40,12 @@ ZeemanEnergy::~ZeemanEnergy()
 {
 }
 
-double ZeemanEnergy::single_energy(int position)
+double ZeemanEnergy::single_energy(const int &position) const
 {
 	return -MyMath::dot_product(_spinArray[position], _direction) * _energyParameter;
 }
 
-double ZeemanEnergy::interaction_energy_between_two_spins(int position1, int position2) 
-{
-	return 0;
-}
-
-Threedim ZeemanEnergy::effective_field(int position)
+Threedim ZeemanEnergy::effective_field(const int &position) const
 {
 	return MyMath::mult(_direction,_energyParameter);
 }
@@ -59,7 +54,7 @@ void ZeemanEnergy::set_direction(Threedim direction) {
 	_direction = MyMath::normalize(direction);
 }
 
-Threedim ZeemanEnergy::get_direction(void)
+Threedim ZeemanEnergy::get_direction(void) const
 {
 	return _direction;
 }

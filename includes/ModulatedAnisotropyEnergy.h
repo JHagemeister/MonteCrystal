@@ -20,10 +20,8 @@ public:
 	ModulatedAnisotropyEnergy(Threedim* spinArray, double energyParameter, Threedim direction, 
 		Lattice* lattice, double lambda, double width, int modulationNumber);
 	virtual ~ModulatedAnisotropyEnergy();
-	double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-
-	virtual Threedim effective_field(int position);
+	double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 	
 protected:
 	void setup_anisotropy_array(int modulationNumber);

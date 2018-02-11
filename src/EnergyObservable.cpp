@@ -64,7 +64,7 @@ EnergyObservable::~EnergyObservable()
 	_singleEnergies = NULL;
 }
 
-std::string EnergyObservable::get_steps_header(void)
+std::string EnergyObservable::get_steps_header(void) const
 {
 	/**
 	* This function returns the header for the output file.
@@ -88,7 +88,7 @@ std::string EnergyObservable::get_steps_header(void)
 	return header;
 }
 
-std::string EnergyObservable::get_mean_header(void)
+std::string EnergyObservable::get_mean_header(void) const
 {
 	/**
 	* This function returns the header for the output file.
@@ -115,7 +115,7 @@ void EnergyObservable::take_value(void)
 	++_measurementIndex;
 }
 
-std::string EnergyObservable::get_step_value(int index)
+std::string EnergyObservable::get_step_value(const int &index) const
 {
 	std::stringstream stream;
 	stream << std::setprecision(15);
@@ -139,7 +139,7 @@ std::string EnergyObservable::get_step_value(int index)
 	return stream.str();
 }
 
-std::string EnergyObservable::get_mean_value(double temperature)
+std::string EnergyObservable::get_mean_value(const double &temperature) const
 {
 	std::stringstream stream;
 	stream << std::setprecision(15);

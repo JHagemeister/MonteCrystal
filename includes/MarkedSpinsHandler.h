@@ -15,7 +15,7 @@ class OGLWidget;
 class SpinOrientation;
 class MainWindow;
 
-class MarkedSpinsHandler: QObject
+class MarkedSpinsHandler: public QObject
 {
 	Q_OBJECT
 public:
@@ -35,15 +35,15 @@ public:
 
 	void clear_defects_and_unlock_all(void);
 
-	void show_defects(void);
-	void show_locked_spins(void);
+	void show_defects(void) const;
+	void show_locked_spins(void) const;
 
 	std::unordered_map<int, std::unordered_map<int, double>> get_exchange_defects(void);
 	std::unordered_map<int, std::unordered_map<int, double>> get_dm_defects(void);
 	std::unordered_map <int, UniaxialAnisotropyStruct> get_anisotropy_defects(void);
 
 	public slots:
-	void on_request_window_rejected(void);
+	void request_window_rejected(void);
 
 private:
 	QSharedPointer<SpinOrientation> _spinOrientation;

@@ -194,56 +194,7 @@ background-color: rgb(235, 241, 255, 255);
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton_apply</sender>
-   <signal>released()</signal>
-   <receiver>skyrmion</receiver>
-   <slot>on_push_button_apply()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>69</x>
-     <y>132</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>18</x>
-     <y>104</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_undo</sender>
-   <signal>released()</signal>
-   <receiver>skyrmion</receiver>
-   <slot>on_push_button_undo()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>262</x>
-     <y>142</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>359</x>
-     <y>127</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_ok</sender>
-   <signal>released()</signal>
-   <receiver>skyrmion</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>444</x>
-     <y>142</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>269</x>
-     <y>90</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>on_push_button_apply()</slot>
   <slot>on_push_button_undo()</slot>

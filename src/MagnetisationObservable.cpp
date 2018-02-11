@@ -52,7 +52,7 @@ MagnetisationObservable::~MagnetisationObservable()
 	delete[] _valuesSpinResolved;
 }
 
-std::string MagnetisationObservable::get_steps_header(void)
+std::string MagnetisationObservable::get_steps_header(void) const
 {
 	/**
 	* This function returns the header for the output file.
@@ -83,7 +83,7 @@ std::string MagnetisationObservable::get_steps_header(void)
 	return header;
 }
 
-std::string MagnetisationObservable::get_mean_header(void)
+std::string MagnetisationObservable::get_mean_header(void) const
 {
 	/**
 	* This function returns the header for the output file.
@@ -116,7 +116,7 @@ void MagnetisationObservable::take_value(void)
 	++_measurementIndex;
 }
 
-std::string MagnetisationObservable::get_step_value(int index)
+std::string MagnetisationObservable::get_step_value(const int &index) const
 {
 	/**
 	* Get a measurement result that has been taken.
@@ -147,7 +147,7 @@ std::string MagnetisationObservable::get_step_value(int index)
 	return stream.str();
 }
 
-std::string MagnetisationObservable::get_mean_value(double temperature)
+std::string MagnetisationObservable::get_mean_value(const double &temperature) const
 {
 	/**
 	* Get the mean values and susceptibilities of the measurement results.

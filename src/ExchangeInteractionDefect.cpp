@@ -43,7 +43,7 @@ ExchangeInteractionDefect::~ExchangeInteractionDefect()
 {
 }
 
-double ExchangeInteractionDefect::single_energy(int position)
+double ExchangeInteractionDefect::single_energy(const int &position) const
 {
 	double energy = 0;
 	if (_bondEnergies.count(position) != 0)
@@ -54,32 +54,14 @@ double ExchangeInteractionDefect::single_energy(int position)
 			if (_neighborArray[_nbors * position + i] != -1) // -1 refers to empty entry
 			{
 				neighbor = _neighborArray[_nbors * position + i]; // index of neighbor atom
-				energy -= _bondEnergies[position][i] * MyMath::dot_product(_spinArray[position], _spinArray[neighbor]);
+				energy -= _bondEnergies.at(position)[i] * MyMath::dot_product(_spinArray[position], _spinArray[neighbor]);
 			}
 		}
 	}
 	return energy; // energy of single atom
 }
 
-double ExchangeInteractionDefect::interaction_energy_between_two_spins(int position1, int position2)
-{
-	double energy = 0;
-	if (_bondEnergies.count(position1) != 0)
-	{
-		int neighbor = 0; // index of neighbor atom
-		for (int i = 0; i < _nbors; ++i) // -1 refers to empty entry
-		{
-			if (_neighborArray[_nbors * position1 + i] == position2) // -1 refers to empty entry
-			{
-				neighbor = _neighborArray[_nbors * position1 + i]; // index of neighbor atom
-				energy -= _bondEnergies[position1][i] * MyMath::dot_product(_spinArray[position1], _spinArray[position2]);
-			}
-		}
-	}
-	return energy; // energy of single atom
-}
-
-Threedim ExchangeInteractionDefect::effective_field(int position)
+Threedim ExchangeInteractionDefect::effective_field(const int &position) const
 {
 	Threedim field = { 0,0,0 };
 	if (_bondEnergies.count(position) != 0)
@@ -90,7 +72,7 @@ Threedim ExchangeInteractionDefect::effective_field(int position)
 			if (_neighborArray[_nbors * position + i] != -1) // -1 refers to empty entry
 			{
 				neighbor = _neighborArray[_nbors * position + i]; // index of neighbor atom
-				field = MyMath::add(field, MyMath::mult(_spinArray[neighbor], _bondEnergies[position][i]));
+				field = MyMath::add(field, MyMath::mult(_spinArray[neighbor], _bondEnergies.at(position)[i]));
 			}
 		}
 	}

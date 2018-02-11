@@ -19,10 +19,8 @@ class FourSpinInteraction : public Energy
 public:
 	FourSpinInteraction(Threedim* spinArray, double energyParameter, Fourdim* cells, int nCellsPerAtom);
 	virtual ~FourSpinInteraction();
-	virtual double single_energy(int position);
-	virtual double interaction_energy_between_two_spins(int position1, int position2);
-
-	virtual Threedim effective_field(int position);
+	virtual double single_energy(const int &position) const;
+	virtual Threedim effective_field(const int &position) const;
 
 protected:
 	int const _nCellsPerAtom; ///< number of four spin cells per atom

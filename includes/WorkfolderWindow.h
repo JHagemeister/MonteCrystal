@@ -16,13 +16,13 @@ public:
 	void set_text_edit(QString qString);
 
 	public slots:
-	void on_push_button_select_other(void);
+	void push_button_select_other(void);
 
 signals:
 	void send_select_other(void);
 
 private:
-	Ui::Workfolder ui;
+	Ui::Workfolder _ui;
 };
 
 #endif // WORKFOLDER_H

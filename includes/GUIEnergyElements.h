@@ -32,9 +32,9 @@ public:
 	void open_anisotropy_window(void); ///< open additional window to specify anisotropy energies
 
 	public slots:
-	void on_push_button_neel(void);
-	void on_push_button_chiral(void);
-	void on_anisotropy_window_destroyed(void);
+	void push_button_neel(void);
+	void push_button_chiral(void);
+	void anisotropy_window_destroyed(void);
 
 protected:
 	Ui::QtMainWindow* _ui; ///< ui elements
