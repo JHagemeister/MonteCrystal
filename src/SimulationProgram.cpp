@@ -34,7 +34,7 @@
 #include "Setup.h"
 #include "Mersenne.h"
 
-#include <QMutex>;
+#include <QMutex>
 
 #include "Hamiltonian.h"
 #include "Energy.h"
