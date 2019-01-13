@@ -24,7 +24,10 @@
 
 #include <gsl/gsl_complex.h>
 
+#include <QChar>
+#include <QDataStream>
 #include <QString>
+#include <QFile>
 
 #include <iomanip>
 #include <iostream>
@@ -192,94 +195,35 @@ std::string Functions::get_id(std::string workfolder)
 	std::string fname = workfolder + "simulation_number";
 
 	int id = 1;
-	std::string idStr = "";
 
-	std::fstream sstream;
-	std::string _parameter;
-	char _cstring[256];
-	char* _spiece;
-	char separators[] = " ";
-	char* next_token1 = NULL;
-	sstream.open(fname, std::fstream::in);
-	if (!sstream.good())
-	{
-		std::fstream newstream;
-		newstream.open(fname, std::fstream::out);
-		idStr.append("0001");
-		newstream << "ID " << idStr << " #" << std::endl;
-		newstream.close();
-	}
-	else
-	{
-		while (!sstream.eof())
-		{
-			sstream.getline(_cstring, sizeof(_cstring));
-			_parameter = _cstring;
-			/*
-			* look for comments and empty rows
-			*/
-			if (int(_parameter.find("//")) == 0 || int(_parameter.find("*")) == 0
-				|| int(_parameter.find("#")) == 0)
-			{
-			}
-			else if (int(_parameter.find(" ")) == -1)
-			{ //if no blank spaces occur its empty
-			}
-			else
-			{
-#ifdef WIN
-				_spiece = strtok_s(_cstring, separators, &next_token1);
-#elif LINUNX
-				_spiece = strtok(_cstring, separators);
-#endif
-				if (strcmp(_spiece, "ID") == 0)
-				{
-#ifdef WIN
-					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUNX
-					_spiece = strtok(NULL, separators);
-#endif
-					_parameter = _spiece;
-					id = atoi(_spiece);
-					++id;
-				}
+	QFile id_file(QString::fromStdString(fname));
+
+	if (!id_file.exists()) {
+		id_file.open(QIODevice::Append | QIODevice::Text);
+		id_file.write("ID 1");
+		id_file.close();
+	} else {
+		id_file.open(QIODevice::ReadWrite | QIODevice::Text);
+		while (!id_file.atEnd()) {
+			const auto line = id_file.readLine();
+			if (line.startsWith("ID")) {
+				id = line.split(' ')[1].toInt();
+				++id;
 			}
 		}
-		sstream.clear();
-		sstream.close();
-		sstream.open(fname, std::fstream::out);
-		std::stringstream stream;
-		stream << id;
-		if (id < 10)
-		{
-			idStr = "000";
-			idStr.append(stream.str());
-		}
-		else
-		{
-			if (id < 100)
-			{
-				idStr = "00";
-				idStr.append(stream.str());
-			}
-			else
-			{
-				if (id < 1000)
-				{
-					idStr = "0";
-					idStr.append(stream.str());
-				}
-				else
-				{
-					idStr.append(stream.str());
-				}
-			}
-		}
-		sstream << "ID " << idStr << " #" << std::endl;
+		id_file.close();
+		id_file.remove();
+		id_file.open(QIODevice::WriteOnly); // TODO: Check that the opening succeeded
+		id_file.write("ID ");
+		id_file.write(QByteArray::number(id));
+
 	}
 
-	sstream.close();
-	return idStr;
+	QString idStr;
+	idStr = QString::number(id);
+	idStr.prepend(QString(4 - idStr.size(), QChar('0')));
+	
+	return idStr.toStdString();
 }
 
 std::string Functions::folder_name(const Configuration* config)
