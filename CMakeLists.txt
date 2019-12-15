@@ -80,15 +80,11 @@ set ( UIS
  includes/workfolder.ui
 )
 
-set ( RESOURCES
-src/main.qrc
-)
-
 QT5_ADD_RESOURCES( RES_SOURCES ${RESOURCES})
 QT5_WRAP_UI(UI_HEADERS ${UIS})
 QT5_WRAP_CPP(MOC_SRCS ${MOC_HEADERS})
 
-add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS})
+add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(X11 REQUIRED)
