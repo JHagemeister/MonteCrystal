@@ -9,7 +9,7 @@ find_package(OpenMP)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 # Set the directory to your Qt installation here 
-set(Qt5_DIR C:/Qt3/5.9.1/msvc2015_64/lib/cmake/Qt5)
+set(Qt5_DIR C:/Qt/5.12.6/msvc2017_64/lib/cmake/Qt5)
 find_package(Qt5 COMPONENTS Core Widgets Gui  REQUIRED)
 
 file(GLOB SOURCES "src/*.cpp")

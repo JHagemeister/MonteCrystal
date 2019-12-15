@@ -32,8 +32,8 @@ int main(int argc, char **argv)
 	QApplication a(argc, argv);
 
 	QSurfaceFormat format;
-	format.setProfile(QSurfaceFormat::CoreProfile);
 	format.setVersion(3, 3);
+	format.setProfile(QSurfaceFormat::CoreProfile);
         std::cout << "OGL " << format.majorVersion() << "." << format.minorVersion();
 	QSurfaceFormat::setDefaultFormat(format);
 
