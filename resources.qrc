@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>src/lighting.frag</file>
+    <file>src/lighting.vs</file>
+</qresource>
+</RCC>

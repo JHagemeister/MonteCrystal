@@ -36,39 +36,31 @@
 
 #include "Shader.h"
 
-#include <fstream>
+#include <iostream>
 #include <sstream>
+#include <QFile>
 
 
 Shader::Shader()
 {
 }
 
-void Shader::setup_shader(std::string vertexPath, std::string fragmentPath, QOpenGLFunctions_3_3_Core *glf)
-{
+void Shader::setup_shader(const QString &vertexPath, const QString &fragmentPath, QOpenGLFunctions_3_3_Core *glf)
+{	
+	QFile vShaderFile{vertexPath};
+	QFile fShaderFile{fragmentPath};
 
-	std::string vertexCode;
-	std::string fragmentCode;
+	vShaderFile.open(QIODevice::ReadOnly);
+	fShaderFile.open(QIODevice::ReadOnly);
 	
-	std::ifstream vShaderFile;
-	std::ifstream fShaderFile;
+	std::string vertexCode = QString{vShaderFile.readAll()}.toStdString();
+	std::string fragmentCode = QString{fShaderFile.readAll()}.toStdString();
 
-	vShaderFile.open(vertexPath);
-	fShaderFile.open(fragmentPath);
-
-	std::stringstream vShaderStream, fShaderStream;
-
-	vShaderStream << vShaderFile.rdbuf();
-	fShaderStream << fShaderFile.rdbuf();
-	
 	vShaderFile.close();
 	fShaderFile.close();
-	
-	vertexCode = vShaderStream.str();
-	fragmentCode = fShaderStream.str();
 
-	const GLchar* vShaderCode = vertexCode.c_str();
-	const GLchar * fShaderCode = fragmentCode.c_str();
+	const GLchar *vShaderCode = vertexCode.c_str();
+	const GLchar *fShaderCode = fragmentCode.c_str();
 
 	GLuint vertex;
 	GLuint fragment;
@@ -94,7 +86,6 @@ void Shader::setup_shader(std::string vertexPath, std::string fragmentPath, QOpe
 	
 	glf->glDeleteShader(vertex);
 	glf->glDeleteShader(fragment);
-
 }
 
 void Shader::use(QOpenGLFunctions_3_3_Core *glf)

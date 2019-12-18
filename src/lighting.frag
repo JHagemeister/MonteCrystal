@@ -24,4 +24,4 @@ void main()
 
     vec3 result = (ambient + diffuse) * tmp;
     color = vec4(result, objectColor.a);
-} 
+}

@@ -710,7 +710,7 @@ void OGLWidget::initializeGL()
 	_glf->glEnable(GL_DEPTH_TEST);
 
 	// Setup and compile our shaders
-	_shader.setup_shader("lighting.vs", "lighting.frag", _glf);
+	_shader.setup_shader(":/src/lighting.vs", ":/src/lighting.frag", _glf);
 
 	// Load arrow model for representation of spin direction
 	_spinMesh = std::make_shared<SpinMesh>(_glf, _spinMeshParams);

@@ -30,7 +30,7 @@ public:
 	GLuint _program;
 
 	Shader();
-	void setup_shader(std::string vertexPath, std::string fragmentPath, QOpenGLFunctions_3_3_Core *glf);
+	void setup_shader(const QString& vertexPath, const QString& fragmentPath, QOpenGLFunctions_3_3_Core* glf);
 	void use(QOpenGLFunctions_3_3_Core *glf);
 };
 
