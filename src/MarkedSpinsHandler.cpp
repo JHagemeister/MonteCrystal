@@ -259,8 +259,6 @@ void MarkedSpinsHandler::request_window_rejected(void)
 	_requestWindow->get_anisotropy_defect_parameters(anisotropy);
 	set_as_anisotropy_defects(anisotropy);
 
-	delete _requestWindow;
-	_requestWindow = NULL;
 	_oglWidget->delete_rubber_band();
 	_mainWindow->unblock_simulation_start();
 }
