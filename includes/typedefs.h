@@ -72,9 +72,9 @@ enum ColorMapType
 /// Helper struct with three double values
 struct Threedim
 {
-	double x;
-	double y;
-	double z;
+	double x = 0.0;
+	double y = 0.0;
+	double z = 0.0;
 };
 
 /// Helper struct to store information about a cell for the calculation of local topological charge

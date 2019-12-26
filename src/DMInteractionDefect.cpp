@@ -151,7 +151,8 @@ void DMInteractionDefect::set_DM_vectors(const std::unordered_map<int, double> &
 			{
 				dmVector = { 0,0,0 };
 			}
-			_dmVectors[currentatom].push_back(MyMath::mult(dmVector, it->second));
+			_dmVectors[currentatom].resize(_nbors);
+			_dmVectors[currentatom][i] = MyMath::mult(dmVector, it->second);
 		}
 	}
 
@@ -172,8 +173,21 @@ void DMInteractionDefect::set_DM_vectors(const std::unordered_map<int, double> &
 			{
 				if (_neighborArray[neighbor*_nbors + j] == it->first)
 				{
-					dmVector = MyMath::mult(_dmVectors[it->first][i],-1);
-					_dmVectors[neighbor][j] = MyMath::add(_dmVectors[neighbor][j],dmVector);
+					dmVector = neighborVectorArray[neighbor * _nbors + j];
+					if (MyMath::norm(dmVector) > PRECISION)
+					{
+						if (_dmType == Neel)
+						{
+							dmVector = MyMath::vector_product(_direction, dmVector);
+							dmVector = MyMath::normalize(dmVector);
+						}
+						else if (_dmType == Chiral)
+						{
+							dmVector = MyMath::normalize(dmVector);
+						}
+						dmVector = MyMath::mult(dmVector, it->second);
+						_dmVectors[neighbor][j] = MyMath::add(_dmVectors[neighbor][j], dmVector);
+					}
 				}
 			}
 		}
