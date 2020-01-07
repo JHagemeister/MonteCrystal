@@ -86,6 +86,8 @@ QT5_WRAP_CPP(MOC_SRCS ${MOC_HEADERS})
 
 add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc)
 
+set_target_properties(MonteCrystal PROPERTIES AUTOGEN_BUILD_DIR ${CMAKE_BINARY_DIR})
+
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(X11 REQUIRED)
 
