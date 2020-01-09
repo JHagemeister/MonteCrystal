@@ -8,6 +8,7 @@
 
 
 // Qt includes
+#include <QDir>
 #include <QtWidgets/QMainWindow>
 #include <QSharedPointer>
 #include <QString>
@@ -119,7 +120,7 @@ protected:
 	QSharedPointer<SpinOrientation> _spinOrientation; ///< store spins between two succeedingsimulation runs
 	std::string _storageFname; ///< multi purpose file name 
 
-	std::string _workfolder;  ///< working folder with "DATA" folder and README file
+	QDir _workfolder;  ///< working folder with "DATA" folder and README file
 
 	void write_workfolder(void);
 

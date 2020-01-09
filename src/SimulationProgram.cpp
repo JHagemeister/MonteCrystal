@@ -49,13 +49,7 @@
 #include <fstream>
 #include <iostream>
 
-#ifdef WIN
-#include <windows.h>
-#elif LINUX
-#include <sys/stat.h>
-#endif
-
-SimulationProgram::SimulationProgram(std::string workfolder, QSharedPointer<Configuration> config, 
+SimulationProgram::SimulationProgram(QDir &workfolder, QSharedPointer<Configuration> config, 
 	QMutex* mutex, int* terminateThread, QSharedPointer<Lattice> lattice,
 	QSharedPointer<SpinOrientation> spinOrientation)
 {
@@ -358,9 +352,9 @@ void SimulationProgram::temperature_magnetic_field_loop(const std::shared_ptr<Se
 	std::string simID = "";
 
 	// determine unique identity number and created unique folder for simulation output
-	std::string simFolder = create_unique_simulation_folder(simID, boolFolderOutput);
+	QDir simFolder = create_unique_simulation_folder(simID, boolFolderOutput);
 	// folder for simulation ouput
-	std::string outputFolder = simFolder + "SIMULATION/";
+	std::string outputFolder = simFolder.absolutePath().toStdString() + "/SIMULATION/";
 
 	std::string fname = "";
 	std::stringstream stringStream;
@@ -511,7 +505,7 @@ void SimulationProgram::temperature_magnetic_field_loop(const std::shared_ptr<Se
 	}
 
 	// Save information about the lattice used in the simulation to simulation folder
-	save_lattice_information(setup->_lattice.data(), simFolder + "SYSTEM/", simID, boolFolderOutput);
+	save_lattice_information(setup->_lattice.data(), simFolder.absolutePath().toStdString() + "/SYSTEM/", simID, boolFolderOutput);
 }
 
 void SimulationProgram::spin_seebeck(const std::shared_ptr<Setup> &setup, std::shared_ptr<RanGen> ranGen, 
@@ -528,9 +522,9 @@ void SimulationProgram::spin_seebeck(const std::shared_ptr<Setup> &setup, std::s
 	std::string simID = "";
 
 	// determine unique identity number and created unique folder for simulation output
-	std::string simFolder = create_unique_simulation_folder(simID, boolFolderOutput);
+	QDir simFolder = create_unique_simulation_folder(simID, boolFolderOutput);
 	// folder for simulation ouput
-	std::string outputFolder = simFolder + "SIMULATION/";
+	std::string outputFolder = simFolder.absolutePath().toStdString() + "/SIMULATION/";
 
 	std::string fname = "";
 
@@ -605,7 +599,7 @@ void SimulationProgram::spin_seebeck(const std::shared_ptr<Setup> &setup, std::s
 	}
 	
 	// Save information about the lattice used in the simulation to simulation folder
-	save_lattice_information(setup->_lattice.data(), simFolder + "SYSTEM/", simID, boolFolderOutput);
+	save_lattice_information(setup->_lattice.data(), simFolder.absolutePath().toStdString() + "/SYSTEM/", simID, boolFolderOutput);
 }
 
 void SimulationProgram::tip_movement(const std::shared_ptr<Setup> &setup, std::shared_ptr<RanGen> ranGen)
@@ -623,9 +617,9 @@ void SimulationProgram::tip_movement(const std::shared_ptr<Setup> &setup, std::s
 	std::string simID = "";
 
 	// determine unique identity number and created unique folder for simulation output
-	std::string simFolder = create_unique_simulation_folder(simID);
+	QDir simFolder = create_unique_simulation_folder(simID);
 	// folder for simulation ouput
-	std::string outputFolder = simFolder + "SIMULATION/";
+	std::string outputFolder = simFolder.absolutePath().toStdString() + "/SIMULATION/";
 
 	std::string fname = "";
 	std::stringstream stringStream;
@@ -717,7 +711,7 @@ void SimulationProgram::tip_movement(const std::shared_ptr<Setup> &setup, std::s
 	fname.append("_MeanValues_TipMovement");
 	measurement->save_mean_steps(fname, "TipMovementStep");
 
-	save_lattice_information(setup->_lattice.data(), simFolder + "SYSTEM/", simID);
+	save_lattice_information(setup->_lattice.data(), simFolder.absolutePath().toStdString() + "/SYSTEM/", simID);
 }
 
 void SimulationProgram::experiment01(const std::shared_ptr<Setup>& setup, std::shared_ptr<RanGen> ranGen, 
@@ -736,9 +730,9 @@ void SimulationProgram::experiment01(const std::shared_ptr<Setup>& setup, std::s
 	std::string simID = "";
 
 	// determine unique identity number and created unique folder for simulation output
-	std::string simFolder = create_unique_simulation_folder(simID, boolFolderOutput);
+	QDir simFolder = create_unique_simulation_folder(simID, boolFolderOutput);
 	// folder for simulation ouput
-	std::string outputFolder = simFolder + "SIMULATION/";
+	std::string outputFolder = simFolder.absolutePath().toStdString() + "/SIMULATION/";
 
 	std::string fname = "";
 
@@ -851,7 +845,7 @@ void SimulationProgram::experiment01(const std::shared_ptr<Setup>& setup, std::s
 	}
 
 	// Save information about the lattice used in the simulation to simulation folder
-	save_lattice_information(setup->_lattice.data(), simFolder + "SYSTEM/", simID, boolFolderOutput);
+	save_lattice_information(setup->_lattice.data(), simFolder.absolutePath().toStdString() + "/SYSTEM/", simID, boolFolderOutput);
 }
 
 void SimulationProgram::eigen_frequency(const std::shared_ptr<Setup>& setup, std::string fname)
@@ -880,7 +874,7 @@ void SimulationProgram::eigen_frequency(const std::shared_ptr<Setup>& setup, std
 }
 
 
-std::string SimulationProgram::create_unique_simulation_folder(std::string &simID, int boolFolderOutput)
+QDir SimulationProgram::create_unique_simulation_folder(std::string &simID, int boolFolderOutput)
 {
 	/**
 	* Create a simulation folder with unique ID and subfolders SYSTEM and SIMULATION for output of informaiton
@@ -891,77 +885,53 @@ std::string SimulationProgram::create_unique_simulation_folder(std::string &simI
 	* @param[in] simulation identity number is returned by passing by reference.
 	*
 	* @return The simulation folder.
-	*/
+	*/	
+
+	if (boolFolderOutput == FALSE)
+	{
+		return {};
+	}
 
 	// gather information about all current simulation parameters in one string variable
 	_config->set_all_parameters();
 
-	// unique simulation folder for output during simulation 
-	std::string simFolder = "";
-		
-	if (boolFolderOutput == TRUE)
-	{
-		simFolder.append(_workFolder + "Data/");
+	// unique simulation folder for output during simulation
+	QDir sim_folder = _workFolder;
+	sim_folder.cd("Data");
 
-		// temporary string needed several times within this method
-		std::string tmpString = "";
+	// obtain unique identity number for the new simulation from the helper file in the working directory
+	simID = Functions::get_id(_workFolder);
 
-		// obtain unique identity number for the new simulation from the helper file in the working directory
-		simID = Functions::get_id(_workFolder);
+	// unique simulation identity number ensures that simulation folder is unique.
+	auto simulation_folder_name = QString::fromStdString(simID);
 
-		// unique simulation identity number ensures that simulation folder is unique.
-		simFolder.append(simID);
+	// append string generated from parameters specified in _config. This is useful to quickly determine the
+	// purpose of a simulation from the folder name.
+	simulation_folder_name.append(QString::fromStdString(Functions::folder_name(_config.data())));
 
-		// append string generated from parameters specified in _config. This is useful to quickly determine the
-		// purpose of a simulation from the folder name.
-		simFolder.append(Functions::folder_name(_config.data()));
-		simFolder.append("/");
+	// create simulation folder
+	sim_folder.mkdir(simulation_folder_name);
 
-		// create simulation folder
-#ifdef WIN
-		std::wstring widestr = std::wstring(simFolder.begin(), simFolder.end());
-		CreateDirectory(simFolder.c_str(), NULL);
-#elif LINUX
-		mkdir(simFolder.c_str(), 0777);
-#endif
-		
-		// create subfolder SYSTEM for output of system information
-		tmpString = simFolder;
-		tmpString.append("SYSTEM/");
-#ifdef WIN
-		widestr = std::wstring(tmpString.begin(), tmpString.end());
-		CreateDirectory(tmpString.c_str(), NULL);
-#elif LINUX
-		mkdir(tmpString.c_str(), 0777);
-#endif	
+	// create subfolder SYSTEM for output of system information
+	sim_folder.cd(simulation_folder_name);
+	sim_folder.mkdir("SYSTEM");
 
-		// store information about simulation parameters in output folder
-		std::fstream filestr;
-		filestr.open(tmpString + "SimInf", std::fstream::out);
-		filestr << _config->_allParameters;
-		filestr.close();
+	// store information about simulation parameters in output folder
+	QDir system_dir = sim_folder;
+	system_dir.cd("SYSTEM");
+	QFile sim_info{ system_dir.absoluteFilePath("SimInf") };
+	sim_info.open(QIODevice::WriteOnly | QIODevice::Text);
+	sim_info.write(_config->_allParameters.c_str());
+	sim_info.close();
 
-		// copy configuration file to simulation folder - obsolete if no console
-		// version of the program is used
-		tmpString = simFolder;
-		tmpString.append(simID);
-		tmpString.append("_Config");
-		_config->copy_configuration_file(tmpString);
+	// create subfolder SIMULATION for ouput during simulation
+	QDir simulation_dir = sim_folder;
+	simulation_dir.mkdir("SIMULATION");
 
-		// create subfolder SIMULATION for ouput during simulation
-		tmpString = simFolder;
-		tmpString.append("SIMULATION/");
-#ifdef WIN
-		widestr = std::wstring(tmpString.begin(), tmpString.end());
-		CreateDirectory(tmpString.c_str(), NULL);
-#elif LINUX
-		mkdir(tmpString.c_str(), 0777);
-#endif	
-		// write new entry with simulation information into README file
-		Functions::write_README(_workFolder, simFolder, _config.data());
-	}
+	// write new entry with simulation information into README file
+	Functions::write_README(_workFolder, sim_folder.absolutePath().toStdString(), _config.data());
 
-	return simFolder;
+	return sim_folder;
 }
 
 void SimulationProgram::save_lattice_information(Lattice* lattice, std::string path, std::string simID,

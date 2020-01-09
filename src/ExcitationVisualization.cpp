@@ -24,7 +24,7 @@
 
 #include "MyMath.h"
 
-#include <stdlib.h>
+#include <QThread>
 
 ExcitationVisualization::ExcitationVisualization(Threedim* spinArray, Threedim* spinArrayBackup, 
 	int numberAtoms, std::vector<double>* evalues, gsl_matrix_complex* evec, 
@@ -137,12 +137,7 @@ void ExcitationVisualization::visualize(void)
 	// do visualization forever as long as user does not request termination
 	while (*_parameters.terminate != TRUE)
 	{
-#ifdef WIN	
-	   _sleep(*_parameters.sleepTime); // slow down visualisation
-#elif LINUX
-           struct timespec ts = {0,(*_parameters.sleepTime)*1000000};
-           nanosleep(&ts,NULL);
-#endif
+		QThread::currentThread()->msleep(*_parameters.sleepTime); // slow down visualisation
 		if (*_parameters.pause != TRUE) // pause visualisation
 		{
 			if (*_parameters.rescale) // _rescale is set in ExcitationFrequencyWindow to trigger update of parameters

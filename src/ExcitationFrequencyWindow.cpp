@@ -29,17 +29,7 @@
 #include "Functions.h"
 #include "Configuration.h"
 
-#ifdef WIN
-#include "direct.h"
-#endif
-
-#ifdef LINUX
-#include <sys/stat.h>
-#endif
-
-
-
-ExcitationFrequencyWindow::ExcitationFrequencyWindow(OGLWidget* oglWidget, std::string workfolder, 
+ExcitationFrequencyWindow::ExcitationFrequencyWindow(OGLWidget* oglWidget, const QDir &workfolder, 
 	QWidget * parent) : QDialog(parent)
 {
 	_ui.setupUi(this);
@@ -191,7 +181,7 @@ void ExcitationFrequencyWindow::button_eigenvalues(void)
 	Open window to allow specification of file to read eigenvalues in from.
 	*/
 
-	QString fname = QFileDialog::getOpenFileName(this, tr("Eigenvalues"), QString::fromStdString(_workfolder)
+	QString fname = QFileDialog::getOpenFileName(this, tr("Eigenvalues"), _workfolder.absolutePath()
 		, "ALL files (*.*)");
 	if (fname.size() != 0)
 	{
@@ -226,7 +216,7 @@ void ExcitationFrequencyWindow::button_eigenvectors(void)
 	}
 	else
 	{
-		fname = QFileDialog::getOpenFileName(this, tr("Eigenvectors"), QString::fromStdString(_workfolder)
+		fname = QFileDialog::getOpenFileName(this, tr("Eigenvectors"), _workfolder.absolutePath()
 			, "ALL files (*.*)");
 	}
 	if (fname.size() != 0)
@@ -307,13 +297,10 @@ void ExcitationFrequencyWindow::button_save_image_sequence(void)
 
 	*_parameters.videoSequence = TRUE;
 	_ui.pushButtonVideoSeq->setEnabled(FALSE);
-	_currentSubfolder = _outputFolder + QString::number(_outputIndex); // create (hopefully) unique folder
-#ifdef WIN
-	_mkdir(_currentSubfolder.toStdString().c_str());
-#elif LINUX
-        mkdir(_currentSubfolder.toStdString().c_str(), 0777);
-#endif
-	_currentSubfolder.append("/" );
+	QDir directory{_outputFolder};
+	directory.mkdir(QString::number(_outputIndex)); // create (hopefully) unique folder
+	directory.cd(QString::number(_outputIndex));
+	_currentSubfolder = directory;
 }
 
 void ExcitationFrequencyWindow::change_in_table_widget_angle(int row, int column)
@@ -356,7 +343,7 @@ void ExcitationFrequencyWindow::receive_save_image_request(int imageIndex)
 	*/
 
 	std::string name2 = Functions::get_three_digit_name(imageIndex);
-	QString fname = _currentSubfolder + QString::fromStdString(name2) + ".png";
+	QString fname = _currentSubfolder.absoluteFilePath(QString::fromStdString(name2 + ".png"));
 	_oglWidget->receive_save_request(fname);
 	*_parameters.pause = FALSE;
 }

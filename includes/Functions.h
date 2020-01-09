@@ -8,6 +8,8 @@
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 
+#include <QDir>
+
 #include <string>
 #include <sstream>
 #include <memory>
@@ -30,7 +32,7 @@ public:
 	static std::string time_stamp(void);
 	static void get_spin_model_params(SpinMeshParams &params, std::string fname);
 	static void save_spin_model_params(SpinMeshParams params, std::string fname);
-	static std::string get_id(std::string workfolder);
+	static std::string get_id(const QDir &workfolder);
 	static std::string folder_name(const Configuration* config);
 	static std::string get_name(double value);
 	static std::string get_three_digit_name(int value);
@@ -50,7 +52,7 @@ public:
 	static int read_eigenvalues(std::string fname, std::vector<double> &eigenvalues);
 	static gsl_matrix_complex* read_eigenvectors(std::string fname);
 
-	static void write_README(std::string workfolder, std::string simFolder, const Configuration* config);
+	static void write_README(const QDir &workfolder, std::string simFolder, const Configuration* config);
 	static int get_num_lines(std::string fname);
 };
 

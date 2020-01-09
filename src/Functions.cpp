@@ -67,97 +67,39 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 	* @param[in] fname File name containing the parameters of arrow model
 	*/
 
-	std::fstream sstream;
-	std::string _parameter;
-	char _cstring[256];
-	char* _spiece;
-	char separators[] = " ";
-	char* next_token1 = NULL;
-	sstream.open(fname, std::fstream::in);
-	if (!sstream.good())
+	QFile spin_model_file{QString::fromStdString(fname)};
+	if (!spin_model_file.exists())
 	{
-		std::fstream newstream;
-		newstream.open(fname, std::fstream::out);
-		newstream << "n " << params.n << " #" << std::endl;
-		newstream << "r2divr1 " << params.r2divr1 << " #" << std::endl;
-		newstream << "l1divl2 " << params.l1divl2 << " #" << std::endl;
-		newstream << "r2divl2 " << params.r2divl2 << " #" << std::endl;
-		newstream << "scale " << params.scale << " #" << std::endl;
-		newstream.close();
+		spin_model_file.open(QIODevice::WriteOnly | QIODevice::Text);
+		spin_model_file.write(QString{"n %1\n"
+							  "r2divr1 %2\n"
+							  "l1divl2 %3\n"
+							  "r2divl2 %4\n"
+							  "scale %5"}.arg(params.n).arg(params.r2divr1)
+			                             .arg(params.l1divl2).arg(params.r2divl2)
+			                             .arg(params.scale).toStdString().c_str());
+		spin_model_file.close();
 	}
 	else
 	{
-		while (!sstream.eof())
-		{
-			sstream.getline(_cstring, sizeof(_cstring));
-			_parameter = _cstring;
-			/*
-			* look for comments and empty rows
-			*/
-			if (int(_parameter.find("//")) == 0 || int(_parameter.find("*")) == 0
-				|| int(_parameter.find("#")) == 0)
-			{
+		spin_model_file.open(QIODevice::ReadOnly | QIODevice::Text);
+		while (!spin_model_file.atEnd()) {
+			const auto line = QString{spin_model_file.readLine()};
+			const auto parameter = line.split(' ');
+			if (parameter[0].compare("n") == 0) {
+				params.n = parameter[1].toInt();
 			}
-			else if (int(_parameter.find(" ")) == -1)
-			{ //if no blank spaces occur its empty
+			else if (parameter[0].compare("r2divr1") == 0) {
+				params.r2divr1 = parameter[1].toFloat();
 			}
-			else
-			{
-#ifdef WIN
-				_spiece = strtok_s(_cstring, separators, &next_token1);
-#elif LINUX
-				_spiece = strtok(_cstring, separators);
-#endif
-				if (strcmp(_spiece, "n") == 0)
-				{
-#ifdef WIN
-					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUX
-					_spiece = strtok(NULL, separators);
-#endif
-					_parameter = _spiece;
-					params.n = atoi(_spiece);
-				}
-				if (strcmp(_spiece, "r2divr1") == 0)
-				{
-#ifdef WIN
-					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUX
-					_spiece = strtok(NULL, separators);
-#endif
-					_parameter = _spiece;
-					params.r2divr1 = atof(_spiece);
-				}
-				if (strcmp(_spiece, "l1divl2") == 0)
-				{
-#ifdef WIN
-					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUX
-					_spiece = strtok(NULL, separators);
-#endif
-					_parameter = _spiece;
-					params.l1divl2 = atof(_spiece);
-				}
-				if (strcmp(_spiece, "r2divl2") == 0)
-				{
-#ifdef WIN
-					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUX
-					_spiece = strtok(NULL, separators);
-#endif
-					_parameter = _spiece;
-					params.r2divl2 = atof(_spiece);
-				}
-				if (strcmp(_spiece, "scale") == 0)
-				{
-#ifdef WIN
-					_spiece = strtok_s(NULL, separators, &next_token1);
-#elif LINUX
-					_spiece = strtok(NULL, separators);
-#endif
-					_parameter = _spiece;
-					params.scale = atof(_spiece);
-				}
+			else if (parameter[0].compare("l1divl2") == 0) {
+				params.l1divl2 = parameter[1].toFloat();
+			}
+			else if (parameter[0].compare("r2divl2") == 0) {
+				params.r2divl2 = parameter[1].toFloat();
+			}
+			else if (parameter[0].compare("scale") == 0) {
+				params.scale = parameter[1].toFloat();
 			}
 		}
 	}
@@ -182,7 +124,7 @@ void Functions::save_spin_model_params(SpinMeshParams params, std::string fname)
 	sstream.close();
 }
 
-std::string Functions::get_id(std::string workfolder)
+std::string Functions::get_id(const QDir &workfolder)
 {
 	/**
 	* get unique id using the helper file "simulation_number" in working folder. If no such file exist, the
@@ -192,11 +134,9 @@ std::string Functions::get_id(std::string workfolder)
 	* @return string containing unique simulation identity number
 	*/
 
-	std::string fname = workfolder + "simulation_number";
-
 	int id = 1;
 
-	QFile id_file(QString::fromStdString(fname));
+	QFile id_file(workfolder.absoluteFilePath("simulation_number"));
 
 	if (!id_file.exists()) {
 		id_file.open(QIODevice::Append | QIODevice::Text);
@@ -676,7 +616,7 @@ gsl_matrix_complex* Functions::read_eigenvectors(std::string fname)
 	return evecs;
 }
 
-void Functions::write_README(std::string workfolder, std::string simFolder, const Configuration* config)
+void Functions::write_README(const QDir &workfolder, std::string simFolder, const Configuration* config)
 {
 	/**
 	* write new entry to README file; contains time stamp; simulation folder name; simulation parameters
@@ -686,7 +626,7 @@ void Functions::write_README(std::string workfolder, std::string simFolder, cons
 	* @param[in] config simulation parameters
 	*/
 
-	std::string fname = workfolder + "README";
+	std::string fname = workfolder.absoluteFilePath("README").toStdString();
 	std::fstream filestr;
 	filestr.open(fname, std::fstream::in);
 	if (!filestr.good())

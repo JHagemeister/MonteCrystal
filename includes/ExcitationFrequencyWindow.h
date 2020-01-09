@@ -2,6 +2,7 @@
 #define EXCITATIONFREQUENCYWINDOW_H_
 
 #include <QDialog>
+#include <QDir>
 #include "ui_excitationfrequencywindow.h"
 
 #include <gsl/gsl_matrix.h>
@@ -18,7 +19,7 @@ Q_OBJECT
 
 public:
 
-	ExcitationFrequencyWindow(OGLWidget* oglWidget, std::string workfolder, QWidget * parent = Q_NULLPTR);
+	ExcitationFrequencyWindow(OGLWidget* oglWidget, const QDir &workfolder, QWidget * parent = Q_NULLPTR);
 	~ExcitationFrequencyWindow();
 
 	void set_spin_array(Threedim* spinArray, int numberAtoms);
@@ -48,12 +49,12 @@ private:
 
 	Ui::ExcitationFrequencyWindow _ui;
 
-	std::string _workfolder; ///< workfolder of main program as start folder for folder dialogues
+	QDir _workfolder; ///< workfolder of main program as start folder for folder dialogues
 
 	ExcitationFrequencyParameters _parameters;
 
 	QString _outputFolder; ///< this is determined by object of this class when eigenvalues are read in.
-	QString _currentSubfolder; ///< unique subfolder in _outputFolder for output of video sequence
+	QDir _currentSubfolder; ///< unique subfolder in _outputFolder for output of video sequence
 	int _outputIndex; ///< number of video sequences done. needed to create unique output folders.
 
 	OGLWidget* _oglWidget;

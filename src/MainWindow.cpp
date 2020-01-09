@@ -28,6 +28,7 @@
 #include "Experiment01Window.h"
 #include "ExcitationFrequencyWindow.h"
 
+#include <QFile>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QThread>
@@ -50,11 +51,7 @@
 #include "GUIOutputElements.h"
 #include "WorkfolderWindow.h"
 
-#ifdef WIN
-#include <direct.h>
-#endif
-
-#include <fstream>
+#include <stdio.h>
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -299,7 +296,7 @@ void MainWindow::program_type_selected(const QString &qString)
 	{
 		QString fname("");
 		fname = QFileDialog::getOpenFileName(this, tr(qPrintable("Filename for " + qString)),
-				QString::fromStdString(_workfolder), "Bitmaps (*.bmp)");
+											 _workfolder.absolutePath(), "Bitmaps (*.bmp)");
 		_storageFname = fname.toStdString();
 		if (fname.contains(".bmp"))
 		{
@@ -318,7 +315,7 @@ void MainWindow::program_type_selected(const QString &qString)
 		if (qString.contains("save"))
 		{
 			fname = QFileDialog::getSaveFileName(this, tr(qPrintable("Filename for " + qString)), 
-				QString::fromStdString(_workfolder), "ALL files (*)");
+												 _workfolder.absolutePath(), "ALL files (*)");
 			_storageFname = fname.toStdString();
 			if (fname.size() != 0)
 			{
@@ -332,7 +329,7 @@ void MainWindow::program_type_selected(const QString &qString)
 		else if (qString.contains("read"))
 		{
 			fname = QFileDialog::getOpenFileName(this, tr(qPrintable("Filename for " + qString)),
-				QString::fromStdString(_workfolder), "ALL files (*)");
+												 _workfolder.absolutePath(), "ALL files (*)");
 			_storageFname = fname.toStdString();
 			if (fname.size() != 0)
 			{
@@ -477,8 +474,7 @@ void MainWindow::open_workfolder_dialog()
 	QString directory;
 	if (result)
 	{
-		directory = dialog.selectedFiles()[0];
-		_workfolder = (directory.toStdString()).append("/");
+		_workfolder = QDir{dialog.selectedFiles()[0]};
 		write_workfolder();
 	}
 	else
@@ -546,29 +542,33 @@ void MainWindow::read_workfolder(void)
 	of this program. If no file with this information exists, a window to select a workfolder will be opened.
 	*/
 
-	std::string fname = "workfolder";
-	std::fstream filestr;
-	filestr.open(fname, std::fstream::in);
-	if (!filestr.good())
+	QFile w_file{"workfolder"};
+	if (!w_file.exists())
 	{
-		filestr.close();
-		filestr.open(fname, std::fstream::out);
-		filestr << "";
-		filestr.close();
+		w_file.open(QIODevice::WriteOnly | QIODevice::Text);
+		w_file.close();
 		open_workfolder_dialog();
 	}
 	else 
 	{
-		filestr >> _workfolder;
-		filestr.close();
-		if (_workfolder.compare("") == 0)
+		std::string folder;
+		w_file.open(QIODevice::ReadOnly | QIODevice::Text);
+		if (!w_file.atEnd())
+		{
+			QByteArray line = w_file.readLine();
+			folder = line.toStdString();
+		}
+		
+		_workfolder.setPath(QString::fromStdString(folder));
+		w_file.close();
+		if (folder.compare("") == 0)
 		{
 			open_workfolder_dialog();
 		}
 		WorkfolderWindow* workfolder = new WorkfolderWindow();
 		workfolder->setAttribute(Qt::WA_DeleteOnClose, true);
 		connect(workfolder, &WorkfolderWindow::send_select_other, this, &MainWindow::open_workfolder_dialog);
-		workfolder->set_text_edit(QString::fromStdString(_workfolder));
+		workfolder->set_text_edit(_workfolder.absolutePath());
 		workfolder->exec();
 	}
 }
@@ -579,18 +579,13 @@ void MainWindow::write_workfolder(void)
 	Save currently selected workfolder (used for text file output) in a text file.
 	*/
 
-	std::string fname = "workfolder";
-	std::fstream filestr;
-	filestr.open(fname, std::fstream::out);
-	filestr << _workfolder;
-	filestr.close();
-	std::string tempString = _workfolder + "Data";
-#ifdef WIN
-	_mkdir(tempString.c_str());
-#elif LINUNX
-        mkdir(tempString.c_str(), 0777);
-#endif
+	QFile file{"workfolder"};
+	file.open(stderr, QIODevice::WriteOnly);
+	file.write(_workfolder.absolutePath().toStdString().c_str());
+	file.resize(file.pos());
+	file.close();
 
+	_workfolder.mkdir("Data");
 }
 
 void MainWindow::read_parameters_from_ui(QSharedPointer<Configuration> &config)

@@ -18,6 +18,7 @@
 #include <string>
 
 // Qt includes
+#include <QDir>
 #include <QObject>
 #include <QSharedPointer>
 class QMutex;
@@ -42,7 +43,7 @@ class SimulationProgram: public QObject
 {
 Q_OBJECT
 public:
-	SimulationProgram(std::string workfolder, QSharedPointer<Configuration> config, QMutex* mutex,
+	SimulationProgram(QDir &workfolder, QSharedPointer<Configuration> config, QMutex* mutex,
 		int* terminateThread, QSharedPointer<Lattice> lattice,
 		QSharedPointer<SpinOrientation> spinOrientation);
 	virtual ~SimulationProgram();
@@ -102,7 +103,7 @@ protected:
 	void eigen_frequency(const std::shared_ptr<Setup> &setup, std::string fname);
 	
 	/// create a unique simulation folder 
-	std::string create_unique_simulation_folder(std::string &simID, int boolFolderOutput = 1);
+	QDir create_unique_simulation_folder(std::string &simID, int boolFolderOutput = 1);
 	/// save lattice information to simulation folder
 	void save_lattice_information(Lattice* lattice, std::string path, std::string simID, 
 		int boolFolderOutput = 1);
@@ -110,7 +111,7 @@ protected:
 	/// working folder 
 	/** containing: README with history of all simulations run with this working folder, "Data" folder 
 	containing the simulation folders */
-	std::string _workFolder; 
+	QDir _workFolder; 
 	/// configuration parameters
 	QSharedPointer<Configuration> _config;
 	/// lattice from cache of last simulation
