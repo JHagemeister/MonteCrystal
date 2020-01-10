@@ -172,15 +172,6 @@ std::string MagnetisationObservable::get_mean_value(const double &temperature) c
 
 		stream  << meanValues.x << " "  << meanValues.y << " " << meanValues.z << " ";
 
-		double esq = 0;
-		for (int i = 0; i < _numberMeasurements; ++i)
-		{
-			esq += _values[i].x*_values[i].x + _values[i].y*_values[i].y + _values[i].z*_values[i].z;
-		}
-		meanValues = MyMath::mult(meanValues, _numberAtoms);
-		esq /= _numberMeasurements;
-		stream << (esq - MyMath::dot_product(meanValues,meanValues)) / (kB * temperature) << " ";
-
 		if (_boolEachSpin == TRUE)
 		{
 			Threedim spinAverage = { 0,0,0 };
@@ -197,10 +188,15 @@ std::string MagnetisationObservable::get_mean_value(const double &temperature) c
 				stream << " " << spinAverage.x << " " << spinAverage.y << " " << spinAverage.z;
 			}
 		}
-		else
+		
+		double esq = 0;
+		for (int i = 0; i < _numberMeasurements; ++i)
 		{
-			std::cout << "Error in MagnetisationObservable::mean_value." << std::endl;
+			esq += _values[i].x * _values[i].x + _values[i].y * _values[i].y + _values[i].z * _values[i].z;
 		}
+		meanValues = MyMath::mult(meanValues, _numberAtoms);
+		esq /= _numberMeasurements;
+		stream << (esq - MyMath::dot_product(meanValues, meanValues)) / (kB * temperature) << " ";
 	}
 	return stream.str();
 }
