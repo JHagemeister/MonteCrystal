@@ -892,9 +892,6 @@ QDir SimulationProgram::create_unique_simulation_folder(std::string &simID, int 
 		return {};
 	}
 
-	// gather information about all current simulation parameters in one string variable
-	_config->set_all_parameters();
-
 	// unique simulation folder for output during simulation
 	QDir sim_folder = _workFolder;
 	sim_folder.cd("Data");
@@ -921,7 +918,7 @@ QDir SimulationProgram::create_unique_simulation_folder(std::string &simID, int 
 	system_dir.cd("SYSTEM");
 	QFile sim_info{ system_dir.absoluteFilePath("SimInf") };
 	sim_info.open(QIODevice::WriteOnly | QIODevice::Text);
-	sim_info.write(_config->_allParameters.c_str());
+	sim_info.write(_config->all_parameters().c_str());
 	sim_info.close();
 
 	// create subfolder SIMULATION for ouput during simulation

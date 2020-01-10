@@ -22,11 +22,8 @@
 class Configuration
 {
 public:
-	Configuration(std::string conffile = "");
-	virtual ~Configuration();
-
-	int read_parameters(void); ///< read parameters from specified configuration file
-	void set_all_parameters(void); ///< make a single string from all parameter values
+	Configuration::Configuration();
+	std::string all_parameters(void) const; ///< make a single string from all parameter values
 	void show_parameters(void); ///< show parameters on console
 	void determine_outputfolder_needed(void); ///< determine whether output folder is needed
 	void copy_configuration_file(std::string fname); ///< copy configuration file
@@ -103,21 +100,6 @@ public:
 
 	// parameters UI output
 	int _uiUpdateWidth; ///< update GUI output every _uiUpdateWidth simulation steps
-
-	std::string _allParameters; ///< string containing all parameter information
-	
-protected:
-	std::string _confile; ///< name of configuration file
-	
-	/// read lattice parameter
-	void lattice_parameters(const std::string &identifier, std::istringstream &isstream);
-	/// read spin system parameter
-	void spin_system_paremeters(const std::string &identifier, std::istringstream &isstream);
-	/// read energy parameter
-	void energy_parameters(const std::string &identifier, std::istringstream &isstream);
-
-private:
-	std::string next(std::istringstream &isstream); ///< get next string in istringstream
 };
 
 #endif /* CONFIG_H_ */

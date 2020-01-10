@@ -642,7 +642,7 @@ void Functions::write_README(const QDir &workfolder, std::string simFolder, cons
 	filestr.open(fname, std::fstream::out | std::fstream::app);
 	filestr << "SIMULATION on: " << time_stamp();
 	filestr << "    Folder Name: " << simFolder << std::endl;
-	filestr << "Configuration Parameters: " << std::endl << config->_allParameters << std::endl << std::endl;
+	filestr << "Configuration Parameters: " << std::endl << config->all_parameters() << std::endl << std::endl;
 	filestr.close();
 }
 
