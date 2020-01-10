@@ -33,7 +33,7 @@
 #include <iomanip>
 
 EnergyObservable::EnergyObservable(int numberMeasurements, QSharedPointer<Hamiltonian> hamilton,
-	int numberAtoms):
+	int numberAtoms, bool eachSpin):
 	Observable(numberMeasurements)
 {
 	/**
@@ -45,11 +45,21 @@ EnergyObservable::EnergyObservable(int numberMeasurements, QSharedPointer<Hamilt
 	_hamilton = hamilton;
 	_numberEnergies = hamilton->get_number_energies();
 	_numberAtoms = numberAtoms;
+	_eachSpin = eachSpin;
 
 	_singleEnergies = new double*[_numberEnergies];
 	for (int i = 0; i < _numberEnergies; ++i)
 	{
 		_singleEnergies[i] = new double[numberMeasurements];
+	}
+	_singleEnergiesperspin = new double**[_numberEnergies + 1];
+	for (int i = 0; i < _numberEnergies + 1; ++i)
+	{
+		_singleEnergiesperspin[i] = new double*[_numberAtoms];
+		for (int j = 0; j < _numberAtoms; ++j)
+		{
+			_singleEnergiesperspin[i][j] = new double[numberMeasurements];
+		}
 	}
 }
 
@@ -62,6 +72,18 @@ EnergyObservable::~EnergyObservable()
 	}
 	delete[] _singleEnergies;
 	_singleEnergies = NULL;
+	for (int i = 0; i < _numberEnergies + 1; ++i)
+	{
+		for (int j = 0; j < _numberAtoms; ++j)
+		{
+			delete[] _singleEnergiesperspin[i][j];
+			_singleEnergiesperspin[i][j] = NULL;
+		}
+		delete[] _singleEnergiesperspin[i];
+		_singleEnergiesperspin[i] = NULL;
+	}
+	delete[] _singleEnergiesperspin;
+	_singleEnergiesperspin = NULL;
 }
 
 std::string EnergyObservable::get_steps_header(void) const
@@ -84,6 +106,21 @@ std::string EnergyObservable::get_steps_header(void) const
 			header.append(energies[i]->get_string_id());
 		}
 		header.append("E ");
+		if (_eachSpin == TRUE)
+		{
+			for (int i = 0; i < _numberEnergies; ++i)
+			{
+				for (int j = 0; j < _numberAtoms; ++j)
+				{
+					header.append("S_" + std::to_string(j) + "_" + energies[i]->get_string_id());
+				}
+			}
+		for (int j = 0; j < _numberAtoms; ++j)
+			{
+				header.append("S_" + std::to_string(j) + "_E ");
+			}
+		}
+
 	}
 	return header;
 }
@@ -107,10 +144,27 @@ void EnergyObservable::take_value(void)
 	* Do a measurement on the system.
 	*/
 	double* valuesPntr = NULL;
+	double* valuesPntrperspin = NULL;
+	double* valuesPntrperspintotal = NULL;
 	for (int i = 0; i < _numberEnergies; ++i)
 	{
 		valuesPntr = _singleEnergies[i];
 		valuesPntr[_measurementIndex] = _hamilton->part_energy(i);
+		if (_eachSpin)
+		{
+			for (int j = 0; j < _numberAtoms; ++j)
+			{
+				valuesPntrperspin = _singleEnergiesperspin[i][j];
+				valuesPntrperspin[_measurementIndex] = _hamilton->single_part_energy(i, j);
+				valuesPntrperspintotal = _singleEnergiesperspin[_numberEnergies][j];
+				if (i == 0)
+				{
+					valuesPntrperspintotal[_measurementIndex] = 0.0;
+				}
+				valuesPntrperspintotal[_measurementIndex] += valuesPntrperspin[_measurementIndex];
+			}
+		}
+
 	}
 	++_measurementIndex;
 }
@@ -122,6 +176,7 @@ std::string EnergyObservable::get_step_value(const int &index) const
 	if (index < _numberMeasurements)
 	{
 		double* valuesPntr = NULL;
+		double* valuesPntrperspin = NULL;
 		double totalEnergy = 0;
 		for (int j = 0; j < _numberEnergies; ++j)
 		{
@@ -130,6 +185,17 @@ std::string EnergyObservable::get_step_value(const int &index) const
 			totalEnergy += valuesPntr[index];
 		}
 		stream << totalEnergy / _numberAtoms << " ";
+		if (_eachSpin == TRUE)
+		{
+			for (int j = 0; j < _numberEnergies + 1; ++j)
+			{
+				for (int k = 0; k < _numberAtoms; ++k)
+				{
+					valuesPntrperspin = _singleEnergiesperspin[j][k];
+					stream << valuesPntrperspin[index] << " ";
+				}
+			}
+		}
 	}
 	else
 	{
@@ -170,8 +236,29 @@ std::string EnergyObservable::get_mean_value(const double &temperature) const
 			}
 		}
 
-		stream << MyMath::mean_value(totalEnergies, _numberMeasurements)/_numberAtoms << " " 
-			<< MyMath::variance(totalEnergies, _numberMeasurements) / (kB * pow(temperature, 2)) << " ";
+		stream << MyMath::mean_value(totalEnergies, _numberMeasurements) / _numberAtoms << " ";
+
+		if (_eachSpin == TRUE)
+		{
+			double* valuesPntrperspin = NULL;
+			double valueperspin = 0.0;
+			for (int i = 0; i < _numberEnergies + 1; ++i)
+			{
+				for (int k = 0; k < _numberAtoms; ++k)
+				{
+					valueperspin = 0.0;
+					valuesPntrperspin = _singleEnergiesperspin[i][k];
+					for (int j = 0; j < _numberMeasurements; ++j)
+					{
+						valueperspin += valuesPntrperspin[j];
+					}
+					valueperspin /= _numberMeasurements;
+					stream << valueperspin << " ";
+				}
+			}
+		}
+
+		stream << MyMath::variance(totalEnergies, _numberMeasurements) / (kB * pow(temperature, 2)) << " ";
 
 		delete[] totalEnergies;
 	}
@@ -191,9 +278,30 @@ void EnergyObservable::clear_storage()
 	}
 	delete[] _singleEnergies;
 	_singleEnergies = NULL;
+	for (int i = 0; i < _numberEnergies + 1; ++i)
+	{
+		for (int j = 0; j < _numberAtoms; ++j)
+		{
+			delete[] _singleEnergiesperspin[i][j];
+			_singleEnergiesperspin[i][j] = NULL;
+		}
+		delete[] _singleEnergiesperspin[i];
+		_singleEnergiesperspin[i] = NULL;
+	}
+	delete[] _singleEnergiesperspin;
+	_singleEnergiesperspin = NULL;
 	_singleEnergies = new double*[_numberEnergies];
 	for (int i = 0; i < _numberEnergies; ++i)
 	{
 		_singleEnergies[i] = new double[_numberMeasurements];
+	}
+	_singleEnergiesperspin = new double** [_numberEnergies + 1];
+	for (int i = 0; i < _numberEnergies + 1; ++i)
+	{
+		_singleEnergiesperspin[i] = new double* [_numberAtoms];
+		for (int j = 0; j < _numberAtoms; ++j)
+		{
+			_singleEnergiesperspin[i][j] = new double[_numberMeasurements];
+		}
 	}
 }

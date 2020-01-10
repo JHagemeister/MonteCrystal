@@ -189,7 +189,7 @@ void Setup::setup_measurement(void)
 	if (_config->_boolE == TRUE)
 	{
 		observables.push_back(std::make_shared<EnergyObservable>(numberMeasurements, _hamilton,
-			_spinOrientation->get_number_atoms()));
+			_spinOrientation->get_number_atoms(), _config->_boolEachSpin));
 	}
 
 	if (_config->_boolM == TRUE)

@@ -19,7 +19,8 @@ class Hamiltonian;
 class EnergyObservable : public Observable
 {
 public:
-	EnergyObservable(int numberMeasurements, QSharedPointer<Hamiltonian> hamilton,	int numberAtoms);
+	EnergyObservable(int numberMeasurements, QSharedPointer<Hamiltonian> hamilton,	int numberAtoms,
+		             bool eachSpin);
 	virtual ~EnergyObservable();
 	virtual std::string get_steps_header(void) const;
 	virtual std::string get_mean_header(void) const;
@@ -32,8 +33,10 @@ protected:
 	QSharedPointer<Hamiltonian> _hamilton; ///< Hamiltonian for energy calculation
 	int _numberEnergies; ///< number of energy objects in Hamiltonian
 	int _numberAtoms; ///< number of lattice sites
+	bool _eachSpin;
 
 	double** _singleEnergies; ///< storage room for measurement values resolved to energy objects
+	double*** _singleEnergiesperspin; ///< storage room for measurement values resolved to energy objects and spins
 };
 
 #endif /* ENERGYOBSERVABLE_H_ */
