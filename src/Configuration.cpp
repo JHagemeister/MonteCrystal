@@ -332,26 +332,27 @@ std::string Configuration::all_parameters(void) const
 	}
 	_allParameters.append(" ");
 
-	_allParameters.append("K");
-	_allParameters.append("_Defects (site,energy,direction): ");
-
-	for (auto it = _anisotropyDefects.begin(); it != _anisotropyDefects.end(); ++it)
-	{
-		_allParameters.append("(");
-		_allParameters.append(std::to_string(it->first));
-		_allParameters.append(",");
-		_allParameters.append(std::to_string(it->second.energyParameter));
-		_allParameters.append(",");
-		_allParameters.append("(");
-		_allParameters.append(std::to_string(it->second.direction.x));
-		_allParameters.append(",");
-		_allParameters.append(std::to_string(it->second.direction.y));
-		_allParameters.append(",");
-		_allParameters.append(std::to_string(it->second.direction.z));
-		_allParameters.append(")");
-		_allParameters.append(")");
+	if (!_anisotropyDefects.empty()) {
+		_allParameters.append("K");
+		_allParameters.append("_Defects (site,energy,direction): ");
+		for (auto it = _anisotropyDefects.begin(); it != _anisotropyDefects.end(); ++it)
+		{
+			_allParameters.append("(");
+			_allParameters.append(std::to_string(it->first));
+			_allParameters.append(",");
+			_allParameters.append(std::to_string(it->second.energyParameter));
+			_allParameters.append(",");
+			_allParameters.append("(");
+			_allParameters.append(std::to_string(it->second.direction.x));
+			_allParameters.append(",");
+			_allParameters.append(std::to_string(it->second.direction.y));
+			_allParameters.append(",");
+			_allParameters.append(std::to_string(it->second.direction.z));
+			_allParameters.append(")");
+			_allParameters.append(")");
+		}
+		_allParameters.append(" ");
 	}
-	_allParameters.append(" ");
 
 	_allParameters.append("\n");
 	

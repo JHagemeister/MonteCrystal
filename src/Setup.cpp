@@ -550,6 +550,10 @@ void Setup::setup_anisotropy_defects(void)
 	* Setup uniaxial anisotropy energy defects.
 	*/
 
+	if (_config->_anisotropyDefects.empty()) {
+		return;
+	}
+
 	_energies.push_back(std::make_shared<UniaxialAnisotropyEnergyDefect>(_spinOrientation->get_spin_array(),
 			_config->_anisotropyDefects));
 }
