@@ -202,7 +202,7 @@ void SimulationProgram::main(void)
 		std::cout << "---------------------------------------------" << std::endl;
 		std::cout << "Metropolis calculation starts." << std::endl;
 		// start temperature and magnetic field loop
-		temperature_magnetic_field_loop(setup, ranGen, _config->_boolOutput); 
+		temperature_magnetic_field_loop(setup, ranGen, _config->_doOutput); 
 		break;
 
 	case spinSeebeck:
@@ -210,7 +210,7 @@ void SimulationProgram::main(void)
 		std::cout << "---------------------------------------------" << std::endl;
 		std::cout << "Metropolis calculation with temperature gradient starts." << std::endl;
 		// start Spin-Seebeck simulation
-		spin_seebeck(setup, ranGen, _config->_boolOutput);
+		spin_seebeck(setup, ranGen, _config->_doOutput);
 		break;
 
 	case tipMovement:
@@ -221,7 +221,7 @@ void SimulationProgram::main(void)
 		tip_movement(setup, ranGen);
 		break;
 	case Experiment01:
-		experiment01(setup, ranGen, _config->_boolOutput);
+		experiment01(setup, ranGen, _config->_doOutput);
 		break;
 	}
 
@@ -446,7 +446,7 @@ void SimulationProgram::temperature_magnetic_field_loop(const std::shared_ptr<Se
 			_mutex->unlock();
 
 			// output of measurement information as a function of simulation steps
-			if (_config->_boolOutSimulationSteps)
+			if (_config->_doSimulationStepsOutput)
 			{
 				std::string header;
 				switch (_config->_simulationType)
@@ -471,7 +471,7 @@ void SimulationProgram::temperature_magnetic_field_loop(const std::shared_ptr<Se
 			measurement->take_mean_values(stringStream.str(), *tempPtr); // mean values of observables
 
 			// output of spin configuration at end of loop step
-			if (_config->_boolSpinConfig == TRUE)
+			if (_config->_doSpinConfigOutput)
 			{ 
 				// save spin configuration as text file
 				Functions::save(setup->_spinOrientation->get_activity_list(), 
@@ -581,7 +581,7 @@ void SimulationProgram::spin_seebeck(const std::shared_ptr<Setup> &setup, std::s
 		_config->_movieStart, _config->_movieEnd, _config->_movieWidth, fname);
 
 	// output of measurement information as a function of simulation steps
-	if (_config->_boolOutSimulationSteps)
+	if (_config->_doSimulationStepsOutput)
 	{
 		std::string header;
 		switch (_config->_simulationType)

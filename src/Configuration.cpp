@@ -79,18 +79,9 @@ Configuration::Configuration()
 	_numEigenStates = 0;
 	
 	// parameters for output configuration
-	_boolOutput = FALSE;
-	_boolSpinConfig = FALSE;
 	_movieStart = -1;
 	_movieEnd = -1;
 	_movieWidth = 0;
-	_boolOutSimulationSteps = FALSE;
-	_boolE = FALSE;
-	_boolM = FALSE;
-	_boolMABS = FALSE;
-	_boolNCMR = FALSE;
-	_boolEachSpin = FALSE;
-	_boolWindingNumber = FALSE;
 
 	// parameters UI output
 	_uiUpdateWidth = 10;
@@ -399,7 +390,7 @@ std::string Configuration::all_parameters(void) const
 	_allParameters.append("\n");
 
 	_allParameters.append("Output settings: ");
-	if (_boolSpinConfig == TRUE)
+	if (_doSpinConfigOutput)
 	{
 		_allParameters.append("   SpinConfig ");
 	}
@@ -407,32 +398,32 @@ std::string Configuration::all_parameters(void) const
 	_allParameters.append("   Movie: start " + std::to_string(_movieStart) + " end " + std::to_string(_movieEnd)
 		+ " width " + std::to_string(_movieWidth));
 	
-	if (_boolOutSimulationSteps == TRUE)
+	if (_doSimulationStepsOutput)
 	{
 		_allParameters.append("   Monte_Carlo_steps ");
 	}
 
-	if (_boolE== TRUE)
+	if (_doEnergyOutput)
 	{
 		_allParameters.append("   energy ");
 	}
 
-	if (_boolM == TRUE)
+	if (_doMagnetisationOutput)
 	{
 		_allParameters.append("   magnetization ");
 	}
 	
-	if (_boolMABS)
+	if (_doAbsoluteMagnetisationOutput)
 	{
 		_allParameters.append("   absolute_magnetization ");
 	}
 
-	if (_boolEachSpin)
+	if (_doSpinResolvedOutput)
 	{
 		_allParameters.append("   each_spin ");
 	}
 
-	if (_boolWindingNumber)
+	if (_doWindingNumberOutput)
 	{
 		_allParameters.append("   winding_number ");
 	}
@@ -449,21 +440,16 @@ void Configuration::show_parameters(void)
 
 void Configuration::determine_outputfolder_needed(void)
 {
-	_boolOutput = FALSE;
-
-	if ( (_boolSpinConfig == TRUE) || (_boolE == TRUE) || (_boolM == TRUE) || (_boolMABS == TRUE)
-		|| (_boolWindingNumber == TRUE) || (_boolNCMR == TRUE) )
-	{
-		_boolOutput = TRUE;
-	}
+	_doOutput = _doSpinConfigOutput || _doEnergyOutput || _doMagnetisationOutput
+		|| _doAbsoluteMagnetisationOutput || _doWindingNumberOutput || _doNCMROutput;
 	
 	if (_movieStart > -1 && _movieEnd > -1 && _movieEnd > _movieStart && _movieWidth > 0)
 	{
-		_boolOutput = TRUE;
+		_doOutput = true;
 	}
 
 	if (_numEigenStates > 0)
 	{
-		_boolOutput = TRUE;
+		_doOutput = true;
 	}
 }

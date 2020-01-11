@@ -186,32 +186,32 @@ void Setup::setup_measurement(void)
 
 	int numberMeasurements = 1; // arbitrary choice, changed later anyway
 
-	if (_config->_boolE == TRUE)
+	if (_config->_doEnergyOutput)
 	{
 		observables.push_back(std::make_shared<EnergyObservable>(numberMeasurements, _hamilton,
-			_spinOrientation->get_number_atoms(), _config->_boolEachSpin));
+			_spinOrientation->get_number_atoms(), _config->_doSpinResolvedOutput));
 	}
 
-	if (_config->_boolM == TRUE)
+	if (_config->_doMagnetisationOutput)
 	{
 		observables.push_back(std::make_shared<MagnetisationObservable>(numberMeasurements, 
-			_spinOrientation.data(), _config->_boolEachSpin));
+			_spinOrientation.data(), _config->_doSpinResolvedOutput));
 	}
 
-	if (_config->_boolMABS == TRUE)
+	if (_config->_doAbsoluteMagnetisationOutput)
 	{
 		observables.push_back(std::make_shared<AbsoluteMagnetisationObservable>(numberMeasurements, 
 			                  _spinOrientation.data()));
 	}
 
-	if (_config->_boolNCMR == TRUE)
+	if (_config->_doNCMROutput)
 	{
 		observables.push_back(std::make_shared<NCMRContrastObservable>(numberMeasurements,
 			_spinOrientation->get_spin_array(), _spinOrientation->get_number_atoms(), 
 			_lattice->get_neighbor_array(1), _lattice->get_number_nth_neighbors(1)));
 	}
 
-	if (_config->_boolWindingNumber == TRUE)
+	if (_config->_doWindingNumberOutput == TRUE)
 	{
 		observables.push_back(std::make_shared<WindingNumber>(numberMeasurements, 
 			_spinOrientation->get_spin_array(),	_lattice->get_skN_cells(), _lattice->get_skN_cell_number()));

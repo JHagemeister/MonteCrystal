@@ -95,39 +95,14 @@ void GUIOutputElements::read_parameters(QSharedPointer<Configuration> &config)
 	{
 		config->_uiUpdateWidth = _ui->tableWidgetUIUpdate->item(0, 0)->text().toInt();
 	}
-	if (_checkBox_E->isChecked())
-	{
-		config->_boolE = TRUE;
-	}
-	if (_checkBox_M->isChecked())
-	{
-		config->_boolM = TRUE;
-	}
-	if (_checkBox_Mabs->isChecked())
-	{
-		config->_boolMABS = TRUE;
-	}
-	if (_checkBox_NCMR->isChecked())
-	{
-		config->_boolNCMR = TRUE;
-	}
-	if (_checkBox_Skn->isChecked())
-	{
-		config->_boolWindingNumber = TRUE;
-	}
-	if (_checkBox_spinConfig->isChecked())
-	{
-		config->_boolSpinConfig = TRUE;
-	}
-	if (_checkBox_espin->isChecked())
-	{
-		config->_boolEachSpin = TRUE;
-	}
-	if (_checkBox_outSimStep->isChecked())
-	{
-		config->_boolOutSimulationSteps = TRUE;
-	}
-
+	config->_doEnergyOutput = _checkBox_E->isChecked();
+	config->_doMagnetisationOutput = _checkBox_M->isChecked();
+	config->_doAbsoluteMagnetisationOutput = _checkBox_Mabs->isChecked();
+	config->_doNCMROutput = _checkBox_NCMR->isChecked();
+	config->_doWindingNumberOutput = _checkBox_Skn->isChecked();
+	config->_doSpinConfigOutput = _checkBox_spinConfig->isChecked();
+	config->_doSpinResolvedOutput = _checkBox_espin->isChecked();
+	config->_doSimulationStepsOutput = _checkBox_outSimStep->isChecked();
 	if (_ui->tableWidgetMovie->item(0, 0))
 	{
 		config->_movieStart = _ui->tableWidgetMovie->item(0, 0)->text().toDouble();

@@ -84,18 +84,18 @@ public:
 	int _numEigenStates;
 
 	// parameters for output configuration
-	int _boolOutput; ///< 1 if output into folder wanted, 0 if not output into folder wanted
-	int _boolSpinConfig; ///< spin configuration output at end of each temperature and magnetic field step
+	bool _doOutput = false; ///< 1 if output into folder wanted, 0 if not output into folder wanted
+	bool _doSpinConfigOutput = false; ///< spin configuration output at end of each temperature and magnetic field step
 	int _movieStart; ///< simulation step to begin spin configuration output
 	int _movieEnd; ///< simulation step to stop spin configuration output
 	int _movieWidth;///< every _movieWidth steps between (_movieStart, _movieEnd) output of spin configuration 
-	int _boolOutSimulationSteps; ///< save all measurement values taken as a function of simulation step
-	int _boolE; ///< save energy values, heat capacity as a function of temperature and mgnetic field step
-	int _boolM; ///< save magnetization values, susceptibility as function of temperature and magnetic field
-	int _boolMABS; ///< save absolute magnetization values as function of temperature and magnetic field
-	int _boolNCMR;
-	int _boolEachSpin; ///< save information for each spin
-	int _boolWindingNumber; ///< save skyrmion number
+	bool _doSimulationStepsOutput = false; ///< save all measurement values taken as a function of simulation step
+	bool _doEnergyOutput = false; ///< save energy values, heat capacity as a function of temperature and mgnetic field step
+	bool _doMagnetisationOutput = false; ///< save magnetization values, susceptibility as function of temperature and magnetic field
+	bool _doAbsoluteMagnetisationOutput = false; ///< save absolute magnetization values as function of temperature and magnetic field
+	bool _doNCMROutput = false;
+	bool _doSpinResolvedOutput = false; ///< save information for each spin
+	bool _doWindingNumberOutput = false; ///< save skyrmion number
 	std::string _storageFname; ///< a file name that can be used for data output
 
 	// parameters UI output
