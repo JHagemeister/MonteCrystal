@@ -596,6 +596,40 @@ void Lattice::create_triangular_hexagonal_open(int n)
 	neighbor_distances();
 	assign_neighbors();
 
+	for (int i = 0; i < _numberAtoms * _fourSpinCellsPerAtom; ++i)
+	{
+		auto site1 = _fourSpinCells[i].i;
+		auto site2 = _fourSpinCells[i].j;
+		auto site3 = _fourSpinCells[i].k;
+		auto site4 = _fourSpinCells[i].l;
+		auto tmpvalue = MyMath::norm(MyMath::difference(_latticeCoordArray[site1], _latticeCoordArray[site2]));
+		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site2], _latticeCoordArray[site3]));
+		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site3], _latticeCoordArray[site4]));
+		if (tmpvalue > 3.1)
+		{
+			_fourSpinCells[i].i = -1;
+			_fourSpinCells[i].j = -1;
+			_fourSpinCells[i].k = -1;
+			_fourSpinCells[i].l = -1;
+		}
+	}
+
+	for (int i = 0; i < _numberAtoms * _threeSiteCellsPerAtom; ++i)
+	{
+		auto site1 = _threeSiteCells[i].i;
+		auto site2 = _threeSiteCells[i].j;
+		auto site3 = _threeSiteCells[i].k;
+		auto tmpvalue = MyMath::norm(MyMath::difference(_latticeCoordArray[site1], _latticeCoordArray[site2]));
+		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site2], _latticeCoordArray[site3]));
+		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site3], _latticeCoordArray[site1]));
+		if (tmpvalue > 3.1)
+		{
+			_threeSiteCells[i].i = -1;
+			_threeSiteCells[i].j = -1;
+			_threeSiteCells[i].k = -1;
+		}
+	}
+
 	Threedim vec1 = MyMath::difference(_dummyskNTriangles[0], _dummyskNTriangles[1]);
 	Threedim vec2 = MyMath::difference(_dummyskNTriangles[0], _dummyskNTriangles[2]);
 	Threedim vec3 = MyMath::difference(_dummyskNTriangles[1], _dummyskNTriangles[2]);
@@ -641,8 +675,7 @@ void Lattice::create_triangular_hexagonal_helical(int n)
 {
 	/**
 	* This function creates a triangular lattice with a hexagonal shape. The method sets !!!only!!! next 
-	* nearest neighbors with helical boundary conditions. All other interactions will be set as with open
-	* boundary conditions. (second nearest neighbors, third nearest neighbors ... and 4-spin cells)
+	* nearest neighbors with helical boundary conditions.
 	*
 	* @param[in] n Number of sites at one straight edge of hexagonal shaped system
 	*
@@ -704,8 +737,6 @@ void Lattice::create_triangular_hexagonal_helical(int n)
 			}
 		}
 	}
-	//neighbor_distances();
-	//assign_neighbors();
 
 	_wignerSeitzCell.clear();
 	double value = 1. / (2 * sqrt(3.));
@@ -905,28 +936,6 @@ void Lattice::create_triangular_hexagonal_helical(int n)
 			* numNeigh + 5] * numNeigh + 1]; // NN top left
 		_fourSpinCells[i * _fourSpinCellsPerAtom + 11].l = _firstNeighborArray[i * numNeigh + 1]; // left
 	}
-	double tmpvalue = 0;
-	int site1 = 0;
-	int site2 = 0;
-	int site3 = 0;
-	int site4 = 0;
-	for (int i = 0; i < _numberAtoms * _fourSpinCellsPerAtom; ++i)
-	{
-		site1 = _fourSpinCells[i].i;
-		site2 = _fourSpinCells[i].j;
-		site3 = _fourSpinCells[i].k;
-		site4 = _fourSpinCells[i].l;
-		tmpvalue = MyMath::norm(MyMath::difference(_latticeCoordArray[site1], _latticeCoordArray[site2]));
-		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site2], _latticeCoordArray[site3]));
-		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site3], _latticeCoordArray[site4]));
-		if (tmpvalue > 3.1)
-		{
-			_fourSpinCells[i].i = -1;
-			_fourSpinCells[i].j = -1;
-			_fourSpinCells[i].k = -1;
-			_fourSpinCells[i].l = -1;
-		}
-	}
 	
 	_threeSiteCellsPerAtom = 6;
 	delete[] _threeSiteCells;
@@ -956,21 +965,6 @@ void Lattice::create_triangular_hexagonal_helical(int n)
 		_threeSiteCells[i * _threeSiteCellsPerAtom + 5].i = i;
 		_threeSiteCells[i * _threeSiteCellsPerAtom + 5].j = _firstNeighborArray[i * numNeigh + 2]; // bottom left
 		_threeSiteCells[i * _threeSiteCellsPerAtom + 5].k = _firstNeighborArray[i * numNeigh + 4]; // bottom right
-	}
-	for (int i = 0; i < _numberAtoms * _threeSiteCellsPerAtom; ++i)
-	{
-		site1 = _threeSiteCells[i].i;
-		site2 = _threeSiteCells[i].j;
-		site3 = _threeSiteCells[i].k;
-		tmpvalue = MyMath::norm(MyMath::difference(_latticeCoordArray[site1], _latticeCoordArray[site2]));
-		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site2], _latticeCoordArray[site3]));
-		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site3], _latticeCoordArray[site1]));
-		if (tmpvalue > 3.1)
-		{
-			_threeSiteCells[i].i = -1;
-			_threeSiteCells[i].j = -1;
-			_threeSiteCells[i].k = -1;
-		}
 	}
 }
 
