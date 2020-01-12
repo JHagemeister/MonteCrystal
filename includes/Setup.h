@@ -67,6 +67,7 @@ private:
 	void setup_DM_interaction(void);
 	void setup_biquadratic_interaction(void);
 	void setup_four_spin_interaction(void);
+	void setup_three_site_interaction(void);
 	void setup_anisotropy_energy(void);
 	void setup_dipol_interaction(void);
 	void setup_modulated_exchange_interaction(void);

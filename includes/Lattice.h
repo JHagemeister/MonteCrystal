@@ -57,6 +57,8 @@ public:
 	std::vector<Threedim> get_dummy_skN_triangles();
 	Fourdim* get_four_spin_cells(void) const;
 	int get_number_four_spin_cells_per_atom(void) const;
+	ThreeSite* get_three_site_cells(void) const;
+	int get_number_three_site_cells_per_atom(void) const;
 	int get_number_atoms(void) const;
 	int get_center_site(void);
 	std::vector<Threedim> get_wigner_seitz_cell(void) const;
@@ -100,6 +102,9 @@ protected:
 
 	Fourdim* _fourSpinCells; ///< cells for four spin interaction; size = _fourSpinCellsPerAtom*_numberAtoms
 	int _fourSpinCellsPerAtom; ///< number of cells per atom
+
+	ThreeSite* _threeSiteCells; ///< cells for three-site interaction; size = _ThreeSiteCellsPerAtom*_numberAtoms
+	int _threeSiteCellsPerAtom; ///< number of cells per atom
 
 	int* _firstNeighborArray; ///< indexes of first neighbor atoms
 	Threedim* _firstNeighborVectorArray; // vectors pointing from lattice site to all neighbors

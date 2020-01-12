@@ -244,6 +244,11 @@ std::string Configuration::all_parameters(void) const
 		_allParameters.append("   4-spin energy: " + std::to_string(_fourSpinEnergy));
 	}
 
+	if (abs(_threeSiteEnergy) > PRECISION)
+	{
+		_allParameters.append("   Three-site energy: " + std::to_string(_threeSiteEnergy));
+	}
+
 	for (int i = 0; i < _uniaxialAnisotropyEnergies.size(); ++i)
 	{
 		_allParameters.append("   Anisotorpy energy: "+std::to_string(

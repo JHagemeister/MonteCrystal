@@ -50,6 +50,9 @@ Lattice::Lattice(LatticeType latticeType, std::vector<int> latticeDimensions, in
 	_fourSpinCells = NULL;
 	_fourSpinCellsPerAtom = 0;
 
+	_threeSiteCells = NULL;
+	_threeSiteCellsPerAtom = 0;
+
 	_firstNeighborArray = NULL;
 	_firstNeighborVectorArray = NULL;
 	_secondNeighborArray = NULL;
@@ -72,6 +75,7 @@ Lattice::~Lattice()
 	delete[] _latticeCoordArray;
 	delete[] _skNcells;
 	delete[] _fourSpinCells;
+	delete[] _threeSiteCells;
 
 	delete[] _firstNeighborArray;
 	delete[] _firstNeighborVectorArray;
@@ -923,6 +927,51 @@ void Lattice::create_triangular_hexagonal_helical(int n)
 			_fourSpinCells[i].l = -1;
 		}
 	}
+	
+	_threeSiteCellsPerAtom = 6;
+	delete[] _threeSiteCells;
+	_threeSiteCells = new ThreeSite[_numberAtoms * _threeSiteCellsPerAtom]; // cells for evaluation of three-site interaction
+	for (int i = 0; i < _numberAtoms; ++i)
+	{
+		_threeSiteCells[i * _threeSiteCellsPerAtom].i = i;
+		_threeSiteCells[i * _threeSiteCellsPerAtom].j = _firstNeighborArray[i * numNeigh + 4]; // bottom right
+		_threeSiteCells[i * _threeSiteCellsPerAtom].k = _firstNeighborArray[i * numNeigh]; // right
+
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 1].i = i;
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 1].j = _firstNeighborArray[i * numNeigh + 5]; // top left
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 1].k = _firstNeighborArray[i * numNeigh + 1]; // left
+
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 2].i = i;
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 2].j = _firstNeighborArray[i * numNeigh]; // right
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 2].k = _firstNeighborArray[i * numNeigh + 3]; // top right
+
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 3].i = i;
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 3].j = _firstNeighborArray[i * numNeigh + 1]; // left
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 3].k = _firstNeighborArray[i * numNeigh + 2]; // bottom left
+
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 4].i = i;
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 4].j = _firstNeighborArray[i * numNeigh + 3]; // top right
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 4].k = _firstNeighborArray[i * numNeigh + 5]; // top left
+
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 5].i = i;
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 5].j = _firstNeighborArray[i * numNeigh + 2]; // bottom left
+		_threeSiteCells[i * _threeSiteCellsPerAtom + 5].k = _firstNeighborArray[i * numNeigh + 4]; // bottom right
+	}
+	for (int i = 0; i < _numberAtoms * _threeSiteCellsPerAtom; ++i)
+	{
+		site1 = _threeSiteCells[i].i;
+		site2 = _threeSiteCells[i].j;
+		site3 = _threeSiteCells[i].k;
+		tmpvalue = MyMath::norm(MyMath::difference(_latticeCoordArray[site1], _latticeCoordArray[site2]));
+		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site2], _latticeCoordArray[site3]));
+		tmpvalue += MyMath::norm(MyMath::difference(_latticeCoordArray[site3], _latticeCoordArray[site1]));
+		if (tmpvalue > 3.1)
+		{
+			_threeSiteCells[i].i = -1;
+			_threeSiteCells[i].j = -1;
+			_threeSiteCells[i].k = -1;
+		}
+	}
 }
 
 void Lattice::finish_cutting_process(int* belongsToCutSystem, int numberCutAtoms)
@@ -1028,6 +1077,56 @@ void Lattice::finish_cutting_process(int* belongsToCutSystem, int numberCutAtoms
 			tmp_fourSpinCells[i].l = -1;
 		}
 	}
+
+	ThreeSite * tmp_ThreeSiteCells = new ThreeSite[numberCutAtoms * _threeSiteCellsPerAtom];
+	for (int i = 0; i < numberCutAtoms * _threeSiteCellsPerAtom; ++i)
+	{
+		tmp_ThreeSiteCells[i].i = -1;
+		tmp_ThreeSiteCells[i].j = -1;
+		tmp_ThreeSiteCells[i].k = -1;
+	}
+	for (int i = 0; i < _numberAtoms; ++i)
+	{
+		if (transcriptArray[i] != -1)
+		{
+			position = transcriptArray[i] * _threeSiteCellsPerAtom;
+			for (int j = 0; j < _threeSiteCellsPerAtom; ++j)
+			{
+				tmp_ThreeSiteCells[position + j].i = _threeSiteCells[i * _threeSiteCellsPerAtom + j].i;
+				tmp_ThreeSiteCells[position + j].j = _threeSiteCells[i * _threeSiteCellsPerAtom + j].j;
+				tmp_ThreeSiteCells[position + j].k = _threeSiteCells[i * _threeSiteCellsPerAtom + j].k;
+			}
+		}
+	}
+	for (int i = 0; i < numberCutAtoms * _threeSiteCellsPerAtom; ++i)
+	{
+		tmpBool = TRUE;
+		if (tmp_ThreeSiteCells[i].i != -1)
+		{
+			tmp_ThreeSiteCells[i].i = transcriptArray[tmp_ThreeSiteCells[i].i];
+			tmp_ThreeSiteCells[i].j = transcriptArray[tmp_ThreeSiteCells[i].j];
+			tmp_ThreeSiteCells[i].k = transcriptArray[tmp_ThreeSiteCells[i].k];
+		}
+		if (tmp_ThreeSiteCells[i].i < -0.5)
+		{
+			tmpBool = FALSE;
+		}
+		if (tmp_ThreeSiteCells[i].j < -0.5)
+		{
+			tmpBool = FALSE;
+		}
+		if (tmp_ThreeSiteCells[i].k < -0.5)
+		{
+			tmpBool = FALSE;
+		}
+		if (tmpBool == FALSE)
+		{
+			tmp_ThreeSiteCells[i].i = -1;
+			tmp_ThreeSiteCells[i].j = -1;
+			tmp_ThreeSiteCells[i].k = -1;
+		}
+	}
+
 	delete[] _latticeCoordArray;
 	_latticeCoordArray = tmp_latticeCoordArray;
 	_numberAtoms = numberCutAtoms;
@@ -1036,6 +1135,8 @@ void Lattice::finish_cutting_process(int* belongsToCutSystem, int numberCutAtoms
 	_skNcellNum = skNcellNumTemp;
 	delete[] _fourSpinCells;
 	_fourSpinCells = tmp_fourSpinCells;
+	delete[] _threeSiteCells;
+	_threeSiteCells = tmp_ThreeSiteCells;
 	delete[] transcriptArray;
 
 	neighbor_distances();
@@ -2278,6 +2379,16 @@ Fourdim* Lattice::get_four_spin_cells(void) const
 int Lattice::get_number_four_spin_cells_per_atom(void) const
 {
 	return _fourSpinCellsPerAtom;
+}
+
+ThreeSite* Lattice::get_three_site_cells(void) const
+{
+	return _threeSiteCells;
+}
+
+int Lattice::get_number_three_site_cells_per_atom(void) const
+{
+	return _threeSiteCellsPerAtom;
 }
 
 int Lattice::get_number_atoms() const

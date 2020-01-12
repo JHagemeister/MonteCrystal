@@ -41,6 +41,7 @@
 #include "UniaxialAnisotropyEnergy.h"
 #include "ModulatedAnisotropyEnergy.h"
 #include "DMInteraction.h"
+#include "ThreeSpinInteraction.h"
 #include "FourSpinInteraction.h"
 #include "BiquadraticInteraction.h"
 #include "DipolarInteraction.h"
@@ -250,6 +251,8 @@ void Setup::setup_energies(void)
 
 	setup_four_spin_interaction();
 
+	setup_three_site_interaction();
+
 	setup_anisotropy_energy();
 
 	setup_dipol_interaction();
@@ -405,6 +408,23 @@ void Setup::setup_four_spin_interaction(void)
 		_energies.push_back(std::make_shared<FourSpinInteraction>(_spinOrientation->get_spin_array(),
 							_config->_fourSpinEnergy, _lattice->get_four_spin_cells(), 
 							_lattice->get_number_four_spin_cells_per_atom()));
+	}
+}
+
+void Setup::setup_three_site_interaction(void)
+{
+	/**
+	Setup of three-site energy.
+	*/
+	if (fabs(_config->_threeSiteEnergy) > PRECISION) // 4-spin interaction energy setup
+	{
+		if (_lattice->get_three_site_cells() == NULL)
+		{
+			std::cout << "error. ThreeSitecells not set. end program!" << std::endl;
+		}
+		_energies.push_back(std::make_shared<ThreeSpinInteraction>(_spinOrientation->get_spin_array(),
+			_config->_threeSiteEnergy, _lattice->get_three_site_cells(),
+			_lattice->get_number_three_site_cells_per_atom()));
 	}
 }
 

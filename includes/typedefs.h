@@ -104,6 +104,14 @@ struct Fourdim
 	int l;
 };
 
+/// Helper struct with three int values
+struct ThreeSite
+{
+	int i;
+	int j;
+	int k;
+};
+
 /// Helper struct with two double values
 struct Twodim
 {

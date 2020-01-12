@@ -56,6 +56,7 @@ public:
 	DMType _dmType;
 	double _biQuadraticEnergy;
 	double _fourSpinEnergy;
+	double _threeSiteEnergy;
 	std::vector<UniaxialAnisotropyStruct> _uniaxialAnisotropyEnergies;
 	std::vector<double> _hexagonalAnisotropyEnergies;
 	int _dipolEnergy; ///< 0 for no dipol-dipol energy; 1 for dipol-dipol energy

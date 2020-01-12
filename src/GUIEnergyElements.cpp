@@ -76,17 +76,18 @@ void GUIEnergyElements::setup_elements(void)
 
 	_ui->tableWidgetExchEnergies2->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
 	_ui->tableWidgetExchEnergies2->setRowCount(1);
-	_ui->tableWidgetExchEnergies2->setColumnCount(5);
+	_ui->tableWidgetExchEnergies2->setColumnCount(6);
 	_ui->tableWidgetExchEnergies2->verticalHeader()->hide();
 	_ui->tableWidgetExchEnergies2->setHorizontalHeaderLabels(
 		QString("<i>J</i><font size=4><sub> 6</sub>;<i>J</i><font size=4><sub> 7</sub>;\
-<i>J</i><font size=4><sub> 8</sub>;BiQ;4Spin").split(";"));
+<i>J</i><font size=4><sub> 8</sub>;BiQ;4Spin;3Spin").split(";"));
 	ratio.clear();
-	ratio.push_back(68);
-	ratio.push_back(68);
-	ratio.push_back(68);
-	ratio.push_back(70);
-	ratio.push_back(74);
+	ratio.push_back(58);
+	ratio.push_back(58);
+	ratio.push_back(58);
+	ratio.push_back(60);
+	ratio.push_back(64);
+	ratio.push_back(50);
 	_ui->tableWidgetExchEnergies2->set_column_ratio(ratio);
 	_ui->tableWidgetExchEnergies2->set_horizontal_header_height(45);
 	ratio.clear();
@@ -164,6 +165,11 @@ void GUIEnergyElements::read_parameters(QSharedPointer<Configuration> &config)
 	if (_ui->tableWidgetExchEnergies2->item(0, 4))
 	{
 		config->_fourSpinEnergy = _ui->tableWidgetExchEnergies2->item(0, 4)->text().toDouble();
+	}
+
+	if (_ui->tableWidgetExchEnergies2->item(0, 5))
+	{
+		config->_threeSiteEnergy = _ui->tableWidgetExchEnergies2->item(0, 5)->text().toDouble();
 	}
 
 	for (int i = 0; i < 5; ++i)
