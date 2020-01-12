@@ -64,6 +64,8 @@ set ( MOC_HEADERS
  includes/SpinSpiralWindow.h
  includes/WorkfolderWindow.h
  includes/SimulationProgram.h
+ includes/ToolBarWidget.h
+ includes/OpenGLWidget.h
 )
 
 set ( UIS
@@ -78,6 +80,8 @@ set ( UIS
  includes/skyrmion.ui
  includes/spinspiral.ui
  includes/workfolder.ui
+ includes/openglwidget.ui
+ includes/toolbar.ui
 )
 
 QT5_ADD_RESOURCES( RES_SOURCES resources.qrc)

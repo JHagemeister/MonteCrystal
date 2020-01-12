@@ -26,14 +26,15 @@
 
 // forward
 #include "Configuration.h"
+#include "MainWindow.h"
 
-GUILatticeElements::GUILatticeElements(Ui::QtMainWindow* ui)
+GUILatticeElements::GUILatticeElements(MainWindow* mw)
 {
 	/**
 	* @param[in] ui Pointer to object with ui elements
 	*/
 
-	_ui = ui;
+	_mw = mw;
 	setup_elements();
 	set_default_values();
 
@@ -51,15 +52,15 @@ void GUILatticeElements::setup_elements(void)
 	* The possible lattice types are specified here.
 	*/
 
-	_ui->comboBoxLatticeType->addItem(tr("simple cubic"));
-	_ui->comboBoxLatticeType->addItem(tr("body centered cubic"));
-	_ui->comboBoxLatticeType->addItem(tr("face centered cubic"));
-	_ui->comboBoxLatticeType->addItem(tr("2D triangular, hexagonal boundary"));
-	_ui->comboBoxLatticeType->addItem(tr("2D triangular, stripe"));
-	_ui->comboBoxLatticeType->addItem(tr("2D triangular, triangular boundary"));
-	_ui->comboBoxLatticeType->addItem(tr("2D triangular, half disk"));
-	_ui->comboBoxLatticeType->addItem(tr("2D triangular, disk"));
-	_ui->comboBoxLatticeType->addItem(tr("2D triangular, arrow head"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("simple cubic"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("body centered cubic"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("face centered cubic"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("2D triangular, hexagonal boundary"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("2D triangular, stripe"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("2D triangular, triangular boundary"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("2D triangular, half disk"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("2D triangular, disk"));
+	_mw->_toolbar->comboBoxLatticeType->addItem(tr("2D triangular, arrow head"));
 }
 
 void GUILatticeElements::set_default_values(void)
@@ -68,7 +69,7 @@ void GUILatticeElements::set_default_values(void)
 	* set default lattice parameters
 	*/
 
-	update_to_lattice_type(_ui->comboBoxLatticeType->currentText());
+	update_to_lattice_type(_mw->_toolbar->comboBoxLatticeType->currentText());
 }
 
 void GUILatticeElements::read_parameters(QSharedPointer<Configuration> &config)
@@ -79,7 +80,7 @@ void GUILatticeElements::read_parameters(QSharedPointer<Configuration> &config)
 	@param[in] config Object to store parameters in.
 	*/
 
-	QString qString = _ui->comboBoxLatticeType->currentText();
+	QString qString = _mw->_toolbar->comboBoxLatticeType->currentText();
 
 	if (qString.compare("simple cubic") == 0)
 	{
@@ -118,23 +119,23 @@ void GUILatticeElements::read_parameters(QSharedPointer<Configuration> &config)
 		config->_latticeType = triangularArrowHead;
 	}
 
-	int nCol = _ui->tableWidgetLatticeDimensions->columnCount();
+	int nCol = _mw->_toolbar->tableWidgetLatticeDimensions->columnCount();
 	config->_latticeDimensions.clear();
 	for (int i = 0; i < nCol -1; ++i)
 	{
-		if (_ui->tableWidgetLatticeDimensions->item(0, i))
+		if (_mw->_toolbar->tableWidgetLatticeDimensions->item(0, i))
 		{
-			int dimension = _ui->tableWidgetLatticeDimensions->item(0, i)->text().toInt();
+			int dimension = _mw->_toolbar->tableWidgetLatticeDimensions->item(0, i)->text().toInt();
 			config->_latticeDimensions.push_back(dimension);
 		}
 	}
 
-	if (_ui->tableWidgetLatticeDimensions->item(0, nCol - 1))
+	if (_mw->_toolbar->tableWidgetLatticeDimensions->item(0, nCol - 1))
 	{
-		config->_latticeConstant = _ui->tableWidgetLatticeDimensions->item(0, nCol - 1)->text().toDouble();
+		config->_latticeConstant = _mw->_toolbar->tableWidgetLatticeDimensions->item(0, nCol - 1)->text().toDouble();
 	}
 
-	qString = _ui->comboBoxBoundaryConditions->currentText();
+	qString = _mw->_toolbar->comboBoxBoundaryConditions->currentText();
 	if (qString.compare("open boundary conditions") == 0)
 	{
 		config->_boundaryConditions = openBound;
@@ -194,39 +195,39 @@ void GUILatticeElements::update_lattice_dimensions_to_lattice_type(QString qStri
 	if (qString.compare("simple cubic") == 0 || qString.compare("body centered cubic") == 0
 		|| qString.compare("face centered cubic") == 0)
 	{
-		_ui->tableWidgetLatticeDimensions->clear();
-		_ui->tableWidgetLatticeDimensions->setColumnCount(4);
-		_ui->tableWidgetLatticeDimensions->setRowCount(1);
-		_ui->tableWidgetLatticeDimensions->verticalHeader()->hide();
+		_mw->_toolbar->tableWidgetLatticeDimensions->clear();
+		_mw->_toolbar->tableWidgetLatticeDimensions->setColumnCount(4);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setRowCount(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->verticalHeader()->hide();
 		QString qString("DimX;DimY;DimZ;a [");
 		qString.append(QChar(8491));
 		qString.append("]");
-		_ui->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
+		_mw->_toolbar->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
 		ratio.push_back(1);
 		ratio.push_back(1);
 		ratio.push_back(1);
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_column_ratio(ratio);
-		_ui->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_column_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
 		ratio.clear();
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_row_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_row_ratio(ratio);
 		QTableWidgetItem* dimX = new QTableWidgetItem("30");
 		dimX->setText("30");
 		dimX->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 0, dimX);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 0, dimX);
 		QTableWidgetItem* dimY = new QTableWidgetItem();
 		dimY->setText("18");
 		dimY->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 1, dimY);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 1, dimY);
 		QTableWidgetItem* dimZ = new QTableWidgetItem();
 		dimZ->setText("1");
 		dimZ->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 2, dimZ);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 2, dimZ);
 		QTableWidgetItem* latticeConstant = new QTableWidgetItem();
 		latticeConstant->setText("1");
 		latticeConstant->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 3, latticeConstant);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 3, latticeConstant);
 	}
 
 	if (qString.compare("2D triangular, hexagonal boundary") == 0
@@ -234,99 +235,99 @@ void GUILatticeElements::update_lattice_dimensions_to_lattice_type(QString qStri
 		|| qString.compare("2D triangular, half disk") == 0
 		|| qString.compare("2D triangular, disk") == 0)
 	{
-		_ui->tableWidgetLatticeDimensions->clear();
-		_ui->tableWidgetLatticeDimensions->setColumnCount(2);
-		_ui->tableWidgetLatticeDimensions->setRowCount(1);
-		_ui->tableWidgetLatticeDimensions->verticalHeader()->hide();
+		_mw->_toolbar->tableWidgetLatticeDimensions->clear();
+		_mw->_toolbar->tableWidgetLatticeDimensions->setColumnCount(2);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setRowCount(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->verticalHeader()->hide();
 		QString qString("size n;a [");
 		qString.append(QChar(8491));
 		qString.append("]");
-		_ui->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
+		_mw->_toolbar->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
 		ratio.clear();
 		ratio.push_back(1);
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_column_ratio(ratio);
-		_ui->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_column_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
 		ratio.clear();
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_row_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_row_ratio(ratio);
 		QTableWidgetItem* dim = new QTableWidgetItem();
 		dim->setText("17");
 		dim->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 0, dim);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 0, dim);
 		QTableWidgetItem* latticeConstant = new QTableWidgetItem();
 		latticeConstant->setText("1");
 		latticeConstant->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 1, latticeConstant);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 1, latticeConstant);
 	}
 
 	if (qString.compare("2D triangular, stripe") == 0)
 	{
-		_ui->tableWidgetLatticeDimensions->clear();
-		_ui->tableWidgetLatticeDimensions->setColumnCount(3);
-		_ui->tableWidgetLatticeDimensions->setRowCount(1);
-		_ui->tableWidgetLatticeDimensions->verticalHeader()->hide();
+		_mw->_toolbar->tableWidgetLatticeDimensions->clear();
+		_mw->_toolbar->tableWidgetLatticeDimensions->setColumnCount(3);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setRowCount(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->verticalHeader()->hide();
 		QString qString("m rows;n sites per row;a [");
 		qString.append(QChar(8491));
 		qString.append("]");
-		_ui->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
+		_mw->_toolbar->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
 		ratio.clear();
 		ratio.push_back(134);
 		ratio.push_back(214);
 		ratio.push_back(134);
-		_ui->tableWidgetLatticeDimensions->set_column_ratio(ratio);
-		_ui->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_column_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
 		ratio.clear();
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_row_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_row_ratio(ratio);
 		QTableWidgetItem* mrows = new QTableWidgetItem();
 		mrows->setText("18");
 		mrows->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 0, mrows);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 0, mrows);
 		QTableWidgetItem* sites = new QTableWidgetItem();
 		sites->setText("30");
 		sites->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 1, sites);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 1, sites);
 		QTableWidgetItem* latticeConstant = new QTableWidgetItem();
 		latticeConstant->setText("1");
 		latticeConstant->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 2, latticeConstant);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 2, latticeConstant);
 	}
 
 	if (qString.compare("2D triangular, arrow head") == 0)
 	{
-		_ui->tableWidgetLatticeDimensions->clear();
-		_ui->tableWidgetLatticeDimensions->setColumnCount(3);
-		_ui->tableWidgetLatticeDimensions->setRowCount(1);
-		_ui->tableWidgetLatticeDimensions->verticalHeader()->hide();
+		_mw->_toolbar->tableWidgetLatticeDimensions->clear();
+		_mw->_toolbar->tableWidgetLatticeDimensions->setColumnCount(3);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setRowCount(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->verticalHeader()->hide();
 		QString qString("m;n;a [");
 		qString.append(QChar(8491));
 		qString.append("]");
-		_ui->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
+		_mw->_toolbar->tableWidgetLatticeDimensions->setHorizontalHeaderLabels(qString.split(";"));
 		ratio.clear();
 		ratio.push_back(1);
 		ratio.push_back(1);
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_column_ratio(ratio);
-		_ui->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_column_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_horizontal_header_height(1);
 		ratio.clear();
 		ratio.push_back(1);
-		_ui->tableWidgetLatticeDimensions->set_row_ratio(ratio);
+		_mw->_toolbar->tableWidgetLatticeDimensions->set_row_ratio(ratio);
 		QTableWidgetItem* mval = new QTableWidgetItem();
 		mval->setText("20");
 		mval->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 0, mval);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 0, mval);
 		QTableWidgetItem* nval = new QTableWidgetItem();
 		nval->setText("6");
 		nval->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 1, nval);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 1, nval);
 		QTableWidgetItem* latticeConstant = new QTableWidgetItem();
 		latticeConstant->setText("1");
 		latticeConstant->setTextAlignment(Qt::AlignCenter);
-		_ui->tableWidgetLatticeDimensions->setItem(0, 2, latticeConstant);
+		_mw->_toolbar->tableWidgetLatticeDimensions->setItem(0, 2, latticeConstant);
 	}
 
-	_ui->tableWidgetLatticeDimensions->custom_resize();
+	_mw->_toolbar->tableWidgetLatticeDimensions->custom_resize();
 }
 
 void GUILatticeElements::update_boundary_conditions_to_lattice_type(QString qString)
@@ -339,58 +340,58 @@ void GUILatticeElements::update_boundary_conditions_to_lattice_type(QString qStr
 
 	if (qString.compare("simple cubic") == 0 )
 	{
-		int count = _ui->comboBoxBoundaryConditions->count();
+		int count = _mw->_toolbar->comboBoxBoundaryConditions->count();
 		for (int i = 0; i < count; ++i)
 		{
-			_ui->comboBoxBoundaryConditions->removeItem(0);
+			_mw->_toolbar->comboBoxBoundaryConditions->removeItem(0);
 		}
-		_ui->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
-		_ui->comboBoxBoundaryConditions->addItem(tr("periodic boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("periodic boundary conditions"));
 	}
 
 	if (qString.compare("body centered cubic") == 0 || qString.compare("face centered cubic") == 0)
 	{
-		int count = _ui->comboBoxBoundaryConditions->count();
+		int count = _mw->_toolbar->comboBoxBoundaryConditions->count();
 		for (int i = 0; i < count; ++i)
 		{
-			_ui->comboBoxBoundaryConditions->removeItem(0);
+			_mw->_toolbar->comboBoxBoundaryConditions->removeItem(0);
 		}
-		_ui->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
 	}
 
 	if (qString.compare("2D triangular, hexagonal boundary") == 0)
 	{
-		int count = _ui->comboBoxBoundaryConditions->count();
+		int count = _mw->_toolbar->comboBoxBoundaryConditions->count();
 		for (int i = 0; i < count; ++i)
 		{
-			_ui->comboBoxBoundaryConditions->removeItem(0);
+			_mw->_toolbar->comboBoxBoundaryConditions->removeItem(0);
 		}
-		_ui->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
-		_ui->comboBoxBoundaryConditions->addItem(tr("helical boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("helical boundary conditions"));
 	}
 
 	if (qString.compare("2D triangular, triangular boundary") == 0
 		|| qString.compare("2D triangular, half disk") == 0
 		|| qString.compare("2D triangular, disk") == 0 || qString.compare("2D triangular, arrow head") == 0)
 	{
-		int count = _ui->comboBoxBoundaryConditions->count();
+		int count = _mw->_toolbar->comboBoxBoundaryConditions->count();
 		for (int i = 0; i < count; ++i)
 		{
-			_ui->comboBoxBoundaryConditions->removeItem(0);
+			_mw->_toolbar->comboBoxBoundaryConditions->removeItem(0);
 		}
-		_ui->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
 	}
 
 	if (qString.compare("2D triangular, stripe") == 0)
 	{
-		int count = _ui->comboBoxBoundaryConditions->count();
+		int count = _mw->_toolbar->comboBoxBoundaryConditions->count();
 		for (int i = 0; i < count; ++i)
 		{
-			_ui->comboBoxBoundaryConditions->removeItem(0);
+			_mw->_toolbar->comboBoxBoundaryConditions->removeItem(0);
 		}
-		_ui->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
-		_ui->comboBoxBoundaryConditions->addItem(tr("periodic boundary conditions"));
-		_ui->comboBoxBoundaryConditions->addItem(tr("x_periodic boundary conditions"));
-		_ui->comboBoxBoundaryConditions->addItem(tr("y_periodic boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("open boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("periodic boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("x_periodic boundary conditions"));
+		_mw->_toolbar->comboBoxBoundaryConditions->addItem(tr("y_periodic boundary conditions"));
 	}
 }

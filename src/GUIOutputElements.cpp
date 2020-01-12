@@ -22,15 +22,19 @@
 
 #include "GUIOutputElements.h"
 
+#include <QCheckBox>
+#include <QTableWidget>
+
 // forward includes
 #include "Configuration.h"
+#include "MainWindow.h"
 
-GUIOutputElements::GUIOutputElements(Ui::QtMainWindow* ui)
+GUIOutputElements::GUIOutputElements(MainWindow* mw)
 {
 	/**
 	* @param[in] ui Pointer to object with ui elements
 	*/
-	_ui = ui;
+	_mw = mw;
 	setup_elements();
 	set_default_values();
 }
@@ -42,15 +46,15 @@ void GUIOutputElements::setup_elements(void)
 	text files.
 	*/
 
-	_ui->tableWidgetUIUpdate->setColumnCount(1);
-	_ui->tableWidgetUIUpdate->setRowCount(1);
-	_ui->tableWidgetUIUpdate->verticalHeader()->hide();
-	_ui->tableWidgetUIUpdate->setHorizontalHeaderLabels(QString("uiWidth;").split(";"));
+	_mw->_toolbar->tableWidgetUIUpdate->setColumnCount(1);
+	_mw->_toolbar->tableWidgetUIUpdate->setRowCount(1);
+	_mw->_toolbar->tableWidgetUIUpdate->verticalHeader()->hide();
+	_mw->_toolbar->tableWidgetUIUpdate->setHorizontalHeaderLabels(QString("uiWidth;").split(";"));
 
-	_ui->tableWidgetMovie->setColumnCount(3);
-	_ui->tableWidgetMovie->setRowCount(1);
-	_ui->tableWidgetMovie->verticalHeader()->hide();
-	_ui->tableWidgetMovie->setHorizontalHeaderLabels(QString("start;stop;width").split(";"));
+	_mw->_toolbar->tableWidgetMovie->setColumnCount(3);
+	_mw->_toolbar->tableWidgetMovie->setRowCount(1);
+	_mw->_toolbar->tableWidgetMovie->verticalHeader()->hide();
+	_mw->_toolbar->tableWidgetMovie->setHorizontalHeaderLabels(QString("start;stop;width").split(";"));
 
 	_checkBox_E = new QCheckBox(tr("E"));
 	_checkBox_M = new QCheckBox(tr("M"));
@@ -61,17 +65,17 @@ void GUIOutputElements::setup_elements(void)
 	_checkBox_Skn = new QCheckBox(tr("SkN"));
 	_checkBox_outSimStep = new QCheckBox(tr("Step"));
 
-	_ui->gridLayoutOutput->addWidget(_checkBox_E, 0, 0);
-	_ui->gridLayoutOutput->addWidget(_checkBox_M, 0, 1);
-	_ui->gridLayoutOutput->addWidget(_checkBox_Mabs, 0, 2);
-	_ui->gridLayoutOutput->addWidget(_checkBox_NCMR, 0, 3);
-	_ui->gridLayoutOutput->addWidget(_checkBox_espin, 1, 0);
-	_ui->gridLayoutOutput->addWidget(_checkBox_Skn, 1, 1);
-	_ui->gridLayoutOutput->addWidget(_checkBox_spinConfig, 1, 2);
-	_ui->gridLayoutOutput->addWidget(_checkBox_outSimStep, 1, 3);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_E, 0, 0);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_M, 0, 1);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_Mabs, 0, 2);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_NCMR, 0, 3);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_espin, 1, 0);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_Skn, 1, 1);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_spinConfig, 1, 2);
+	_mw->_toolbar->gridLayoutOutput->addWidget(_checkBox_outSimStep, 1, 3);
 
 	QTableWidgetItem* uiWidth = new QTableWidgetItem();
-	_ui->tableWidgetUIUpdate->setItem(0, 0, uiWidth);
+	_mw->_toolbar->tableWidgetUIUpdate->setItem(0, 0, uiWidth);
 }
 
 void GUIOutputElements::set_default_values(void)
@@ -80,7 +84,7 @@ void GUIOutputElements::set_default_values(void)
 	* Set default values for output parameters
 	*/
 
-	_ui->tableWidgetUIUpdate->item(0, 0)->setText("500");
+	_mw->_toolbar->tableWidgetUIUpdate->item(0, 0)->setText("500");
 }
 
 void GUIOutputElements::read_parameters(QSharedPointer<Configuration> &config)
@@ -91,9 +95,9 @@ void GUIOutputElements::read_parameters(QSharedPointer<Configuration> &config)
 	@param[in] config Object to store parameters in.
 	*/
 
-	if (_ui->tableWidgetUIUpdate->item(0, 0))
+	if (_mw->_toolbar->tableWidgetUIUpdate->item(0, 0))
 	{
-		config->_uiUpdateWidth = _ui->tableWidgetUIUpdate->item(0, 0)->text().toInt();
+		config->_uiUpdateWidth = _mw->_toolbar->tableWidgetUIUpdate->item(0, 0)->text().toInt();
 	}
 	config->_doEnergyOutput = _checkBox_E->isChecked();
 	config->_doMagnetisationOutput = _checkBox_M->isChecked();
@@ -103,16 +107,16 @@ void GUIOutputElements::read_parameters(QSharedPointer<Configuration> &config)
 	config->_doSpinConfigOutput = _checkBox_spinConfig->isChecked();
 	config->_doSpinResolvedOutput = _checkBox_espin->isChecked();
 	config->_doSimulationStepsOutput = _checkBox_outSimStep->isChecked();
-	if (_ui->tableWidgetMovie->item(0, 0))
+	if (_mw->_toolbar->tableWidgetMovie->item(0, 0))
 	{
-		config->_movieStart = _ui->tableWidgetMovie->item(0, 0)->text().toDouble();
+		config->_movieStart = _mw->_toolbar->tableWidgetMovie->item(0, 0)->text().toDouble();
 	}
-	if (_ui->tableWidgetMovie->item(0, 1))
+	if (_mw->_toolbar->tableWidgetMovie->item(0, 1))
 	{
-		config->_movieEnd = _ui->tableWidgetMovie->item(0, 1)->text().toDouble();
+		config->_movieEnd = _mw->_toolbar->tableWidgetMovie->item(0, 1)->text().toDouble();
 	}
-	if (_ui->tableWidgetMovie->item(0, 2))
+	if (_mw->_toolbar->tableWidgetMovie->item(0, 2))
 	{
-		config->_movieWidth = _ui->tableWidgetMovie->item(0, 2)->text().toDouble();
+		config->_movieWidth = _mw->_toolbar->tableWidgetMovie->item(0, 2)->text().toDouble();
 	}
 }

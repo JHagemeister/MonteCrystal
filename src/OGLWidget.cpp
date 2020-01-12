@@ -694,12 +694,10 @@ void OGLWidget::update_color_scale(void)
 
 void OGLWidget::initializeGL()
 {
-
-	makeCurrent();
-        std::cout << "OGL "  << format().majorVersion() << "."  << format().minorVersion();
+    std::cout << "OGL "  << format().majorVersion() << "."  << format().minorVersion() << std::endl;
 	_glf = context()->versionFunctions<QOpenGLFunctions_3_3_Core>();
 	if (!_glf) {
-	    std::cout << "es geht nicht" << std::endl;
+	    std::cout << "Failed to obtain QOpenGLFunctions_3_3_Core" << std::endl;
   //  	    exit(1);
 	}
 
@@ -1151,7 +1149,8 @@ std::vector<int> OGLWidget::search_anisotropy_energies(void)
 
 void OGLWidget::resizeGL(int width, int height)
 {
-
+	_glf->glViewport(0, 0, width, height);
+	adjust_camera_to_lattice();
 }
 
 void OGLWidget::adjust_camera_to_lattice(void)

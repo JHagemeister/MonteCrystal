@@ -25,16 +25,17 @@
 // forward includes
 #include "AnisotropyWindow.h"
 #include "Configuration.h"
+#include "MainWindow.h"
 
 #include "MyHeaderView.h"
 
-GUIEnergyElements::GUIEnergyElements(Ui::QtMainWindow* ui)
+GUIEnergyElements::GUIEnergyElements(MainWindow* mw)
 {
 	/**
 	* @param[in] ui Pointer to object with ui elements
 	*/
 
-	_ui = ui;
+	_mw = mw;
 	setup_elements();
 	set_default_values();
 
@@ -55,11 +56,11 @@ void GUIEnergyElements::setup_elements(void)
 	*/
 	std::vector<int> ratio;
 
-	_ui->tableWidgetExchEnergies1->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
-	_ui->tableWidgetExchEnergies1->setRowCount(1);
-	_ui->tableWidgetExchEnergies1->setColumnCount(5);
-	_ui->tableWidgetExchEnergies1->verticalHeader()->hide();
-	_ui->tableWidgetExchEnergies1->setHorizontalHeaderLabels(
+	_mw->_toolbar->tableWidgetExchEnergies1->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
+	_mw->_toolbar->tableWidgetExchEnergies1->setRowCount(1);
+	_mw->_toolbar->tableWidgetExchEnergies1->setColumnCount(5);
+	_mw->_toolbar->tableWidgetExchEnergies1->verticalHeader()->hide();
+	_mw->_toolbar->tableWidgetExchEnergies1->setHorizontalHeaderLabels(
 		QString("<i>J</i><font size=4><sub> 1</sub>;<i>J</i><font size=4><sub> 2</sub>;\
 <i>J</i><font size=4><sub> 3</sub>;<i>J</i><font size=4><sub> 4</sub>;\
 <i>J</i><font size=4><sub> 5</sub>").split(";"));
@@ -68,17 +69,17 @@ void GUIEnergyElements::setup_elements(void)
 	ratio.push_back(68);
 	ratio.push_back(70);
 	ratio.push_back(74);
-	_ui->tableWidgetExchEnergies1->set_column_ratio(ratio);
-	_ui->tableWidgetExchEnergies1->set_horizontal_header_height(40);
+	_mw->_toolbar->tableWidgetExchEnergies1->set_column_ratio(ratio);
+	_mw->_toolbar->tableWidgetExchEnergies1->set_horizontal_header_height(40);
 	ratio.clear();
 	ratio.push_back(40);
-	_ui->tableWidgetExchEnergies1->set_row_ratio(ratio);
+	_mw->_toolbar->tableWidgetExchEnergies1->set_row_ratio(ratio);
 
-	_ui->tableWidgetExchEnergies2->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
-	_ui->tableWidgetExchEnergies2->setRowCount(1);
-	_ui->tableWidgetExchEnergies2->setColumnCount(6);
-	_ui->tableWidgetExchEnergies2->verticalHeader()->hide();
-	_ui->tableWidgetExchEnergies2->setHorizontalHeaderLabels(
+	_mw->_toolbar->tableWidgetExchEnergies2->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
+	_mw->_toolbar->tableWidgetExchEnergies2->setRowCount(1);
+	_mw->_toolbar->tableWidgetExchEnergies2->setColumnCount(6);
+	_mw->_toolbar->tableWidgetExchEnergies2->verticalHeader()->hide();
+	_mw->_toolbar->tableWidgetExchEnergies2->setHorizontalHeaderLabels(
 		QString("<i>J</i><font size=4><sub> 6</sub>;<i>J</i><font size=4><sub> 7</sub>;\
 <i>J</i><font size=4><sub> 8</sub>;BiQ;4Spin;3Spin").split(";"));
 	ratio.clear();
@@ -88,17 +89,17 @@ void GUIEnergyElements::setup_elements(void)
 	ratio.push_back(60);
 	ratio.push_back(64);
 	ratio.push_back(50);
-	_ui->tableWidgetExchEnergies2->set_column_ratio(ratio);
-	_ui->tableWidgetExchEnergies2->set_horizontal_header_height(45);
+	_mw->_toolbar->tableWidgetExchEnergies2->set_column_ratio(ratio);
+	_mw->_toolbar->tableWidgetExchEnergies2->set_horizontal_header_height(45);
 	ratio.clear();
 	ratio.push_back(40);
-	_ui->tableWidgetExchEnergies2->set_row_ratio(ratio);
+	_mw->_toolbar->tableWidgetExchEnergies2->set_row_ratio(ratio);
 
-	_ui->tableWidgetDMEnergy->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
-	_ui->tableWidgetDMEnergy->setColumnCount(5);
-	_ui->tableWidgetDMEnergy->setRowCount(1);
-	_ui->tableWidgetDMEnergy->verticalHeader()->hide();
-	_ui->tableWidgetDMEnergy->setHorizontalHeaderLabels(
+	_mw->_toolbar->tableWidgetDMEnergy->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
+	_mw->_toolbar->tableWidgetDMEnergy->setColumnCount(5);
+	_mw->_toolbar->tableWidgetDMEnergy->setRowCount(1);
+	_mw->_toolbar->tableWidgetDMEnergy->verticalHeader()->hide();
+	_mw->_toolbar->tableWidgetDMEnergy->setHorizontalHeaderLabels(
 		QString("<i>D</i><font size=4><sub>1</sub>;<i>D</i><font size=4><sub>2</sub>;\
 <i>D</i><font size=4><sub>3</sub>;<i>D</i><font size=4><sub>4</sub>;\
 <i>D</i><font size=4><sub>5</sub>").split(";"));
@@ -109,15 +110,15 @@ void GUIEnergyElements::setup_elements(void)
 	ratio.push_back(87);
 	ratio.push_back(87);
 	ratio.push_back(87);
-	_ui->tableWidgetDMEnergy->set_column_ratio(ratio);
-	_ui->tableWidgetDMEnergy->set_horizontal_header_height(40);
+	_mw->_toolbar->tableWidgetDMEnergy->set_column_ratio(ratio);
+	_mw->_toolbar->tableWidgetDMEnergy->set_horizontal_header_height(40);
 	ratio.clear();
 	ratio.push_back(40);
-	_ui->tableWidgetDMEnergy->set_row_ratio(ratio);
+	_mw->_toolbar->tableWidgetDMEnergy->set_row_ratio(ratio);
 
-	connect(_ui->pushButtonNeel, &QAbstractButton::released, 
+	connect(_mw->_toolbar->pushButtonNeel, &QAbstractButton::released, 
 		this, &GUIEnergyElements::push_button_neel);
-	connect(_ui->pushButtonChiral, &QAbstractButton::released, 
+	connect(_mw->_toolbar->pushButtonChiral, &QAbstractButton::released, 
 		this, &GUIEnergyElements::push_button_chiral);
 }
 
@@ -127,7 +128,7 @@ void GUIEnergyElements::set_default_values(void)
 	* Set default values for energy parameters
 	*/
 	QString styleSheet = "background: rgb(255, 254, 242)";
-	_ui->pushButtonNeel->setStyleSheet(styleSheet);
+	_mw->_toolbar->pushButtonNeel->setStyleSheet(styleSheet);
 	_dmType = Neel;
 }
 
@@ -141,48 +142,48 @@ void GUIEnergyElements::read_parameters(QSharedPointer<Configuration> &config)
 
 	for (int i = 0; i < 5; ++i)
 	{
-		if (_ui->tableWidgetExchEnergies1->item(0, i))
+		if (_mw->_toolbar->tableWidgetExchEnergies1->item(0, i))
 		{
-			double energy = _ui->tableWidgetExchEnergies1->item(0, i)->text().toDouble();
+			double energy = _mw->_toolbar->tableWidgetExchEnergies1->item(0, i)->text().toDouble();
 			config->_exchangeEnergies.push_back({ energy, i + 1 });
 		}
 	}
 
 	for (int i = 0; i < 3; ++i)
 	{
-		if (_ui->tableWidgetExchEnergies2->item(0, i))
+		if (_mw->_toolbar->tableWidgetExchEnergies2->item(0, i))
 		{
-			double energy = _ui->tableWidgetExchEnergies2->item(0, i)->text().toDouble();
+			double energy = _mw->_toolbar->tableWidgetExchEnergies2->item(0, i)->text().toDouble();
 			config->_exchangeEnergies.push_back({ energy, i + 6 });
 		}
 	}
 
-	if (_ui->tableWidgetExchEnergies2->item(0, 3))
+	if (_mw->_toolbar->tableWidgetExchEnergies2->item(0, 3))
 	{
-		config->_biQuadraticEnergy = _ui->tableWidgetExchEnergies2->item(0, 3)->text().toDouble();
+		config->_biQuadraticEnergy = _mw->_toolbar->tableWidgetExchEnergies2->item(0, 3)->text().toDouble();
 	}
 
-	if (_ui->tableWidgetExchEnergies2->item(0, 4))
+	if (_mw->_toolbar->tableWidgetExchEnergies2->item(0, 4))
 	{
-		config->_fourSpinEnergy = _ui->tableWidgetExchEnergies2->item(0, 4)->text().toDouble();
+		config->_fourSpinEnergy = _mw->_toolbar->tableWidgetExchEnergies2->item(0, 4)->text().toDouble();
 	}
 
-	if (_ui->tableWidgetExchEnergies2->item(0, 5))
+	if (_mw->_toolbar->tableWidgetExchEnergies2->item(0, 5))
 	{
-		config->_threeSiteEnergy = _ui->tableWidgetExchEnergies2->item(0, 5)->text().toDouble();
+		config->_threeSiteEnergy = _mw->_toolbar->tableWidgetExchEnergies2->item(0, 5)->text().toDouble();
 	}
 
 	for (int i = 0; i < 5; ++i)
 	{
-		if (_ui->tableWidgetDMEnergy->item(0, i))
+		if (_mw->_toolbar->tableWidgetDMEnergy->item(0, i))
 		{
-			double energy = _ui->tableWidgetDMEnergy->item(0, i)->text().toDouble();
+			double energy = _mw->_toolbar->tableWidgetDMEnergy->item(0, i)->text().toDouble();
 			config->_DMEnergies.push_back({ energy, i+1});
 		}
 	}
 	config->_dmType = _dmType;
 
-	if (_ui->checkBoxDipol->isChecked())
+	if (_mw->_toolbar->checkBoxDipol->isChecked())
 	{
 		config->_dipolEnergy = TRUE;
 	}
@@ -199,31 +200,31 @@ void GUIEnergyElements::read_parameters(QSharedPointer<Configuration> &config)
 
 	MagneticFieldStruct magneticField = { 0, 0, 1,{ 0,0,1 } };
 	double magneticMoment = config->_magneticMoment;
-	if (_ui->tableWidgetMagneticMoment->item(0, 0))
+	if (_mw->_toolbar->tableWidgetMagneticMoment->item(0, 0))
 	{
-		magneticMoment = _ui->tableWidgetMagneticMoment->item(0, 0)->text().toDouble();
+		magneticMoment = _mw->_toolbar->tableWidgetMagneticMoment->item(0, 0)->text().toDouble();
 	}
-	if (_ui->tableWidgetMagneticField->item(0, 0))
+	if (_mw->_toolbar->tableWidgetMagneticField->item(0, 0))
 	{
-		magneticField.start = _ui->tableWidgetMagneticField->item(0, 0)->text().toDouble();
+		magneticField.start = _mw->_toolbar->tableWidgetMagneticField->item(0, 0)->text().toDouble();
 		magneticField.start *= magneticMoment*muBohr;
 	}
-	if (_ui->tableWidgetMagneticField->item(0, 1))
+	if (_mw->_toolbar->tableWidgetMagneticField->item(0, 1))
 	{
-		magneticField.end = _ui->tableWidgetMagneticField->item(0, 1)->text().toDouble();
+		magneticField.end = _mw->_toolbar->tableWidgetMagneticField->item(0, 1)->text().toDouble();
 		magneticField.end *= magneticMoment*muBohr;
 	}
-	if (_ui->tableWidgetMagneticField->item(0, 2))
+	if (_mw->_toolbar->tableWidgetMagneticField->item(0, 2))
 	{
-		magneticField.steps = _ui->tableWidgetMagneticField->item(0, 2)->text().toInt();
+		magneticField.steps = _mw->_toolbar->tableWidgetMagneticField->item(0, 2)->text().toInt();
 	}
-	if (_ui->tableWidgetMagneticField->item(0, 3) && _ui->tableWidgetMagneticField->item(0, 4)
-		&& _ui->tableWidgetMagneticField->item(0, 5))
+	if (_mw->_toolbar->tableWidgetMagneticField->item(0, 3) && _mw->_toolbar->tableWidgetMagneticField->item(0, 4)
+		&& _mw->_toolbar->tableWidgetMagneticField->item(0, 5))
 	{
 		Threedim direction = { 0,0,0 };
-		direction.x = _ui->tableWidgetMagneticField->item(0, 3)->text().toDouble();
-		direction.y = _ui->tableWidgetMagneticField->item(0, 4)->text().toDouble();
-		direction.z = _ui->tableWidgetMagneticField->item(0, 5)->text().toDouble();
+		direction.x = _mw->_toolbar->tableWidgetMagneticField->item(0, 3)->text().toDouble();
+		direction.y = _mw->_toolbar->tableWidgetMagneticField->item(0, 4)->text().toDouble();
+		direction.z = _mw->_toolbar->tableWidgetMagneticField->item(0, 5)->text().toDouble();
 		magneticField.direction = direction;
 	}
 	config->_magneticField = magneticField;
@@ -251,21 +252,21 @@ void GUIEnergyElements::open_anisotropy_window(void)
 void GUIEnergyElements::push_button_neel(void)
 {
 	QString styleSheet = "background: rgb(255, 254, 242)";
-	_ui->pushButtonNeel->setStyleSheet(styleSheet);
+	_mw->_toolbar->pushButtonNeel->setStyleSheet(styleSheet);
 	_dmType = Neel;
 
 	styleSheet = "background: rgb(242, 242, 242)";
-	_ui->pushButtonChiral->setStyleSheet(styleSheet);
+	_mw->_toolbar->pushButtonChiral->setStyleSheet(styleSheet);
 }
 
 void GUIEnergyElements::push_button_chiral(void)
 {
 	QString styleSheet = "background: rgb(255, 254, 242)";
-	_ui->pushButtonChiral->setStyleSheet(styleSheet);
+	_mw->_toolbar->pushButtonChiral->setStyleSheet(styleSheet);
 	_dmType = Chiral;
 
 	styleSheet = "background: rgb(242, 242, 242)";
-	_ui->pushButtonNeel->setStyleSheet(styleSheet);
+	_mw->_toolbar->pushButtonNeel->setStyleSheet(styleSheet);
 }
 
 void GUIEnergyElements::anisotropy_window_destroyed(void)

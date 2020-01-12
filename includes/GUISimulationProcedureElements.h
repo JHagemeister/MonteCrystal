@@ -7,13 +7,13 @@
 #ifndef GUISIMULATIONPROCEDUREELEMENTS_H
 #define GUISIMULATIONPROCEDUREELEMENTS_H
 
-// Form include
-#include "ui_mainWindow.h"
-
 #include <QObject>
 #include <QSharedPointer>
 
+#include "typedefs.h"
+
 class Configuration;
+class MainWindow;
 
 /// Management of GUI elements concerning parameters of simulation procedure
 
@@ -21,7 +21,7 @@ class GUISimulationProcedureElements : public QObject
 {
 	Q_OBJECT
 public:
-	GUISimulationProcedureElements(Ui::QtMainWindow* ui);
+	GUISimulationProcedureElements(MainWindow* mw);
 	~GUISimulationProcedureElements();
 
 	void setup_elements(void); ///< setup GUI elements for parameters of simulation procedure
@@ -37,7 +37,7 @@ public:
 	void change_in_program_type(QString qString);
 
 protected:
-	Ui::QtMainWindow* _ui; ///< ui elements
+	MainWindow* _mw; ///< ui elements
 
 	void set_gui_magnetic_field_elements(QString qString);
 

@@ -35,6 +35,7 @@
 #include <QCloseEvent>
 #include <QKeyEvent>
 #include <QMutex>
+#include <QSplitter>
 
 #include "MarkedSpinsHandler.h"
 
@@ -51,6 +52,9 @@
 #include "GUIOutputElements.h"
 #include "WorkfolderWindow.h"
 
+#include "ToolBarWidget.h"
+#include "OpenGLWidget.h"
+
 #include <stdio.h>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -62,6 +66,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 	_ui = new Ui::QtMainWindow();
 	_ui->setupUi(this); // auto generated user interface from Qt forms
+	const auto splitter = new QSplitter(this);
+	_toolbar = new ToolBarWidget(this);
+	_opengl_widget = new OpenGLWidget(this);
+	splitter->addWidget(_toolbar);
+	splitter->addWidget(_opengl_widget);
+	splitter->setStretchFactor(0,1);
+	splitter->setStretchFactor(1, 8);
+	this->setCentralWidget(splitter);
 
 	_blockSimulationStart = FALSE;
 
@@ -69,25 +81,25 @@ MainWindow::MainWindow(QWidget *parent)
 	_experiment01Window = NULL;
 	_excitationFreqWindow = NULL;
 
-	_ui->textEditSimulationInfo->setFontPointSize(12);
-	_ui->textEditSimulationInfo->setDisabled(1);
-	_ui->textEditSimulationStep->setFontPointSize(12);
-	_ui->textEditSimulationStep->setDisabled(1);
-	_ui->textEditConvergence->setFontPointSize(12);
-	_ui->textEditConvergence->setDisabled(1);
-	_ui->textEditColorMap->setDisabled(1);
+	_opengl_widget->textEditSimulationInfo->setFontPointSize(12);
+	_opengl_widget->textEditSimulationInfo->setDisabled(1);
+	_opengl_widget->textEditSimulationStep->setFontPointSize(12);
+	_opengl_widget->textEditSimulationStep->setDisabled(1);
+	_opengl_widget->textEditConvergence->setFontPointSize(12);
+	_opengl_widget->textEditConvergence->setDisabled(1);
+	_opengl_widget->textEditColorMap->setDisabled(1);
 
-	_ui->pushButtonStartStop->setStyleSheet("QPushButton { background-color: green; }");
+	_toolbar->pushButtonStartStop->setStyleSheet("QPushButton { background-color: green; }");
 	
-	_guiProgramTypeElement = new GUIProgramTypeElement(_ui);
-	_guiEnergyElements = new GUIEnergyElements(_ui);
-	_guiLatticeElements = new GUILatticeElements(_ui);
-	_guiSpinElements = new GUISpinElements(_ui);
-	_guiOutputElements = new GUIOutputElements(_ui);
-	_guiSimulationProcedureElements = new GUISimulationProcedureElements(_ui);
+	_guiProgramTypeElement = new GUIProgramTypeElement(this);
+	_guiEnergyElements = new GUIEnergyElements(this);
+	_guiLatticeElements = new GUILatticeElements(this);
+	_guiSpinElements = new GUISpinElements(this);
+	_guiOutputElements = new GUIOutputElements(this);
+	_guiSimulationProcedureElements = new GUISimulationProcedureElements(this);
 
-	_markedSpinsHandler = new MarkedSpinsHandler(this,_ui->openGLWidget);
-	_ui->openGLWidget->set_marked_spins_handler(_markedSpinsHandler);
+	_markedSpinsHandler = new MarkedSpinsHandler(this, _opengl_widget->openGLWidget);
+	_opengl_widget->openGLWidget->set_marked_spins_handler(_markedSpinsHandler);
 
 	_simulationThread = NULL; // thread in which simulation will run
 	_terminateThread = new int(0); // variable to abort simulation
@@ -95,20 +107,20 @@ MainWindow::MainWindow(QWidget *parent)
 	_workfolder = ""; // folder to store simulation results
 
 	// output of color map information to the GUI
-	_ui->textEditColorMap->setFontPointSize(12);
-	connect(_ui->openGLWidget, &OGLWidget::color_map_text, _ui->textEditColorMap, 
+	_opengl_widget->textEditColorMap->setFontPointSize(12);
+	connect(_opengl_widget->openGLWidget, &OGLWidget::color_map_text, _opengl_widget->textEditColorMap,
 		&QTextEdit::setText, Qt::DirectConnection);
-	connect(_ui->pushButtonColor, &QAbstractButton::released, this, &MainWindow::push_button_colors);
-	connect(_ui->pushButtonWorkfolder, &QAbstractButton::released, this, &MainWindow::push_button_workfolder);
-	connect(_ui->pushButtonStartStop, &QAbstractButton::released, this, &MainWindow::start_stop_simulation);
-	connect(_ui->pushButtonSpinSpiral, &QAbstractButton::released, this, &MainWindow::push_button_spin_spiral);
-	connect(_ui->pushButtonSkyrmions, &QAbstractButton::released, this, &MainWindow::push_button_skyrmions);
-	connect(_ui->pushButtonFerromagnet, &QAbstractButton::released, this, &MainWindow::push_button_ferromagnet);
-	connect(_ui->pushButtonRandomSpin, &QAbstractButton::released, this, &MainWindow::push_button_random_spin);
-	connect(_ui->pushButtonAnisotropy, &QAbstractButton::released, this, &MainWindow::push_button_anisotropy);
-	connect(_ui->comboBoxProgramType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
+	connect(_opengl_widget->pushButtonColor, &QAbstractButton::released, this, &MainWindow::push_button_colors);
+	connect(_toolbar->pushButtonWorkfolder, &QAbstractButton::released, this, &MainWindow::push_button_workfolder);
+	connect(_toolbar->pushButtonStartStop, &QAbstractButton::released, this, &MainWindow::start_stop_simulation);
+	connect(_toolbar->pushButtonSpinSpiral, &QAbstractButton::released, this, &MainWindow::push_button_spin_spiral);
+	connect(_toolbar->pushButtonSkyrmions, &QAbstractButton::released, this, &MainWindow::push_button_skyrmions);
+	connect(_toolbar->pushButtonFerromagnet, &QAbstractButton::released, this, &MainWindow::push_button_ferromagnet);
+	connect(_toolbar->pushButtonRandomSpin, &QAbstractButton::released, this, &MainWindow::push_button_random_spin);
+	connect(_toolbar->pushButtonAnisotropy, &QAbstractButton::released, this, &MainWindow::push_button_anisotropy);
+	connect(_toolbar->comboBoxProgramType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
 		this, &MainWindow::program_type_selected);
-	connect(_ui->comboBoxLatticeType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
+	connect(_toolbar->comboBoxLatticeType, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::activated),
 		this, &MainWindow::lattice_type_selected);
 	connect(_ui->actionClose, &QAction::triggered, this, &QMainWindow::close);
 }
@@ -137,8 +149,8 @@ void MainWindow::start_stop_simulation(void)
 	// simulation not running, new simulation will be started.
 	if (_simulationThread == NULL && _colorsWindow == NULL && _blockSimulationStart == FALSE) 
 	{
-		_ui->pushButtonStartStop->setStyleSheet("QPushButton { background-color: red; }");
-		_ui->pushButtonStartStop->setText("Stop");
+		_toolbar->pushButtonStartStop->setStyleSheet("QPushButton { background-color: red; }");
+		_toolbar->pushButtonStartStop->setText("Stop");
 
 		// Configuration parameters.
 		QSharedPointer<Configuration> config = QSharedPointer<Configuration>(new Configuration); 
@@ -147,7 +159,7 @@ void MainWindow::start_stop_simulation(void)
 		config->determine_outputfolder_needed();
 		config->_storageFname = _storageFname;
 		
-		auto simulationProgram = new SimulationProgram(_workfolder, config, _ui->openGLWidget->_mutex,
+		auto simulationProgram = new SimulationProgram(_workfolder, config, _opengl_widget->openGLWidget->_mutex,
 			_terminateThread, _lattice, _spinOrientation);
 
 		_simulationThread = new QThread(); // Thread to run simulation in.
@@ -165,27 +177,27 @@ void MainWindow::start_stop_simulation(void)
 		
 		// Adjustment of camera postion in openGLWidget to lattice dimensions
 		connect(simulationProgram, &SimulationProgram::send_camera_adjustment_request, 
-			_ui->openGLWidget, &OGLWidget::adjust_camera_to_lattice, Qt::DirectConnection);
+			_opengl_widget->openGLWidget, &OGLWidget::adjust_camera_to_lattice, Qt::DirectConnection);
 		
 		// Trigger repaint of openGLWidget
 		connect(simulationProgram, &SimulationProgram::send_repaint_request, 
-			_ui->openGLWidget, static_cast<void (QWidget::*)()>(&QWidget::repaint));
+			_opengl_widget->openGLWidget, static_cast<void (QWidget::*)()>(&QWidget::repaint));
 		
 		// Update Status information of simulation in GUI
 		connect(simulationProgram, &SimulationProgram::send_simulation_info, 
-			_ui->textEditSimulationInfo, &QTextEdit::setText);
+			_opengl_widget->textEditSimulationInfo, &QTextEdit::setText);
 
 		// Update Status of simulation number in GUI
 		connect(simulationProgram, &SimulationProgram::send_simulation_step, 
-			_ui->textEditSimulationStep, &QTextEdit::setText);
+			_opengl_widget->textEditSimulationStep, &QTextEdit::setText);
 
 		// Update value of convergence criterion in GUI
 		connect(simulationProgram, &SimulationProgram::send_simulation_convergence_criterion, 
-			_ui->textEditConvergence, &QTextEdit::setText);
+			_opengl_widget->textEditConvergence, &QTextEdit::setText);
 
 		// Save QWidget to image
 		connect(simulationProgram, &SimulationProgram::send_save_image_request, 
-			_ui->openGLWidget, &OGLWidget::receive_save_request, Qt::BlockingQueuedConnection);
+			_opengl_widget->openGLWidget, &OGLWidget::receive_save_request, Qt::BlockingQueuedConnection);
 
 		// Quit Thread when simulation is done.
 		connect(simulationProgram, &SimulationProgram::send_finished, _simulationThread, &QThread::quit);
@@ -204,9 +216,9 @@ void MainWindow::start_stop_simulation(void)
 	}
 	else if ( _simulationThread != NULL) // simulation running and will be terminated
 	{
-		_ui->openGLWidget->_mutex->lock();
+		_opengl_widget->openGLWidget->_mutex->lock();
 		*_terminateThread = 1; // variable checked regularly in the simulation loop
-		_ui->openGLWidget->_mutex->unlock();
+		_opengl_widget->openGLWidget->_mutex->unlock();
 	}
 	else if (_colorsWindow != NULL) // program start not allowed while color window open
 	{
@@ -224,8 +236,8 @@ void MainWindow::receive_system_cache(QSharedPointer<Lattice> lattice,
 	_lattice = lattice;
 	_spinOrientation = spinOrientation;
 
-	_ui->openGLWidget->set_lattice(lattice);
-	_ui->openGLWidget->set_spins(spinOrientation->get_spin_array(), lattice->get_number_atoms(), boolNew);
+	_opengl_widget->openGLWidget->set_lattice(lattice);
+	_opengl_widget->openGLWidget->set_spins(spinOrientation->get_spin_array(), lattice->get_number_atoms(), boolNew);
 
 	_markedSpinsHandler->set_spin_orientation(spinOrientation, boolNew);
 }
@@ -236,7 +248,7 @@ void MainWindow::receive_hamiltonian(QSharedPointer<Hamiltonian> hamiltonian)
 	Receive Hamiltonian in order to provide energy color maps on the GUI.
 	*/
 
-	_ui->openGLWidget->set_hamiltonian(hamiltonian);
+	_opengl_widget->openGLWidget->set_hamiltonian(hamiltonian);
 }
 
 void MainWindow::program_done(void)
@@ -247,12 +259,12 @@ void MainWindow::program_done(void)
 
 	_simulationThread = NULL;
 	*_terminateThread = 0;
-	_ui->pushButtonStartStop->setText("Start");
-	_ui->pushButtonStartStop->setStyleSheet("QPushButton { background-color: green; }");
-	if (_ui->comboBoxProgramType->currentText().contains("save")
-		|| _ui->comboBoxProgramType->currentText().contains("read"))
+	_toolbar->pushButtonStartStop->setText("Start");
+	_toolbar->pushButtonStartStop->setStyleSheet("QPushButton { background-color: green; }");
+	if (_toolbar->comboBoxProgramType->currentText().contains("save")
+		|| _toolbar->comboBoxProgramType->currentText().contains("read"))
 	{
-		_ui->comboBoxProgramType->setCurrentIndex(0);
+		_toolbar->comboBoxProgramType->setCurrentIndex(0);
 	}
 }
 
@@ -279,7 +291,7 @@ void MainWindow::program_type_selected(const QString &qString)
 	{
 		if (_excitationFreqWindow == NULL && _simulationThread == NULL)
 		{
-			_excitationFreqWindow = new ExcitationFrequencyWindow(_ui->openGLWidget, _workfolder, this);
+			_excitationFreqWindow = new ExcitationFrequencyWindow(_opengl_widget->openGLWidget, _workfolder, this);
 			_excitationFreqWindow->setAttribute(Qt::WA_DeleteOnClose);
 			
 			if (_spinOrientation)
@@ -306,7 +318,7 @@ void MainWindow::program_type_selected(const QString &qString)
 		}
 		else
 		{
-			_ui->comboBoxProgramType->setCurrentIndex(0);
+			_toolbar->comboBoxProgramType->setCurrentIndex(0);
 		}
 	}
 	else 
@@ -323,7 +335,7 @@ void MainWindow::program_type_selected(const QString &qString)
 			}
 			else
 			{
-				_ui->comboBoxProgramType->setCurrentIndex(0);
+				_toolbar->comboBoxProgramType->setCurrentIndex(0);
 			}
 		}
 		else if (qString.contains("read"))
@@ -337,7 +349,7 @@ void MainWindow::program_type_selected(const QString &qString)
 			}
 			else
 			{
-				_ui->comboBoxProgramType->setCurrentIndex(0);
+				_toolbar->comboBoxProgramType->setCurrentIndex(0);
 			}
 		}
 	}
@@ -351,11 +363,11 @@ void MainWindow::push_button_colors(void)
 
 	if (_simulationThread == NULL && _colorsWindow == NULL)
 	{
-		_colorsWindow = new ColorsWindow(_ui->openGLWidget, this);
+		_colorsWindow = new ColorsWindow(_opengl_widget->openGLWidget, this);
 		_colorsWindow->setAttribute(Qt::WA_DeleteOnClose, true);
 
 		connect(_colorsWindow, &ColorsWindow::send_repaint_request, 
-			_ui->openGLWidget, static_cast<void (QWidget::*)()>(&QWidget::repaint));
+			_opengl_widget->openGLWidget, static_cast<void (QWidget::*)()>(&QWidget::repaint));
 
 		connect(_colorsWindow, &ColorsWindow::destroyed, this, &MainWindow::colors_window_destroyed);
 		_colorsWindow->open();
@@ -374,13 +386,13 @@ void MainWindow::colors_window_destroyed()
 void MainWindow::experiment01_window_destroyed()
 {
 	_experiment01Window = NULL;
-	_ui->comboBoxProgramType->setCurrentIndex(0);
+	_toolbar->comboBoxProgramType->setCurrentIndex(0);
 }
 
 void MainWindow::excitation_freq_window_destroyed()
 {
 	_excitationFreqWindow = NULL;
-	_ui->comboBoxProgramType->setCurrentIndex(0);
+	_toolbar->comboBoxProgramType->setCurrentIndex(0);
 }
 
 void MainWindow::push_button_anisotropy(void)
@@ -437,7 +449,7 @@ void MainWindow::push_button_spin_spiral(void)
 
 	if (_simulationThread == NULL && _spinOrientation != NULL && _lattice != NULL)
 	{
-		_guiSpinElements->open_spin_spiral_window(_ui->openGLWidget, _lattice->get_lattice_coordinate_array(),
+		_guiSpinElements->open_spin_spiral_window(_opengl_widget->openGLWidget, _lattice->get_lattice_coordinate_array(),
 			_spinOrientation->get_spin_array(), _spinOrientation->get_number_atoms());
 	}
 }
@@ -451,7 +463,7 @@ void MainWindow::push_button_skyrmions(void)
 
 	if (_simulationThread == NULL && _spinOrientation != NULL && _lattice != NULL)
 	{
-		_guiSpinElements->open_skyrmion_window(_ui->openGLWidget,_lattice->get_lattice_coordinate_array(),
+		_guiSpinElements->open_skyrmion_window(_opengl_widget->openGLWidget,_lattice->get_lattice_coordinate_array(),
 			_spinOrientation->get_spin_array(), _spinOrientation->get_number_atoms());
 	}
 }

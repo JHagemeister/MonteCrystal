@@ -1,5 +1,5 @@
-/*
-* main.cpp
+﻿/*
+* ToolBarWidget.cpp
 *
 * Copyright 2017 Julian Hagemeister
 *
@@ -20,27 +20,9 @@
 *
 */
 
-//#include <vld.h>
+#include "OpenGLWidget.h"
 
-#include "MainWindow.h"
-#include <QApplication>
-#include <QSurfaceFormat>
-#include <iostream>
-///Contains the entry of the MonteCrystal program with a GUI.
-int main(int argc, char **argv)
+OpenGLWidget::OpenGLWidget(QWidget * parent): QWidget(parent)
 {
-	QApplication a(argc, argv);
-
-	QSurfaceFormat format;
-	format.setVersion(3, 3);
-	format.setProfile(QSurfaceFormat::CoreProfile);
-    std::cout << "Tried to set OGL version 3.3. Obtained version: "
-		<< format.majorVersion() << "." << format.minorVersion() << std::endl;
-	QSurfaceFormat::setDefaultFormat(format);
-
-	MainWindow w;
-	w.setWindowTitle("Monte Crystal 3.1.0");
-	w.showMaximized();
-	w.read_workfolder();
-	return a.exec();
+	setupUi(this);
 }

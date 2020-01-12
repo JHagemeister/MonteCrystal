@@ -7,12 +7,13 @@
 #ifndef GUILATTICEELEMENTS_H
 #define GUILATTICEELEMENTS_H
 
-// Form include
-#include "ui_mainWindow.h"
-
 #include <QObject>
 #include <QString>
 #include <QSharedPointer>
+
+#include <typedefs.h>
+
+class MainWindow;
 
 class LatticeMaskWindow;
 
@@ -24,7 +25,7 @@ class GUILatticeElements: public QObject
 {
 Q_OBJECT
 public:
-	GUILatticeElements(Ui::QtMainWindow* ui);
+	GUILatticeElements(MainWindow* ui);
 	~GUILatticeElements();
 
 	LatticeMaskParameters _latticeMaskParameters; ///< parameters defining lattice mask bitmap read in
@@ -37,7 +38,7 @@ public:
 	void show_lattice_mask_window(void); ///< open window for lattice mask bitmap parameter specification
 
 protected:
-	Ui::QtMainWindow* _ui; ///< ui elements
+	MainWindow* _mw; ///< ui elements
 
 	LatticeMaskWindow* _latticeMaskWindow; ///< pop-up window to get parameters for lattice mask bitmap read in
 

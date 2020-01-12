@@ -15,8 +15,11 @@
 #include <QObject>
 #include <QSharedPointer>
 
+#include <typedefs.h>
+
 class AnisotropyWindow;
 class Configuration;
+class MainWindow;
 
 /// Management of GUI elements concerning energy parameters
 
@@ -24,7 +27,7 @@ class GUIEnergyElements: public QObject
 {
 Q_OBJECT
 public:
-	GUIEnergyElements(Ui::QtMainWindow* ui);
+	GUIEnergyElements(MainWindow* mw);
 
 	void setup_elements(void); ///< setup energy elements
 	void set_default_values(void); ///< set default energy parameter values
@@ -37,7 +40,7 @@ public:
 	void anisotropy_window_destroyed(void);
 
 protected:
-	Ui::QtMainWindow* _ui; ///< ui elements
+	MainWindow* _mw; ///< ui elements
 
 	AnisotropyWindow* _anisoWindow; ///< window to specify anisotropy energies
 	std::shared_ptr<std::vector<double>> _hexAnisotropies; ///< should contain three elements

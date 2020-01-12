@@ -8,10 +8,12 @@
 #define GUISPINELEMENTS_H
 
 // Form include
-#include "ui_mainWindow.h"
+#include "MainWindow.h"
 
 #include <QObject>
 #include <QSharedPointer>
+
+#include "OGLWidget.h"
 
 class Configuration;
 class SpinOrientation;
@@ -25,7 +27,7 @@ class GUISpinElements: public QObject
 {
 Q_OBJECT
 public:
-	GUISpinElements(Ui::QtMainWindow* ui);
+	GUISpinElements(MainWindow* mw);
 	~GUISpinElements();
 
 	void setup_elements(void); ///< setup GUI elements for spin parameters 
@@ -54,7 +56,7 @@ public:
 protected:
 	void close_all_spin_state_windows(void);
 
-	Ui::QtMainWindow* _ui; ///< ui elements
+	MainWindow* _mw; ///< ui elements
 
 	FerromagnetWindow* _ferromagnetWindow;
 	SkyrmionWindow* _skyrmionWindow;

@@ -26,13 +26,15 @@
 #include "AnisotropyWindow.h"
 #include "Configuration.h"
 
-GUIProgramTypeElement::GUIProgramTypeElement(Ui::QtMainWindow* ui)
+#include "MainWindow.h"
+
+GUIProgramTypeElement::GUIProgramTypeElement(MainWindow* mw)
 {
 	/**
 	* @param[in] ui Pointer to object with ui elements
 	*/
 
-	_ui = ui;
+	_mw = mw;
 
 	setup_elements();
 }
@@ -43,18 +45,18 @@ void GUIProgramTypeElement::setup_elements(void)
 	* The possible program types are specified here.
 	*/
 
-	_ui->comboBoxProgramType->addItem(tr("temperature-magnetic-field-loop"));
-	_ui->comboBoxProgramType->addItem(tr("spin-seebeck"));
-	/*_ui->comboBoxProgramType->addItem(tr("tip-movement"));*/
-	_ui->comboBoxProgramType->addItem(tr("experiment01"));
-	_ui->comboBoxProgramType->addItem(tr("eigenFreq"));
-	_ui->comboBoxProgramType->addItem(tr("read lattice configuration"));
-	_ui->comboBoxProgramType->addItem(tr("read bitmap lattice mask"));
-	_ui->comboBoxProgramType->addItem(tr("read spin configuration"));
-	_ui->comboBoxProgramType->addItem(tr("save lattice configuration"));
-	_ui->comboBoxProgramType->addItem(tr("save spin configuration"));
-	_ui->comboBoxProgramType->addItem(tr("save site resolved energies"));
-	_ui->comboBoxProgramType->addItem(tr("save site resolved topological charge"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("temperature-magnetic-field-loop"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("spin-seebeck"));
+	/*_mw->_toolbar->comboBoxProgramType->addItem(tr("tip-movement"));*/
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("experiment01"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("eigenFreq"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("read lattice configuration"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("read bitmap lattice mask"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("read spin configuration"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("save lattice configuration"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("save spin configuration"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("save site resolved energies"));
+	_mw->_toolbar->comboBoxProgramType->addItem(tr("save site resolved topological charge"));
 }
 
 void GUIProgramTypeElement::read_parameter(QSharedPointer<Configuration> &config)
@@ -63,7 +65,7 @@ void GUIProgramTypeElement::read_parameter(QSharedPointer<Configuration> &config
 	* Read specified simulation type.
 	*/
 
-	QString qString = _ui->comboBoxProgramType->currentText();
+	QString qString = _mw->_toolbar->comboBoxProgramType->currentText();
 
 	if (qString.compare("temperature-magnetic-field-loop") == 0)
 	{

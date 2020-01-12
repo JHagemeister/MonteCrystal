@@ -31,13 +31,13 @@
 
 #include "MyHeaderView.h"
 
-GUISpinElements::GUISpinElements(Ui::QtMainWindow* ui)
+GUISpinElements::GUISpinElements(MainWindow* mw)
 {
 	/**
 	* @param[in] ui Pointer to object with ui elements
 	*/
 
-	_ui = ui;
+	_mw = mw;
 	_ferromagnetWindow = NULL;
 	_skyrmionWindow = NULL;
 	_spinSpiralWindow = NULL;
@@ -59,32 +59,32 @@ GUISpinElements::~GUISpinElements()
 
 void GUISpinElements::setup_elements(void)
 {
-	_ui->tableWidgetMagneticMoment->setColumnCount(1);
-	_ui->tableWidgetMagneticMoment->setRowCount(1);
-	_ui->tableWidgetMagneticMoment->horizontalHeader()->hide();
-	_ui->tableWidgetMagneticMoment->setVerticalHeader(new MyHeaderView(Qt::Vertical, 0.1));
+	_mw->_toolbar->tableWidgetMagneticMoment->setColumnCount(1);
+	_mw->_toolbar->tableWidgetMagneticMoment->setRowCount(1);
+	_mw->_toolbar->tableWidgetMagneticMoment->horizontalHeader()->hide();
+	_mw->_toolbar->tableWidgetMagneticMoment->setVerticalHeader(new MyHeaderView(Qt::Vertical, 0.1));
 	QString text("<i>");
 	text.append(QChar(956));
 	text.append("</i> [<i>");
 	text.append(QChar(956));
 	text.append("</i><font size=4><sub><font size=1> </font size=1>B</sub></font size=4>];");
-	_ui->tableWidgetMagneticMoment->setVerticalHeaderLabels(text.split(";"));
+	_mw->_toolbar->tableWidgetMagneticMoment->setVerticalHeaderLabels(text.split(";"));
 
 	QTableWidgetItem* magneticMoment = new QTableWidgetItem();
-	_ui->tableWidgetMagneticMoment->setItem(0, 0, magneticMoment);
+	_mw->_toolbar->tableWidgetMagneticMoment->setItem(0, 0, magneticMoment);
 	
 }
 
 void GUISpinElements::set_default_values(void)
 {
-	_ui->tableWidgetMagneticMoment->item(0, 0)->setText("1");
+	_mw->_toolbar->tableWidgetMagneticMoment->item(0, 0)->setText("1");
 }
 
 void GUISpinElements::read_parameters(QSharedPointer<Configuration> &config)
 {
-	if (_ui->tableWidgetMagneticMoment->item(0, 0))
+	if (_mw->_toolbar->tableWidgetMagneticMoment->item(0, 0))
 	{
-		config->_magneticMoment = _ui->tableWidgetMagneticMoment->item(0, 0)->text().toDouble();
+		config->_magneticMoment = _mw->_toolbar->tableWidgetMagneticMoment->item(0, 0)->text().toDouble();
 	}
 }
 
@@ -172,8 +172,8 @@ void GUISpinElements::random_spin_configuration(SpinOrientation* _spinOrientatio
 {
 	_spinOrientation->random_orientation();
 	_spinOrientation->set_all_sites_active();
-	_ui->openGLWidget->set_spins_filled();
-	_ui->openGLWidget->repaint();
+	_mw->_opengl_widget->openGLWidget->set_spins_filled();
+	_mw->_opengl_widget->openGLWidget->repaint();
 }
 
 void GUISpinElements::ferromagnet(Threedim direction)
@@ -183,7 +183,7 @@ void GUISpinElements::ferromagnet(Threedim direction)
 
 		_spinArray[i] = direction;
 	}
-	_ui->openGLWidget->repaint();
+	_mw->_opengl_widget->openGLWidget->repaint();
 }
 
 void GUISpinElements::skyrmion(SkyrmionWindowParameters parameters)
@@ -213,7 +213,7 @@ void GUISpinElements::skyrmion(SkyrmionWindowParameters parameters)
 			_spinArray[i] = MyMath::normalize(MyMath::mult(spin,parameters.centerDir));
 		}
 	}
-	_ui->openGLWidget->repaint();
+	_mw->_opengl_widget->openGLWidget->repaint();
 }
 
 void GUISpinElements::spin_spiral(Threedim kVector, Threedim position, int helicity)
@@ -236,7 +236,7 @@ void GUISpinElements::spin_spiral(Threedim kVector, Threedim position, int helic
 		helpVec = MyMath::add(helpVec, helpVec1);
 		_spinArray[i] = MyMath::normalize(helpVec);
 	}
-	_ui->openGLWidget->repaint();
+	_mw->_opengl_widget->openGLWidget->repaint();
 }
 
 void GUISpinElements::restore_spin_configuration(void)
@@ -245,7 +245,7 @@ void GUISpinElements::restore_spin_configuration(void)
 	{
 		_spinArray[i] = _spinArrayTemp[i];
 	}
-	_ui->openGLWidget->repaint();
+	_mw->_opengl_widget->openGLWidget->repaint();
 }
 
 void GUISpinElements::ferromagnet_window_destroyed(void)

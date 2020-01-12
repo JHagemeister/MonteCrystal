@@ -23,6 +23,9 @@ class QKeyEvent;
 // own
 #include "typedefs.h"
 
+#include <ToolBarWidget.h>;
+#include <OpenGLWidget.h>;
+
 // forward declarations
 class AnisotropyWindow;
 class ColorsWindow;
@@ -55,6 +58,13 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
+	friend class GUISpinElements;
+	friend class GUISimulationProcedureElements;
+	friend class GUILatticeElements;
+	friend class GUIOutputElements;
+	friend class GUIEnergyElements;
+	friend class GUIProgramTypeElement;
+
 	MainWindow(QWidget *parent = 0);
 	~MainWindow();
 	void read_workfolder(void); ///< check whether a worfolder was specified by a previous programme run
@@ -96,6 +106,8 @@ public slots:
 
 protected:
 	Ui::QtMainWindow* _ui; ///< auto generated setup of GUI elements from Form file
+	ToolBarWidget* _toolbar;
+	OpenGLWidget* _opengl_widget;
 
 	ColorsWindow* _colorsWindow; ///< window to specify graphical output to GUI
 	Experiment01Window* _experiment01Window;
