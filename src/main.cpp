@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	QSurfaceFormat::setDefaultFormat(format);
 
 	MainWindow w;
-	w.setWindowTitle("Monte Crystal 3.1.0");
+	w.setWindowTitle("Monte Crystal 3.2.0");
 	w.showMaximized();
 	w.read_workfolder();
 	return a.exec();

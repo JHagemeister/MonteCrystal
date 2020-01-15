@@ -55,6 +55,8 @@
 #include "ToolBarWidget.h"
 #include "OpenGLWidget.h"
 
+#include "git.h"
+
 #include <stdio.h>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -112,6 +114,7 @@ MainWindow::MainWindow(QWidget *parent)
 		&QTextEdit::setText, Qt::DirectConnection);
 	connect(_opengl_widget->pushButtonColor, &QAbstractButton::released, this, &MainWindow::push_button_colors);
 	connect(_toolbar->pushButtonWorkfolder, &QAbstractButton::released, this, &MainWindow::push_button_workfolder);
+	connect(_toolbar->about_pushButton, &QAbstractButton::released, this, &MainWindow::show_about_box);
 	connect(_toolbar->pushButtonStartStop, &QAbstractButton::released, this, &MainWindow::start_stop_simulation);
 	connect(_toolbar->pushButtonSpinSpiral, &QAbstractButton::released, this, &MainWindow::push_button_spin_spiral);
 	connect(_toolbar->pushButtonSkyrmions, &QAbstractButton::released, this, &MainWindow::push_button_skyrmions);
@@ -402,6 +405,17 @@ void MainWindow::push_button_anisotropy(void)
 	*/
 
 	_guiEnergyElements->open_anisotropy_window();
+}
+
+void MainWindow::show_about_box(void)
+{
+	const auto about_box = new QMessageBox(this);
+	const auto dirty_string = QString{"%1"}.arg(GIT_DIRTY);
+	const auto git_dirty = dirty_string.toInt() == 1;
+	about_box->setText(QString{ "Git revision %1" }.arg(GIT_HEAD_HASH)
+		+ (git_dirty ? QString{ " CAUTION: There are local untracked changes." } : QString{}));
+	about_box->show();
+	about_box->raise();
 }
 
 void MainWindow::push_button_workfolder(void)

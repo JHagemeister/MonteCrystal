@@ -88,6 +88,7 @@ public slots:
 	
 	void push_button_anisotropy(void); ///< open window for specification of anisotropy energies
 	
+	void show_about_box();
 	void push_button_workfolder(void); ///< open file dialogue to specify workfolder for ouput
 	
 	void push_button_random_spin(void); ///< generate random spin configuration

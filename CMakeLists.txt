@@ -88,7 +88,7 @@ QT5_ADD_RESOURCES( RES_SOURCES resources.qrc)
 QT5_WRAP_UI(UI_HEADERS ${UIS})
 QT5_WRAP_CPP(MOC_SRCS ${MOC_HEADERS})
 
-add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc)
+add_executable(MonteCrystal ${SOURCES} ${MOC_SRCS} ${RES_SOURCES} ${UI_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/src/app.rc git.h)
 
 set_target_properties(MonteCrystal PROPERTIES AUTOGEN_BUILD_DIR ${CMAKE_BINARY_DIR})
 
@@ -103,3 +103,5 @@ find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})   
 
 target_link_libraries(MonteCrystal Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen ${GSL_LIBRARIES} ${X11_LIBRARIES})
+
+add_custom_command(OUTPUT git.h COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/git.cmake)
