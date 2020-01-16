@@ -413,7 +413,9 @@ void MainWindow::show_about_box(void)
 	const auto dirty_string = QString{"%1"}.arg(GIT_DIRTY);
 	const auto git_dirty = dirty_string.toInt() == 1;
 	about_box->setText(QString{ "Git revision %1" }.arg(GIT_HEAD_HASH)
-		+ (git_dirty ? QString{ " CAUTION: There are local untracked changes." } : QString{}));
+		+ (git_dirty ? QString{ " CAUTION: There are local untracked changes. "
+			"Note that making the git commit alone will not remove this warning. "
+			"You also need to rebuild afterwards." } : QString{}));
 	about_box->show();
 	about_box->raise();
 }
