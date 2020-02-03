@@ -162,7 +162,7 @@ void GUISimulationProcedureElements::setup_elements(void)
 	}
 }
 
-void GUISimulationProcedureElements::read_parameters(QSharedPointer<Configuration> &config)
+void GUISimulationProcedureElements::read_parameters(const std::shared_ptr<Configuration> &config)
 {
 	if (_mw->_toolbar->comboBoxSimulationType->currentText().compare("Metropolis Monte Carlo") == 0)
 	{

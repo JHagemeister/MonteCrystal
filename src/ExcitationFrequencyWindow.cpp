@@ -151,7 +151,7 @@ void ExcitationFrequencyWindow::start_visualization()
 	}
 }
 
-void ExcitationFrequencyWindow::read_parameters(QSharedPointer<Configuration> &config)
+void ExcitationFrequencyWindow::read_parameters(const std::shared_ptr<Configuration> &config)
 {
 	if (_ui.tableWidgetNumEigStates->item(0, 0))
 	{

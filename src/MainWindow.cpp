@@ -156,7 +156,7 @@ void MainWindow::start_stop_simulation(void)
 		_toolbar->pushButtonStartStop->setText("Stop");
 
 		// Configuration parameters.
-		QSharedPointer<Configuration> config = QSharedPointer<Configuration>(new Configuration); 
+		const auto config = std::make_shared<Configuration>(); 
 		read_parameters_from_ui(config);
 
 		config->determine_outputfolder_needed();
@@ -616,7 +616,7 @@ void MainWindow::write_workfolder(void)
 	_workfolder.mkdir("Data");
 }
 
-void MainWindow::read_parameters_from_ui(QSharedPointer<Configuration> &config)
+void MainWindow::read_parameters_from_ui(const std::shared_ptr<Configuration> &config)
 {
 	/**
 	Read the parameters for the next simulation from the GUI.
@@ -645,7 +645,7 @@ void MainWindow::read_parameters_from_ui(QSharedPointer<Configuration> &config)
 	read_experiment_windows(config);
 }
 
-void MainWindow::read_experiment_windows(QSharedPointer<Configuration> &config)
+void MainWindow::read_experiment_windows(const std::shared_ptr<Configuration> &config)
 {
 	if (_experiment01Window != NULL)
 	{
@@ -658,7 +658,7 @@ void MainWindow::read_experiment_windows(QSharedPointer<Configuration> &config)
 	}
 }
 
-void MainWindow::check_lattice_cache(QSharedPointer<Configuration> &config)
+void MainWindow::check_lattice_cache(const std::shared_ptr<Configuration> &config)
 {
 	/**
 	Checks if lattice stored in cache is equivalent to the parameters specified in config. If not, cache is

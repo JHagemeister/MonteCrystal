@@ -138,14 +138,14 @@ protected:
 	void write_workfolder(void);
 
 	// read parameters from gui right before start of a new simulation
-	void read_parameters_from_ui(QSharedPointer<Configuration> &config); ///< GUI parameters into config
+	void read_parameters_from_ui(const std::shared_ptr<Configuration> &config); ///< GUI parameters into config
 	
-	void read_experiment_windows(QSharedPointer<Configuration> &config);
+	void read_experiment_windows(const std::shared_ptr<Configuration> &config);
 
 	/// compare parameters read from GUI for next simulation to lattice of previous simulation
 	/** If there has been no changes regarding the crystal structure, the lattice of last simulation will be
 	    used */
-	void check_lattice_cache(QSharedPointer<Configuration> &config); 
+	void check_lattice_cache(const std::shared_ptr<Configuration> &config);
 };
 
 #endif // MAINWINDOW_H

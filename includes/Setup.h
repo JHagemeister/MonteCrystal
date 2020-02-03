@@ -35,7 +35,7 @@ class SpinOrientation;
 class Setup
 {
 public:
-	Setup(QSharedPointer<Configuration> config);
+	Setup(const std::shared_ptr<Configuration> &config);
 	virtual ~Setup();
 	
 	// creation of lattice, spinOrientation, Hamiltonian and Energy objects
@@ -78,7 +78,7 @@ private:
 	void setup_dm_defects(void);
 	void setup_anisotropy_defects(void);
 
-	QSharedPointer<Configuration> _config;
+	std::shared_ptr<Configuration> _config;
 	
 	std::vector<std::shared_ptr<Observable>> observables;
 	std::shared_ptr<ZeemanEnergy> _zeemanEnergy;

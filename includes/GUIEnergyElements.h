@@ -31,7 +31,7 @@ public:
 
 	void setup_elements(void); ///< setup energy elements
 	void set_default_values(void); ///< set default energy parameter values
-	void read_parameters(QSharedPointer<Configuration> &config); ///< energy parameters from GUI
+	void read_parameters(const std::shared_ptr<Configuration> &config); ///< energy parameters from GUI
 	void open_anisotropy_window(void); ///< open additional window to specify anisotropy energies
 
 	public slots:

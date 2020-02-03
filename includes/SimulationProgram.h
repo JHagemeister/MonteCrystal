@@ -43,7 +43,7 @@ class SimulationProgram: public QObject
 {
 Q_OBJECT
 public:
-	SimulationProgram(QDir &workfolder, QSharedPointer<Configuration> config, QMutex* mutex,
+	SimulationProgram(QDir &workfolder, const std::shared_ptr<Configuration> &config, QMutex* mutex,
 		int* terminateThread, QSharedPointer<Lattice> lattice,
 		QSharedPointer<SpinOrientation> spinOrientation);
 	virtual ~SimulationProgram();
@@ -113,7 +113,7 @@ protected:
 	containing the simulation folders */
 	QDir _workFolder; 
 	/// configuration parameters
-	QSharedPointer<Configuration> _config;
+	std::shared_ptr<Configuration> _config;
 	/// lattice from cache of last simulation
 	QSharedPointer<Lattice> _lattice;
 	/// spin orientation from cache of last simulation

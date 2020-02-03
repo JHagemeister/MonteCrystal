@@ -72,7 +72,7 @@ void GUILatticeElements::set_default_values(void)
 	update_to_lattice_type(_mw->_toolbar->comboBoxLatticeType->currentText());
 }
 
-void GUILatticeElements::read_parameters(QSharedPointer<Configuration> &config)
+void GUILatticeElements::read_parameters(const std::shared_ptr<Configuration> &config)
 {
 	/**
 	Determines the lattice parameters from the GUI.

@@ -32,7 +32,7 @@ public:
 
 	void setup_elements(void); ///< setup GUI elements for spin parameters 
 	void set_default_values(void); ///< set default values for spin parameters
-	void read_parameters(QSharedPointer<Configuration> &config); ///< spin parameters from GUI
+	void read_parameters(const std::shared_ptr<Configuration> &config); ///< spin parameters from GUI
 
 	void open_ferromagnet_window(Threedim* latticeCoordArray, Threedim* spinArray, int numberAtoms);
 

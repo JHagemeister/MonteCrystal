@@ -25,7 +25,7 @@ public:
 	~GUISimulationProcedureElements();
 
 	void setup_elements(void); ///< setup GUI elements for parameters of simulation procedure
-	void read_parameters(QSharedPointer<Configuration> &config); ///< simulation procedure parameters from GUI
+	void read_parameters(const std::shared_ptr<Configuration> &config); ///< simulation procedure parameters from GUI
 
 	public slots:
 	void change_in_magnetic_field_table(int row, int column);

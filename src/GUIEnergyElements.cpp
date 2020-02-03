@@ -132,7 +132,7 @@ void GUIEnergyElements::set_default_values(void)
 	_dmType = Neel;
 }
 
-void GUIEnergyElements::read_parameters(QSharedPointer<Configuration> &config)
+void GUIEnergyElements::read_parameters(const std::shared_ptr<Configuration> &config)
 {
 	/**
 	Determines the energy parameters from the GUI.

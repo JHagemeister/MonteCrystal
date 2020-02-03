@@ -24,7 +24,7 @@ public:
 
 	void setup_elements(void); ///< setup GUI elements for output parameters
 	void set_default_values(void); ///< set default output parameter values
-	void read_parameters(QSharedPointer<Configuration> &config); ///< output parameters from GUI
+	void read_parameters(const std::shared_ptr<Configuration> &config); ///< output parameters from GUI
 
 protected:
 	MainWindow* _mw; ///< ui elements

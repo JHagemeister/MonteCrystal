@@ -59,7 +59,7 @@ void GUIProgramTypeElement::setup_elements(void)
 	_mw->_toolbar->comboBoxProgramType->addItem(tr("save site resolved topological charge"));
 }
 
-void GUIProgramTypeElement::read_parameter(QSharedPointer<Configuration> &config)
+void GUIProgramTypeElement::read_parameter(const std::shared_ptr<Configuration> &config)
 {
 	/**
 	* Read specified simulation type.

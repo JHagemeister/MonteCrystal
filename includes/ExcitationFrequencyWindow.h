@@ -26,7 +26,7 @@ public:
 
 	void start_visualization(void);
 
-	void read_parameters(QSharedPointer<Configuration> &config);
+	void read_parameters(const std::shared_ptr<Configuration> &config);
 
 	public slots:
 	void button_eigenvalues(void);

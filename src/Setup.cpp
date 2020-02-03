@@ -58,7 +58,7 @@
 #include "WindingNumber.h"
 #include "Measurement.h"
 
-Setup::Setup(QSharedPointer<Configuration> config)
+Setup::Setup(const std::shared_ptr<Configuration> &config)
 {
 	_config = config;
 }

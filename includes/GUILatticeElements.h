@@ -32,7 +32,7 @@ public:
 
 	void setup_elements(void); ///< setup GUI elements for lattice parameters 
 	void set_default_values(void); ///< set default values for lattice parameters
-	void read_parameters(QSharedPointer<Configuration> &config); ///< lattice parameters from GUI
+	void read_parameters(const std::shared_ptr<Configuration> &config); ///< lattice parameters from GUI
 	void update_to_lattice_type(QString qString); ///< adjust GUI if different lattice type is selected
 
 	void show_lattice_mask_window(void); ///< open window for lattice mask bitmap parameter specification

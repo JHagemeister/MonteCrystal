@@ -80,7 +80,7 @@ void GUISpinElements::set_default_values(void)
 	_mw->_toolbar->tableWidgetMagneticMoment->item(0, 0)->setText("1");
 }
 
-void GUISpinElements::read_parameters(QSharedPointer<Configuration> &config)
+void GUISpinElements::read_parameters(const std::shared_ptr<Configuration> &config)
 {
 	if (_mw->_toolbar->tableWidgetMagneticMoment->item(0, 0))
 	{

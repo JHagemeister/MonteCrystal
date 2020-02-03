@@ -22,7 +22,7 @@ public:
 	GUIProgramTypeElement(MainWindow* mw);
 
 	void setup_elements(void); ///< setup energy elements
-	void read_parameter(QSharedPointer<Configuration> &config); ///< read selected program type from GUI
+	void read_parameter(const std::shared_ptr<Configuration> &config); ///< read selected program type from GUI
 
 protected:
 	MainWindow* _mw; ///< pointer to object with ui elements

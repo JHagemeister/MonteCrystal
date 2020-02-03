@@ -49,7 +49,7 @@
 #include <fstream>
 #include <iostream>
 
-SimulationProgram::SimulationProgram(QDir &workfolder, QSharedPointer<Configuration> config, 
+SimulationProgram::SimulationProgram(QDir &workfolder, const std::shared_ptr<Configuration> &config, 
 	QMutex* mutex, int* terminateThread, QSharedPointer<Lattice> lattice,
 	QSharedPointer<SpinOrientation> spinOrientation)
 {
@@ -904,7 +904,7 @@ QDir SimulationProgram::create_unique_simulation_folder(std::string &simID, int 
 
 	// append string generated from parameters specified in _config. This is useful to quickly determine the
 	// purpose of a simulation from the folder name.
-	simulation_folder_name.append(QString::fromStdString(Functions::folder_name(_config.data())));
+	simulation_folder_name.append(QString::fromStdString(Functions::folder_name(_config.get())));
 
 	// create simulation folder
 	sim_folder.mkdir(simulation_folder_name);
@@ -926,7 +926,7 @@ QDir SimulationProgram::create_unique_simulation_folder(std::string &simID, int 
 	simulation_dir.mkdir("SIMULATION");
 
 	// write new entry with simulation information into README file
-	Functions::write_README(_workFolder, sim_folder.absolutePath().toStdString(), _config.data());
+	Functions::write_README(_workFolder, sim_folder.absolutePath().toStdString(), _config.get());
 
 	return sim_folder;
 }

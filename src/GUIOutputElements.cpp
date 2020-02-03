@@ -87,7 +87,7 @@ void GUIOutputElements::set_default_values(void)
 	_mw->_toolbar->tableWidgetUIUpdate->item(0, 0)->setText("500");
 }
 
-void GUIOutputElements::read_parameters(QSharedPointer<Configuration> &config)
+void GUIOutputElements::read_parameters(const std::shared_ptr<Configuration> &config)
 {
 	/**
 	Reads output parameters from GUI.
