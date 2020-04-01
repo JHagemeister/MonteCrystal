@@ -57,6 +57,7 @@ Configuration::Configuration()
 	_hexagonalAnisotropyEnergies.push_back(0);
 	_hexagonalAnisotropyEnergies.push_back(0);
 	_hexagonalAnisotropyEnergies.push_back(0);
+	_pseudoDipolarEnergy = 0;
 	_biQuadraticEnergy = 0;
 	_fourSpinEnergy = 0;
 	_dipolEnergy = FALSE;
@@ -233,6 +234,11 @@ std::string Configuration::all_parameters(void) const
 		_allParameters.append(" chiral");
 		break;
 	}
+
+	if (abs(_pseudoDipolarEnergy) > PRECISION)
+	{
+		_allParameters.append("   Pseudo-Dipolar energy: " + std::to_string(_pseudoDipolarEnergy));
+	}	
 
 	if (abs(_biQuadraticEnergy) > PRECISION)
 	{

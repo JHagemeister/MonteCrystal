@@ -65,6 +65,7 @@ public:
 private:
 	void setup_exchange_interaction(void);
 	void setup_DM_interaction(void);
+	void setup_pseudo_dipolar_energy(void);
 	void setup_biquadratic_interaction(void);
 	void setup_four_spin_interaction(void);
 	void setup_three_site_interaction(void);

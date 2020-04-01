@@ -54,6 +54,7 @@ public:
 	std::vector<ExchangeEnergyStruct> _exchangeEnergies; 
 	std::vector<ExchangeEnergyStruct> _DMEnergies;
 	DMType _dmType;
+	double _pseudoDipolarEnergy;
 	double _biQuadraticEnergy;
 	double _fourSpinEnergy;
 	double _threeSiteEnergy;

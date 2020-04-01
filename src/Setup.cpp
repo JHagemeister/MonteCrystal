@@ -49,6 +49,7 @@
 #include "Tip.h"
 #include "ModulatedExchangeInteraction.h"
 #include "ExchangeInteractionDefect.h"
+#include "PseudoDipolarEnergy.h"
 #include "DMInteractionDefect.h"
 #include "UniaxialAnisotropyEnergyDefect.h"
 #include "EnergyObservable.h"
@@ -247,6 +248,8 @@ void Setup::setup_energies(void)
 
 	setup_DM_interaction();
 
+	setup_pseudo_dipolar_energy();
+
 	setup_biquadratic_interaction();
 
 	setup_four_spin_interaction();
@@ -375,6 +378,17 @@ void Setup::setup_DM_interaction(void)
 			_energies.push_back(std::make_shared<DMInteraction>(_spinOrientation->get_spin_array(),
 				it->energyParameter, Threedim{0, 0, 1}, _config->_dmType, _lattice.data(), it->order));
 		}
+	}
+}
+
+void Setup::setup_pseudo_dipolar_energy(void)
+{
+	if (fabs(_config->_pseudoDipolarEnergy) > PRECISION)
+	{
+		int numberNeighbors = _lattice->get_number_nth_neighbors(1);
+		int* neighborPtr = _lattice->get_neighbor_array(1);
+		_energies.push_back(std::make_shared<PseudoDipolarEnergy>(_spinOrientation->get_spin_array(),
+			_config->_pseudoDipolarEnergy, neighborPtr, numberNeighbors, _lattice->get_neighbor_vector_array(1)));
 	}
 }
 

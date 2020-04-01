@@ -58,17 +58,19 @@ void GUIEnergyElements::setup_elements(void)
 
 	_mw->_toolbar->tableWidgetExchEnergies1->setHorizontalHeader(new MyHeaderView(Qt::Horizontal));
 	_mw->_toolbar->tableWidgetExchEnergies1->setRowCount(1);
-	_mw->_toolbar->tableWidgetExchEnergies1->setColumnCount(5);
+	_mw->_toolbar->tableWidgetExchEnergies1->setColumnCount(6);
 	_mw->_toolbar->tableWidgetExchEnergies1->verticalHeader()->hide();
 	_mw->_toolbar->tableWidgetExchEnergies1->setHorizontalHeaderLabels(
 		QString("<i>J</i><font size=4><sub> 1</sub>;<i>J</i><font size=4><sub> 2</sub>;\
 <i>J</i><font size=4><sub> 3</sub>;<i>J</i><font size=4><sub> 4</sub>;\
-<i>J</i><font size=4><sub> 5</sub>").split(";"));
-	ratio.push_back(68);
-	ratio.push_back(68);
-	ratio.push_back(68);
-	ratio.push_back(70);
-	ratio.push_back(74);
+<i>J</i><font size=4><sub> 5</sub>;\
+<i>J</i><font size=4><sub> pd</sub>").split(";"));
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
 	_mw->_toolbar->tableWidgetExchEnergies1->set_column_ratio(ratio);
 	_mw->_toolbar->tableWidgetExchEnergies1->set_horizontal_header_height(40);
 	ratio.clear();
@@ -83,12 +85,12 @@ void GUIEnergyElements::setup_elements(void)
 		QString("<i>J</i><font size=4><sub> 6</sub>;<i>J</i><font size=4><sub> 7</sub>;\
 <i>J</i><font size=4><sub> 8</sub>;BiQ;4Spin;3Spin").split(";"));
 	ratio.clear();
-	ratio.push_back(58);
-	ratio.push_back(58);
-	ratio.push_back(58);
 	ratio.push_back(60);
-	ratio.push_back(64);
-	ratio.push_back(50);
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
+	ratio.push_back(60);
 	_mw->_toolbar->tableWidgetExchEnergies2->set_column_ratio(ratio);
 	_mw->_toolbar->tableWidgetExchEnergies2->set_horizontal_header_height(45);
 	ratio.clear();
@@ -147,6 +149,11 @@ void GUIEnergyElements::read_parameters(const std::shared_ptr<Configuration> &co
 			double energy = _mw->_toolbar->tableWidgetExchEnergies1->item(0, i)->text().toDouble();
 			config->_exchangeEnergies.push_back({ energy, i + 1 });
 		}
+	}
+
+	if (_mw->_toolbar->tableWidgetExchEnergies1->item(0, 5))
+	{
+		config->_pseudoDipolarEnergy = _mw->_toolbar->tableWidgetExchEnergies1->item(0, 5)->text().toDouble();
 	}
 
 	for (int i = 0; i < 3; ++i)

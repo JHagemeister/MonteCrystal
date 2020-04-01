@@ -61,7 +61,7 @@ SimulationProgram::SimulationProgram(QDir &workfolder, const std::shared_ptr<Con
 	*                       textfile with the history of all simulations, and a folder called "Data" which
 	*                       contains a folder with a unique ID for each simulation.
 	* @param[in] config This object contains all the necessary parameters needed for a simulation.
-	* @param[in] mutex This object is needed to avoid simultaneous access to data as lattice and spin 
+	* @param[in] mutex This object is needed to avoid simultaneous access to data as lattice and spin
 	*                  configuration from simulation thread and GUI thread.
 	* @param[in] terminateThread This is a boolean variable that is shared between simulation and GUI thread. 
 	*                            A running simulation will be aborted when set to true.
