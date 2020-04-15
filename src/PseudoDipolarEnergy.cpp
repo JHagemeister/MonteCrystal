@@ -55,7 +55,7 @@ double PseudoDipolarEnergy::single_energy(const int &position) const
 			MyMath::dot_product(_spinArray[_neighborArray[_nbors * position + i]], _neighborVectorArray[_nbors * position + i]);
 		}
 	}
-	energy = _energyParameter * energy;
+	energy = -_energyParameter * energy;
 	return energy; // energy of single atom
 }
 
@@ -71,5 +71,5 @@ Threedim PseudoDipolarEnergy::effective_field(const int &position) const
 			MyMath::dot_product(_spinArray[_neighborArray[_nbors * position + i]], _neighborVectorArray[_nbors * position + i])));
 		}
 	}
-	return MyMath::mult(field, -_energyParameter); // energy of single atom
+	return MyMath::mult(field, _energyParameter); // energy of single atom
 }
