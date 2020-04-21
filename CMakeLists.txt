@@ -104,4 +104,4 @@ include_directories(${GSL_INCLUDE_DIRS})
 
 target_link_libraries(MonteCrystal Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen ${GSL_LIBRARIES} ${X11_LIBRARIES})
 
-add_custom_command(OUTPUT git.h dummy_ensure_always_run.h COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/git.cmake)
+add_custom_command(OUTPUT git.h   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/git.cmake)
