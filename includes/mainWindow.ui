@@ -18,49 +18,49 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow{
-background:  rgb(242, 242, 242);
+background:  rgba(242, 242, 242,255);
 }
 
 QComboBox{
-background:  rgb(242, 242, 242);
+background:  rgba(242, 242, 242,255);
 border: none;
 }
 
 QComboBox:hover{
-background: rgb(255, 255, 191,255);
-border:  2px solid rgb(255, 170, 0,255);
+background: rgba(255, 255, 191,255);
+border:  2px solid rgba(255, 170, 0,255);
 }
 
 QPushButton:hover{
-background: rgb(255, 255, 191,255);
-border:  2px solid rgb(255, 170, 0,255);
+background: rgba(255, 255, 191,255);
+border:  2px solid rgba(255, 170, 0,255);
 }
 
 QPushButton{
 border: none;
-background:  rgb(242, 242, 242);
+background:  rgba(242, 242, 242,255);
 }
 
 QTableWidget {
-    background: rgb(255, 254, 242);
+    background: rgba(255, 254, 242,255);
 border: none;
 }
 
 QHeaderView::section{
-background-color:  rgb(232, 232, 232);
-border: 1px solid rgb(255, 254, 242);
+background-color:  rgba(232, 232, 232,255);
+border: 1px solid rgba(255, 254, 242,255);
 }
 
 QTableView::item:hover {
-    background-color: rgb(255, 255, 191,255);
+    background-color: rgba(255, 255, 191,255);
 }   
 
 QTableWidget::item{ 
-selection-background-color: rgb(255, 254, 242);
+selection-background-color: rgba(255, 254, 242,255);
 }
 
 QTextEdit{
-background:rgb(242, 242, 242);
+background:rgba(242, 242, 242,255);
 border: none;
 }
 </string>
