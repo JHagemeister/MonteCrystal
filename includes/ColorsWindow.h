@@ -140,8 +140,8 @@ private:
 	void setup_spin_model(void);
 	void update_display_color_table_widget_spin_color(void);
 
-	void setup_color_map(void);
-	void color_map_gray_scale(void);
+    void setup_color_map(void);
+    void color_map_gray_scale(void);
 	void set_color_map_colors(std::vector<glm::vec4> colorMapColors);
 	void read_color_map_colors(void);
 	void update_display_colors_table_widget_color_map(void);

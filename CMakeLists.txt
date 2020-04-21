@@ -46,6 +46,7 @@ set ( MOC_HEADERS
  includes/MainWindow.h
  includes/AnisotropyWindow.h
  includes/ColorsWindow.h
+ includes/CameraWindow.h
  includes/CustomTableWidget.h
  includes/ExcitationFrequencyWindow.h
  includes/Experiment01Window.h
@@ -82,6 +83,7 @@ set ( UIS
  includes/workfolder.ui
  includes/openglwidget.ui
  includes/toolbar.ui
+ includes/camera.ui
 )
 
 QT5_ADD_RESOURCES( RES_SOURCES resources.qrc)
@@ -104,4 +106,4 @@ include_directories(${GSL_INCLUDE_DIRS})
 
 target_link_libraries(MonteCrystal Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen ${GSL_LIBRARIES} ${X11_LIBRARIES})
 
-add_custom_command(OUTPUT git.h   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/git.cmake)
+add_custom_command(OUTPUT git.h COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/git.cmake)

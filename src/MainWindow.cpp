@@ -25,6 +25,7 @@
 // forward declared
 #include "AnisotropyWindow.h"
 #include "ColorsWindow.h"
+#include "CameraWindow.h"
 #include "Experiment01Window.h"
 #include "ExcitationFrequencyWindow.h"
 
@@ -73,13 +74,14 @@ MainWindow::MainWindow(QWidget *parent)
 	_opengl_widget = new OpenGLWidget(this);
 	splitter->addWidget(_toolbar);
 	splitter->addWidget(_opengl_widget);
-	splitter->setStretchFactor(0,1);
-	splitter->setStretchFactor(1, 8);
+    splitter->setStretchFactor(0,1);
+    splitter->setStretchFactor(1, 4);
 	this->setCentralWidget(splitter);
 
 	_blockSimulationStart = FALSE;
 
 	_colorsWindow = NULL;
+    _cameraWindow =NULL;
 	_experiment01Window = NULL;
 	_excitationFreqWindow = NULL;
 
@@ -106,13 +108,14 @@ MainWindow::MainWindow(QWidget *parent)
 	_simulationThread = NULL; // thread in which simulation will run
 	_terminateThread = new int(0); // variable to abort simulation
 
-	_workfolder = ""; // folder to store simulation results
+    _workfolder =""; // folder to store simulation results
 
 	// output of color map information to the GUI
 	_opengl_widget->textEditColorMap->setFontPointSize(12);
 	connect(_opengl_widget->openGLWidget, &OGLWidget::color_map_text, _opengl_widget->textEditColorMap,
 		&QTextEdit::setText, Qt::DirectConnection);
 	connect(_opengl_widget->pushButtonColor, &QAbstractButton::released, this, &MainWindow::push_button_colors);
+    connect(_opengl_widget->pushButtonCamera, &QAbstractButton::released, this, &MainWindow::push_button_camera);
 	connect(_toolbar->pushButtonWorkfolder, &QAbstractButton::released, this, &MainWindow::push_button_workfolder);
 	connect(_toolbar->about_pushButton, &QAbstractButton::released, this, &MainWindow::show_about_box);
 	connect(_toolbar->pushButtonStartStop, &QAbstractButton::released, this, &MainWindow::start_stop_simulation);
@@ -180,7 +183,7 @@ void MainWindow::start_stop_simulation(void)
 		
 		// Adjustment of camera postion in openGLWidget to lattice dimensions
 		connect(simulationProgram, &SimulationProgram::send_camera_adjustment_request, 
-			_opengl_widget->openGLWidget, &OGLWidget::adjust_camera_to_lattice, Qt::DirectConnection);
+            _opengl_widget->openGLWidget, &OGLWidget::adjust_camera_to_lattice, Qt::DirectConnection);
 		
 		// Trigger repaint of openGLWidget
 		connect(simulationProgram, &SimulationProgram::send_repaint_request, 
@@ -377,6 +380,26 @@ void MainWindow::push_button_colors(void)
 	}
 }
 
+
+void MainWindow::push_button_camera(void)
+{
+    /**
+    Open window to specify Camera Position and Orientation.
+    */
+
+    if (_simulationThread == NULL && _cameraWindow == NULL)
+    {
+        _cameraWindow = new CameraWindow(_opengl_widget->openGLWidget, this);
+        _cameraWindow->setAttribute(Qt::WA_DeleteOnClose, true);
+
+        connect(_cameraWindow, &CameraWindow::destroyed, this, &MainWindow::camera_window_destroyed);
+        _cameraWindow->open();
+    }
+}
+
+
+
+
 void MainWindow::colors_window_destroyed()
 {
 	/**
@@ -386,6 +409,15 @@ void MainWindow::colors_window_destroyed()
 	_colorsWindow = NULL;
 }
 
+void MainWindow::camera_window_destroyed()
+{
+
+    /**
+    Reset member pointer to zero after window deletion.
+    */
+
+    _cameraWindow = NULL;
+}
 void MainWindow::experiment01_window_destroyed()
 {
 	_experiment01Window = NULL;

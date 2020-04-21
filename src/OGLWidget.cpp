@@ -33,14 +33,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/norm.hpp>
+#include <GL/glut.h>
 
 #include <QMouseEvent>
 #include <QMutex>
 #include <QRubberBand>
-
+#include <QApplication>
+#include <QMessageBox>
 OGLWidget::OGLWidget(QWidget *parent): 
 	QOpenGLWidget(parent),
-	_spinColor(1.0f,0.0f,0.0f,0.0f), _backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
+    _spinColor(1.0f,0.0f,0.0f,0.0f),_backgroundColor(0.0f, 0.0f, 0.0f, 1.0f)
 {
 	_markedSpinsHandler = NULL;
 
@@ -56,6 +58,10 @@ OGLWidget::OGLWidget(QWidget *parent):
 	_spinsSingleColor = FALSE;
 	_visibleSpinOrder = 1;
 	
+    _showBase = FALSE;
+    _baseOffset= glm::vec3{2.0f,2.0f,1.0f};
+    _baseColor=glm::vec4(0.7f,0.7f,0.7f,1.0f);
+
 	_colorMapType = NoMap;
 	_colorMapColors.push_back(glm::vec4{ 0.0f,0.0f,0.8f,1.0f });
 	_colorMapColors.push_back(glm::vec4{ 0.0f,0.0f,0.0f,1.0f });
@@ -67,12 +73,13 @@ OGLWidget::OGLWidget(QWidget *parent):
 	_boolSetMinMaxLater = FALSE;
 	_redScaleMap = Twodim{ 0,0 };
 	_greenScaleMap = Twodim{ 0,0 };
-	_blueScaleMap = Twodim{ 0,0 };
-	_colorMapOffset = -10;
+    _blueScaleMap = Twodim{ 0,0 };
+    _colorMapOffset =  -0.5;
+
 	
 	_hamiltonian = NULL;
 
-	_spinMeshParams = { 15, 2.f, 3.f, 0.7f, 0.7f };
+    _spinMeshParams = { 15, 2.f, 3.f, 0.7f, 0.7f };
 	_spinMeshParamsFname = "spin_model_params";
 	Functions::get_spin_model_params(_spinMeshParams, _spinMeshParamsFname);
 	_spinScaleFactor.x = _spinMeshParams.scale;
@@ -381,7 +388,7 @@ void OGLWidget::set_visible_spins_order(int order)
 
 double OGLWidget::get_minimal_distance_to_lattice_site(Threedim vector, int &siteIndex)
 {
-	double distance = 10; // arbitrary
+    double distance = 10; // arbitrary
 	for (int i = 0; i < _numberAtoms; ++i)
 	{
 		double test = MyMath::norm(MyMath::difference(_latticeCoordArray[i], vector));
@@ -434,6 +441,50 @@ void OGLWidget::set_spin_invisible(int index)
 	_visibleWireFrameSpins.erase(index);
 	_visibleFilledSpins.erase(index);
 }
+
+void OGLWidget::set_camera(void)
+{
+    Threedim min = { 0,0,0 };
+    Threedim max = { 0,0,0 };
+
+    if (_lattice!= NULL){
+    MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
+    }
+    glm::vec3 center= {(max.x + min.x)/2,(max.y + min.y)/2,(max.z + min.z)/2};
+    if (_orthoView){
+       _cameraPos= _viewOffset+center;
+       _cameraPos.z =_cameraAngle.z;
+       _projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
+       _view = glm::lookAt(_cameraPos,  _cameraPos + glm::vec3(0,0,-1), glm::vec3(0,1,0));
+    }
+
+    else {
+
+
+
+
+        _cameraFront=glm::vec3{sin((_cameraAngle.x/180)*M_PI)* sin(_cameraAngle.y/180*M_PI) * fabs(_cameraAngle.z),
+                                           cos((_cameraAngle.x/180)*M_PI)* sin(_cameraAngle.y/180*M_PI) * fabs(_cameraAngle.z),
+                                           -cos((_cameraAngle.y/180)*M_PI)* fabs(_cameraAngle.z)} ;
+
+
+        _cameraUp   =glm::vec3{sin((_cameraAngle.x/180)*M_PI) * cos(_cameraAngle.y/180*M_PI) ,
+                                           cos((_cameraAngle.x/180)*M_PI) * cos(_cameraAngle.y/180*M_PI),
+                                           sin((_cameraAngle.y/180)*M_PI)};
+
+
+        _cameraPos  =glm::vec3{_viewOffset.x + center.x-_cameraFront.x,
+                               _viewOffset.y + center.y-_cameraFront.y,
+                               _viewOffset.z + center.z-_cameraFront.z} ;
+
+
+        _projection = glm::perspective(glm::radians(45.0f), float(width())/float(height()), 0.1f, 100.0f);
+        _view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
+    }
+
+}
+
+
 
 void OGLWidget::set_spins(Threedim * spinArray, int size, int boolNew)
 {
@@ -748,7 +799,10 @@ void OGLWidget::paintGL()
 		paint_spins();
 	}
 
-	paint_points();
+    paint_spheres(1,10);
+    if( _showBase){
+        paint_base();
+    }
 
 	_mutex->unlock();
 }
@@ -761,13 +815,11 @@ void OGLWidget::paint_spins(void)
 
 	_shader.use(_glf);   // <-- Don't forget this one!
 
-	// Transformation matrices
-	glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
-	glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
+    // Transformation matrices
 
-	_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
-		glm::value_ptr(projection));
-	_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+        glm::value_ptr(_projection));
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
 
 	for (auto it = _visibleFilledSpins.begin(); it != _visibleFilledSpins.end(); ++it)
 	{
@@ -781,6 +833,40 @@ void OGLWidget::paint_spins(void)
 	}
 	_glf->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
+
+
+void OGLWidget::paint_spheres(float r,int slices){
+    _shader.use(_glf);   // <-- Don't forget this one!
+
+    // Transformation matrices
+
+
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+        glm::value_ptr(_projection));
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
+
+    for (auto index = _visibleFilledSpins.begin(); index != _visibleFilledSpins.end(); ++index){
+        glm::mat4 model (1.0f);
+
+        // translation to lattice site
+        model = glm::translate(model, glm::vec3(_latticeCoordArray[*index].x, _latticeCoordArray[*index].y, _latticeCoordArray[*index].z));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+            glm::value_ptr(model));
+
+        GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
+        GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
+        GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
+
+        _glf->glUniform4f(objectColorLoc, 1.0f,1.0f, 1.0f, 1.0f);
+        _glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+        _glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
+
+    }
+
+
+}
+
+
 
 void OGLWidget::paint_single_spin(int index)
 {
@@ -868,19 +954,16 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 	{
 		_shader.use(_glf);
 
-		glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
-		glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
-
-		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
-			glm::value_ptr(projection));
-		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+            glm::value_ptr(_projection));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
 
 		std::vector<Vertex> vertices;
 		vertices.push_back({ glm::vec3{ 0.0f, 0.0f, 0.0f }, glm::vec3{ 0.0f, 0.0f, 1.0f } });
 		for (int i = 0; i < _wignerSeitzCell.size(); i++)
 		{
 			vertices.push_back({ glm::vec3{ (float)_wignerSeitzCell[i].x, (float)_wignerSeitzCell[i].y,
-				(float)_wignerSeitzCell[i].z }, glm::vec3{ 0.0f, 0.0f, 1.0f } });
+                (float)_wignerSeitzCell[i].z }, glm::vec3{ 0.0f, 0.0f, 1.0f } });
 		}
 
 		std::vector<GLuint> indices;
@@ -963,6 +1046,49 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 		}
 	}
 }
+void OGLWidget::paint_base(void)
+{
+    /**
+    * Paint a base plane.
+    */
+    _shader.use(_glf);
+    glm::mat4 model (1.0f);
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+        glm::value_ptr(model));
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+        glm::value_ptr(_projection));
+    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
+
+
+    Threedim min = { 0,0,0 };
+    Threedim max = { 0,0,0 };
+    if (_latticeCoordArray != NULL){
+    MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
+        }
+
+
+    std::vector<Vertex> vertices;
+    vertices.push_back({glm::vec3{min.x-_baseOffset.x,min.y-_baseOffset.y,min.z-_baseOffset.z},glm::vec3{0.0f,0.0f,1.0f}});
+    vertices.push_back({glm::vec3{max.x+_baseOffset.x,min.y-_baseOffset.y,min.z-_baseOffset.z},glm::vec3{0.0f,0.0f,1.0f}});
+    vertices.push_back({glm::vec3{max.x+_baseOffset.x,max.y+_baseOffset.y,min.z-_baseOffset.z},glm::vec3{0.0f,0.0f,1.0f}});
+    vertices.push_back({glm::vec3{min.x-_baseOffset.x,max.y+_baseOffset.y,min.z-_baseOffset.z},glm::vec3{0.0f,0.0f,1.0f}});
+    std::vector<GLuint> indices = std::vector<GLuint>({(GLuint)0,(GLuint)1,(GLuint)2,(GLuint)2,(GLuint)3,(GLuint)0,});
+
+
+    Mesh mesh(_glf, vertices, indices);
+    GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
+    GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
+    GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
+
+    glm::vec4 color=_baseColor;
+    _glf->glUniform4f(objectColorLoc, color.r, color.g, color.b, color.a);
+    _glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+    _glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
+
+    mesh.draw();
+
+}
+
 
 void OGLWidget::paint_color_map_topological_charge(void)
 {
@@ -974,12 +1100,14 @@ void OGLWidget::paint_color_map_topological_charge(void)
 	{
 		_shader.use(_glf);
 
-		glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
-		glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
+;
+        glm::mat4 model (1.0f);
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
+            glm::value_ptr(model));
 
-		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
-			glm::value_ptr(projection));
-		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+            glm::value_ptr(_projection));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
 
 		// triangles that are used to plot the color map
 		std::vector<Mesh> meshes;
@@ -1040,12 +1168,10 @@ void OGLWidget::paint_points(void)
 	{
 		_shader.use(_glf);
 
-		glm::mat4 projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
-		glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
-		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
-			glm::value_ptr(projection));
-		_glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
+            glm::value_ptr(_projection));
+        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
 
 		std::vector<Vertex> vertices;
 		vertices.push_back({ glm::vec3{ -0.25f, (float) -sqrt(3)/12., -0.499f }, glm::vec3{ 0.0f, 0.0f, 1.0f } });
@@ -1155,42 +1281,47 @@ void OGLWidget::resizeGL(int width, int height)
 
 void OGLWidget::adjust_camera_to_lattice(void)
 {
-	/**
-	Always looks (anti-)parallel to z-axis. The camera position is adjusted such that the whole lattice
-	fits into the widget window.
-	*/
+    /**
+    Always looks (anti-)parallel to z-axis. The camera position is adjusted such that the whole lattice
+    fits into the widget window.
+    */
 
-	_mutex->lock();
-	if (_latticeCoordArray == NULL)
-	{
-		_cameraPos = glm::vec3(17.0f, 3.5f, 30.0f); // random default
-	}
-	else
-	{
-		Threedim min = { 0,0,0 };
-		Threedim max = { 0,0,0 };
-		MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
+    _mutex->lock();
+    if (_latticeCoordArray == NULL)
+    {
+        _cameraPos = glm::vec3(17.0f, 3.5f, 30.0f); // random default
+    }
+    else
+    {
+        Threedim min = { 0,0,0 };
+        Threedim max = { 0,0,0 };
+        MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
 
-		_cameraPos.x = (max.x + min.x) / 2; // move camera to center
-		_cameraPos.y = (max.y + min.y) / 2;
+        _cameraPos.x = (max.x + min.x) / 2; // move camera to center
+        _cameraPos.y = (max.y + min.y) / 2;
+        _cameraFront = glm::vec3(0.0f,0.0f,-1.0f);
+        _cameraUp = glm::vec3(0.0f,1.0f,0.0f);
+        float windowAspectRatio = (float)height() / (float)width();
+        float offset = 1.5; // smallest distance between lattice and widget edge in crystal lattice constants
+        float latticeAspectRatio = (max.y - min.y + 2.*offset) / (max.x - min.x + 2.*offset);
 
-		float windowAspectRatio = (float)height() / (float)width();
-		float offset = 1.5; // smallest distance between lattice and widget edge in crystal lattice constants
-		float latticeAspectRatio = (max.y - min.y + 2.*offset) / (max.x - min.x + 2.*offset);
+        // Scale view so that lattice optimally fills out widget size
+        if (latticeAspectRatio > windowAspectRatio)
+        {
+            _viewY = (max.y - min.y) / 2. + offset;
+            _viewX = _viewY / windowAspectRatio;
+        }
+        else
+        {
+            _viewX = (max.x - min.x) / 2. + offset;
+            _viewY = _viewX * windowAspectRatio;
+        }
+    }
 
-		// Scale view so that lattice optimally fills out widget size 
-		if (latticeAspectRatio > windowAspectRatio)
-		{
-			_viewY = (max.y - min.y) / 2. + offset;
-			_viewX = _viewY / windowAspectRatio;
-		}
-		else
-		{
-			_viewX = (max.x - min.x) / 2. + offset;
-			_viewY = _viewX * windowAspectRatio;
-		}
-	}
-	_mutex->unlock();
+    set_camera();
+    _mutex->unlock();
+
+
 }
 
 void OGLWidget::receive_save_request(QString qString)
@@ -1220,18 +1351,28 @@ void OGLWidget::mousePressEvent(QMouseEvent* event)
 		}
 
 		if (event->button() == Qt::RightButton)
-		{
-			if (_rubberBand != NULL)
-			{
-				_rubberBand->hide();
-			}
-			delete _rubberBand;
-			_rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+        {
+            if (_orthoView |(_cameraAngle.x==0 & _cameraAngle.y==0)){
+                if (_rubberBand != NULL)
+                {
+                    _rubberBand->hide();
+                }
+                delete _rubberBand;
+                _rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
 
-			_rubberBandOrigin = event->pos();
-			_rubberBand->setGeometry(QRect(event->pos(), QSize()));
-			_rubberBand->show();
+                _rubberBandOrigin = event->pos();
+                _rubberBand->setGeometry(QRect(event->pos(), QSize()));
+                _rubberBand->show();
+            }
+            else{
+                QMessageBox msgBox;
+                msgBox.setText("Selection is only allowed without rotation or in orthogonal projection.\nPlease go to Camera-Menu. ");
+                msgBox.exec();
+            }
 		}
+
+
+
 	}
 }
 
@@ -1240,81 +1381,101 @@ void OGLWidget::mouseReleaseEvent(QMouseEvent *event)
 	if (_rubberBand!= NULL)
 	{
 		if (event->button() == Qt::RightButton)
-		{
-			Twodim pos1 = pixel_to_lattice_coordinates(_rubberBandOrigin);
-			Twodim pos2 = pixel_to_lattice_coordinates(event->pos());
+        {
+            Twodim pos1 = pixel_to_lattice_coordinates(_rubberBandOrigin);
+            Twodim pos2 = pixel_to_lattice_coordinates(event->pos());
 
-			if (pos1.x > pos2.x)
-			{
-				std::swap(pos1.x, pos2.x);
-			}
+                if (pos1.x > pos2.x)
+                {
+                    std::swap(pos1.x, pos2.x);
+                }
 
-			if (pos1.y > pos2.y)
-			{
-				std::swap(pos1.y, pos2.y);
-			}
-			std::vector<int> indexes;
+                if (pos1.y > pos2.y)
+                {
+                    std::swap(pos1.y, pos2.y);
+                }
+                std::vector<int> indexes;
 
-			for (int i = 0; i < _numberAtoms; ++i)
-			{
-				if (_latticeCoordArray[i].x < pos2.x && _latticeCoordArray[i].x > pos1.x
-					&& _latticeCoordArray[i].y < pos2.y && _latticeCoordArray[i].y > pos1.y)
-				{
-					indexes.push_back(i);
-				}
-			}
-			if (_markedSpinsHandler != NULL)
-			{
-				_markedSpinsHandler->process_spins(indexes);
-			}
-		}
+                for (int i = 0; i < _numberAtoms; ++i)
+                {
+                    if (_latticeCoordArray[i].x < pos2.x && _latticeCoordArray[i].x > pos1.x
+                        && _latticeCoordArray[i].y < pos2.y && _latticeCoordArray[i].y > pos1.y)
+                    {
+                        indexes.push_back(i);
+                    }
+                }
+                if (_markedSpinsHandler != NULL)
+                {
+                    _markedSpinsHandler->process_spins(indexes);
+                }
+            }
+
+        }
 	}	
-}
+
 
 void OGLWidget::wheelEvent(QWheelEvent *event)
 {
 	int numDegrees = event->delta() / 8;
 	int numSteps = numDegrees / 15;
 
-	double factor = (100. + numSteps) / 100.;
-	_viewX *=factor;
-	_viewY *=factor;
+    double factor = (100. + numSteps) / 100.;
+    _cameraAngle.z *=factor;
+    _viewX *=factor;
+    _viewY *=factor;
 
 	event->accept();
-
+    set_camera();
 	repaint();
 }
 
 void OGLWidget::mouseMoveEvent(QMouseEvent * event)
 {
-	if (event->buttons() & Qt::LeftButton)
-	{
+    if (event->buttons() & Qt::LeftButton & not QApplication::keyboardModifiers())
+    {
 		QPoint point = event->pos();
 		Twodim mousePosition = pixel_to_lattice_coordinates(point);
-		_cameraPos.x -= (mousePosition.x - _mousePosition.x);
-		_cameraPos.y -= (mousePosition.y - _mousePosition.y);
-		_mousePosition = mousePosition;
-		repaint();
+        _viewOffset -= glm::float32(mousePosition.y - _mousePosition.y)*glm::normalize(_cameraUp) ;
+        _viewOffset += glm::float32(mousePosition.x - _mousePosition.x)*glm::normalize(glm::cross(_cameraUp,_cameraFront));
+        _mousePosition = mousePosition;
+        set_camera();
+        repaint();
 	}
-	if (event->buttons() & Qt::RightButton)
-	{
+    if (event->buttons() & Qt::LeftButton &  QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
+    {
+        QPoint point = event->pos();
+        Twodim mousePosition = pixel_to_lattice_coordinates(point);
+        _cameraAngle.x += glm::float32(mousePosition.x - _mousePosition.x);
+        _cameraAngle.y += glm::float32(mousePosition.y - _mousePosition.y);
+        _mousePosition = mousePosition;
+        set_camera();
+        repaint();
+    }
+    if (event->buttons() & Qt::RightButton )
+    {
 		_rubberBand->setGeometry(QRect(_rubberBandOrigin, event->pos()).normalized());
 	}
 }
 
+
 Twodim OGLWidget::pixel_to_lattice_coordinates(QPoint point)
 {
-	/**
-	* Translates pixel coordinates into "real space coordinates" according to lattice configuration.
-	*
-	* @param[in] point Pixels defining point in widget.
-	* @return x,y coordinates of "real space" position
-	*/
+    /**
+    * Translates pixel coordinates into "real space coordinates" according to lattice configuration.
+    *
+    * @param[in] point Pixels defining point in widget.
+    * @return x,y coordinates of "real space" position
+    */
 
-	Twodim coordinates = { 0,0 };
-	Twodim solve = MyMath::two_point_equation(0, _cameraPos.x - _viewX, width(), _cameraPos.x + _viewX);
-	coordinates.x = solve.x * point.x() + solve.y;
-	solve = MyMath::two_point_equation(0, _cameraPos.y + _viewY, height(), _cameraPos.y - _viewY);
-	coordinates.y = solve.x * point.y() + solve.y;
-	return coordinates;
+    Twodim coordinates =  {0,0};
+    if(_orthoView){
+        coordinates.x = _cameraPos.x +(point.x()/float(width()) -0.5) *2*_viewX;
+        coordinates.y = _cameraPos.y -(point.y()/float(height()) -0.5)*2*_viewY;
+    }
+    else{
+        coordinates.x = _cameraPos.x +(point.x()/float(width()) -0.5) *2 * tan(M_PI/8)*_cameraAngle.z  *float(width())/float(height());
+        coordinates.y = _cameraPos.y -(point.y()/float(height())-0.5) *2 * tan(M_PI/8)*_cameraAngle.z  ;
+
+    }
+    return coordinates;
 }

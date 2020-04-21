@@ -29,6 +29,7 @@ class QKeyEvent;
 // forward declarations
 class AnisotropyWindow;
 class ColorsWindow;
+class CameraWindow;
 class Experiment01Window;
 class ExcitationFrequencyWindow;
 class MarkedSpinsHandler;
@@ -83,6 +84,9 @@ public slots:
 	void push_button_colors(void);
 	void colors_window_destroyed();
 
+    void push_button_camera(void);
+    void camera_window_destroyed();
+
 	void experiment01_window_destroyed();
 	void excitation_freq_window_destroyed();
 	
@@ -111,6 +115,7 @@ protected:
 	OpenGLWidget* _opengl_widget;
 
 	ColorsWindow* _colorsWindow; ///< window to specify graphical output to GUI
+    CameraWindow* _cameraWindow;
 	Experiment01Window* _experiment01Window;
 	ExcitationFrequencyWindow* _excitationFreqWindow;
 

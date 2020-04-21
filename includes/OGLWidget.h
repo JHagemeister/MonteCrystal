@@ -23,7 +23,7 @@ class QOpenGLFunctions_3_3_Core;
 
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
-
+#include <glm/mat4x4.hpp>
 // own
 #include "Shader.h"
 #include "Mesh.h"
@@ -84,7 +84,7 @@ public:
 	void set_spin_visible(int index);
 	void set_spin_invisible(int index);
 	void set_spins(Threedim* spinArray, int size, int boolNew);
-	
+    void set_camera(void);
 
 	void set_background_color(glm::vec4 color);
 	glm::vec4 get_background_color(void);
@@ -108,6 +108,28 @@ public:
 
 	void update_color_scale(void);
 
+    // Camera
+    bool _orthoView = FALSE;
+    bool _showBase;
+    float _viewX =0;
+    float _viewY =0;
+    glm::vec4 _baseColor;
+    glm::vec3 _baseOffset;
+
+
+    glm::vec3 _cameraAngle = glm::vec3(0.0f,0.0f,30.0f);
+    glm::vec3 _viewOffset= glm::vec3(0.0f,0.0f,0.0f);///< offset of camera reltive to Lattice center
+    glm::vec3 _cameraPos = glm::vec3(0, 0, 40.0f); ///< position of camera
+    glm::vec3 _cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); ///< camera orientation
+    glm::vec3 _cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); ///< camera orientation
+    glm::mat4 _projection ;
+    glm::mat4 _view ;
+
+
+    Threedim* _latticeCoordArray; ///< lattice coordinates; redundant with _lattice
+    int _numberAtoms; ///< number of lattice sites
+
+
 	public slots:
 	void adjust_camera_to_lattice(void); ///< adjust camera so that current lattice is fully displayed
 	void receive_save_request(QString qString); ///< save current spin configuration to .png file
@@ -122,8 +144,10 @@ protected:
 	void paintGL();
 
 	void paint_spins(void);
+    void paint_spheres(float r,int slices);
 	void paint_single_spin(int index);
 	void paint_color_map_lattice_site_centered(void);
+    void paint_base(void);
 	void paint_color_map_topological_charge(void);
 	void paint_points(void);
 
@@ -142,13 +166,14 @@ protected:
 
 	MarkedSpinsHandler* _markedSpinsHandler;
 
+
+
 	Shader _shader;
 	std::shared_ptr<SpinMesh> _spinMesh;
 	std::string _spinMeshParamsFname;
 
 	QSharedPointer<Lattice> _lattice;
-	Threedim* _latticeCoordArray; ///< lattice coordinates; redundant with _lattice
-	int _numberAtoms; ///< number of lattice sites
+
 	std::vector<Threedim> _wignerSeitzCell;
 	TopologicalChargeCell* _skNcells;
 	int _skNcellNum;
@@ -168,6 +193,8 @@ protected:
 
 	glm::vec4 _backgroundColor;
 
+
+
 	ColorMapType _colorMapType;
 	int _energyIndex;
 	std::vector<int> _anisotropyIndexes;
@@ -184,20 +211,12 @@ protected:
 
 	QSharedPointer<Hamiltonian> _hamiltonian;
 
-	// Camera
-	glm::vec3 _cameraPos = glm::vec3(17.0f, 3.5f, 30.0f); ///< position of camera
-	glm::vec3 _cameraFront = glm::vec3(0.0f, 0.0f, -1.0f); ///< camera orientation
-	glm::vec3 _cameraUp = glm::vec3(0.0f, 1.0f, 0.0f); ///< camera orientation
-
-	float _viewX = 5; ///< view frame in x-direction; set by adjust_camera_to_lattice()
-	float _viewY = 20; ///< view frame in y-direction; set by adjust_camera_to_lattice()
-
 	Twodim _mousePosition = { 0,0 };
 	QRubberBand* _rubberBand;
 	QPoint _rubberBandOrigin;
 
 	//Light
-	glm::vec3 _lightPos = glm::vec3(0.0f, 0.0f, 1000.0f); ///< light source
+    glm::vec3 _lightPos = glm::vec3(10.0f, 0.0f, 10.0f); ///< light source
 
 	QOpenGLFunctions_3_3_Core* _glf;
 };
