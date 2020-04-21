@@ -23,8 +23,8 @@ class QKeyEvent;
 // own
 #include "typedefs.h"
 
-#include <ToolBarWidget.h>;
-#include <OpenGLWidget.h>;
+#include <ToolBarWidget.h>
+#include <OpenGLWidget.h>
 
 // forward declarations
 class AnisotropyWindow;

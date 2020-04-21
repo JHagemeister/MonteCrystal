@@ -26,9 +26,8 @@
 #include <QColor>
 #include <QCheckBox>
 #include <QMessageBox>
-
 #include "OGLWidget.h"
-
+#include <math.h>
 ColorsWindow::ColorsWindow(OGLWidget* oglWidget, QWidget * parent): QDialog(parent), 
 _spinColor(0.8f, 0.8f, 0.8f, 1.0f)
 {

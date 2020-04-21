@@ -24,7 +24,7 @@
 #include <QStringList>
 #include <QStringListModel>
 #include "MyHeaderView.h"
-
+#include <math.h>
 AnisotropyWindow::AnisotropyWindow(std::shared_ptr<std::vector<double>> hexAnisotropies,
 	std::shared_ptr<std::vector<UniaxialAnisotropyStruct>> anisotropies,
 	QWidget *parent)

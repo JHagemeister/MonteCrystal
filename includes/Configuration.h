@@ -22,7 +22,7 @@
 class Configuration
 {
 public:
-	Configuration::Configuration();
+    Configuration();
 	std::string all_parameters(void) const; ///< make a single string from all parameter values
 	void show_parameters(void); ///< show parameters on console
 	void determine_outputfolder_needed(void); ///< determine whether output folder is needed
