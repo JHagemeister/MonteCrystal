@@ -784,7 +784,7 @@ void OGLWidget::paint_spins(void)
 
 void OGLWidget::paint_single_spin(int index)
 {
-	glm::mat4 model;
+    glm::mat4 model (1.0f);
 
 	// translation to lattice site
 	model = glm::translate(model, glm::vec3(_latticeCoordArray[index].x, _latticeCoordArray[index].y,
@@ -901,7 +901,7 @@ void OGLWidget::paint_color_map_lattice_site_centered(void)
 
 		for (int i = 0; i < _numberAtoms; ++i)
 		{
-			glm::mat4 model;
+            glm::mat4 model (1.0f);
 			model = glm::translate(model, glm::vec3(_latticeCoordArray[i].x, _latticeCoordArray[i].y,
 				_latticeCoordArray[i].z + _colorMapOffset));
 
@@ -1007,7 +1007,7 @@ void OGLWidget::paint_color_map_topological_charge(void)
 
 		for (int i = 0; i < _skNcellNum; ++i) // sum over all skyrmion cells
 		{
-			glm::mat4 model;
+            glm::mat4 model (1.0f);
 			model = glm::translate(model, glm::vec3(_skNcells[i].position.x, _skNcells[i].position.y,
 				_skNcells[i].position.z + _colorMapOffset));
 
@@ -1061,7 +1061,7 @@ void OGLWidget::paint_points(void)
 
 		for (std::vector<int>::iterator it = _points.begin(); it != _points.end(); ++it)
 		{
-			glm::mat4 model;
+            glm::mat4 model (1.0f);
 			Threedim point = _latticeCoordArray[*it];
 			model = glm::translate(model, glm::vec3(point.x, point.y, point.z));
 
