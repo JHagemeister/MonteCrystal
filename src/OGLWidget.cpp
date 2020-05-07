@@ -442,50 +442,6 @@ void OGLWidget::set_spin_invisible(int index)
 	_visibleFilledSpins.erase(index);
 }
 
-void OGLWidget::set_camera(void)
-{
-    Threedim min = { 0,0,0 };
-    Threedim max = { 0,0,0 };
-
-    if (_lattice!= NULL){
-    MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
-    }
-    glm::vec3 center= {(max.x + min.x)/2,(max.y + min.y)/2,(max.z + min.z)/2};
-    if (_orthoView){
-       _cameraPos= _viewOffset+center;
-       _cameraPos.z =_cameraAngle.z;
-       _projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
-       _view = glm::lookAt(_cameraPos,  _cameraPos + glm::vec3(0,0,-1), glm::vec3(0,1,0));
-    }
-
-    else {
-
-
-
-
-        _cameraFront=glm::vec3{sin((_cameraAngle.x/180)*M_PI)* sin(_cameraAngle.y/180*M_PI) * fabs(_cameraAngle.z),
-                                           cos((_cameraAngle.x/180)*M_PI)* sin(_cameraAngle.y/180*M_PI) * fabs(_cameraAngle.z),
-                                           -cos((_cameraAngle.y/180)*M_PI)* fabs(_cameraAngle.z)} ;
-
-
-        _cameraUp   =glm::vec3{sin((_cameraAngle.x/180)*M_PI) * cos(_cameraAngle.y/180*M_PI) ,
-                                           cos((_cameraAngle.x/180)*M_PI) * cos(_cameraAngle.y/180*M_PI),
-                                           sin((_cameraAngle.y/180)*M_PI)};
-
-
-        _cameraPos  =glm::vec3{_viewOffset.x + center.x-_cameraFront.x,
-                               _viewOffset.y + center.y-_cameraFront.y,
-                               _viewOffset.z + center.z-_cameraFront.z} ;
-
-
-        _projection = glm::perspective(glm::radians(45.0f), float(width())/float(height()), 0.1f, 100.0f);
-        _view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
-    }
-
-}
-
-
-
 void OGLWidget::set_spins(Threedim * spinArray, int size, int boolNew)
 {
 	_spinArray = spinArray;
@@ -799,7 +755,7 @@ void OGLWidget::paintGL()
 		paint_spins();
 	}
 
-    paint_spheres(1,10);
+
     if( _showBase){
         paint_base();
     }
@@ -834,37 +790,6 @@ void OGLWidget::paint_spins(void)
 	_glf->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-
-void OGLWidget::paint_spheres(float r,int slices){
-    _shader.use(_glf);   // <-- Don't forget this one!
-
-    // Transformation matrices
-
-
-    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "projection"), 1, GL_FALSE,
-        glm::value_ptr(_projection));
-    _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "view"), 1, GL_FALSE, glm::value_ptr(_view));
-
-    for (auto index = _visibleFilledSpins.begin(); index != _visibleFilledSpins.end(); ++index){
-        glm::mat4 model (1.0f);
-
-        // translation to lattice site
-        model = glm::translate(model, glm::vec3(_latticeCoordArray[*index].x, _latticeCoordArray[*index].y, _latticeCoordArray[*index].z));
-        _glf->glUniformMatrix4fv(_glf->glGetUniformLocation(_shader._program, "model"), 1, GL_FALSE,
-            glm::value_ptr(model));
-
-        GLint objectColorLoc = _glf->glGetUniformLocation(_shader._program, "objectColor");
-        GLint lightColorLoc = _glf->glGetUniformLocation(_shader._program, "lightColor");
-        GLint lightPosLoc = _glf->glGetUniformLocation(_shader._program, "lightPos");
-
-        _glf->glUniform4f(objectColorLoc, 1.0f,1.0f, 1.0f, 1.0f);
-        _glf->glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
-        _glf->glUniform3f(lightPosLoc, _lightPos.x, _lightPos.y, _lightPos.z);
-
-    }
-
-
-}
 
 
 
@@ -1276,14 +1201,47 @@ std::vector<int> OGLWidget::search_anisotropy_energies(void)
 void OGLWidget::resizeGL(int width, int height)
 {
 	_glf->glViewport(0, 0, width, height);
-	adjust_camera_to_lattice();
+    adjust_camera();
 }
 
-void OGLWidget::adjust_camera_to_lattice(void)
+void OGLWidget::adjust_camera_to_lattice(void){
+
+        //get size of the lattice
+        Threedim min = { 0,0,0 };
+        Threedim max = { 0,0,0 };
+        MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
+       float windowAspectRatio = (float)height() / (float)width();
+       float offset = 1.5; // smallest distance between lattice and widget edge in crystal lattice constants
+       float latticeAspectRatio = (max.y - min.y + 2.*offset) / (max.x - min.x + 2.*offset);
+       // for orthogonal projection: scale view so that lattice optimally fills out widget size
+       if (latticeAspectRatio > windowAspectRatio)
+       {
+           _viewY = (max.y - min.y) / 2. + offset;
+           _viewX = _viewY / windowAspectRatio;
+
+       }
+       else
+       {
+           _viewX = (max.x - min.x) / 2. + offset;
+           _viewY = _viewX * windowAspectRatio;
+       }
+
+       //for perspective projection: calculate distance between lattice center and camera so that lattice optimally fills out widget size
+       float rho_x = ((max.x - min.x)/2+offset)/tan(M_PI/8) * windowAspectRatio ;
+       float rho_y = ((max.y - min.y)/2+offset)/tan(M_PI/8) ;
+       if (rho_x >rho_y){
+           _cameraAngle.z = rho_x;
+       }
+       else {
+           _cameraAngle.z = rho_y;
+       }
+
+    adjust_camera();
+}
+void OGLWidget::adjust_camera()
 {
     /**
-    Always looks (anti-)parallel to z-axis. The camera position is adjusted such that the whole lattice
-    fits into the widget window.
+        Adjust camera position, orientation and projection/view matrix according to values from  adjust_camera_to_lattice() and CameraWindow.
     */
 
     _mutex->lock();
@@ -1293,32 +1251,50 @@ void OGLWidget::adjust_camera_to_lattice(void)
     }
     else
     {
+        //get center of lattice
         Threedim min = { 0,0,0 };
         Threedim max = { 0,0,0 };
         MyMath::min_max_threedim(_latticeCoordArray, _numberAtoms, min, max);
+        glm::vec3 center= {(max.x + min.x)/2,(max.y + min.y)/2,(max.z + min.z)/2};
 
-        _cameraPos.x = (max.x + min.x) / 2; // move camera to center
-        _cameraPos.y = (max.y + min.y) / 2;
-        _cameraFront = glm::vec3(0.0f,0.0f,-1.0f);
-        _cameraUp = glm::vec3(0.0f,1.0f,0.0f);
-        float windowAspectRatio = (float)height() / (float)width();
-        float offset = 1.5; // smallest distance between lattice and widget edge in crystal lattice constants
-        float latticeAspectRatio = (max.y - min.y + 2.*offset) / (max.x - min.x + 2.*offset);
 
-        // Scale view so that lattice optimally fills out widget size
-        if (latticeAspectRatio > windowAspectRatio)
-        {
-            _viewY = (max.y - min.y) / 2. + offset;
-            _viewX = _viewY / windowAspectRatio;
+        //setup camera coordinate system and projection matrix for orthogonal projection
+        if (_orthoView){
+           _cameraPos= _viewOffset+center;      //place camera above center
+           _cameraPos.z =_cameraAngle.z;
+           _cameraFront = glm::vec3(0.0,0.0,-1.0);  // coordinatsystem of camera and projection is independent of lattice
+           _cameraUp = glm::vec3(0.0,1.0,0);
+           _projection = glm::ortho(-_viewX, _viewX, -_viewY, _viewY, 0.1f, 100.0f);
         }
-        else
-        {
-            _viewX = (max.x - min.x) / 2. + offset;
-            _viewY = _viewX * windowAspectRatio;
+        else {
+            //setup camera coordinate system and projection matrix for persepective projection
+
+            // use the spherical coordinates given in _cameraAngle to set coordinate system of camera in carteseane coordinates
+            _cameraFront=glm::vec3{sin((_cameraAngle.x/180)*M_PI)* sin(_cameraAngle.y/180*M_PI) * fabs(_cameraAngle.z),
+                                               cos((_cameraAngle.x/180)*M_PI)* sin(_cameraAngle.y/180*M_PI) * fabs(_cameraAngle.z),
+                                               -cos((_cameraAngle.y/180)*M_PI)* fabs(_cameraAngle.z)} ;
+
+
+            _cameraUp   =glm::vec3{sin((_cameraAngle.x/180)*M_PI) * cos(_cameraAngle.y/180*M_PI) ,
+                                               cos((_cameraAngle.x/180)*M_PI) * cos(_cameraAngle.y/180*M_PI),
+                                               sin((_cameraAngle.y/180)*M_PI)};
+
+
+            // place camera so that the center of view is at _viewOffset relative to the center of the lattice
+            _cameraPos  =glm::vec3{_viewOffset.x + center.x-_cameraFront.x,
+                                   _viewOffset.y + center.y-_cameraFront.y,
+                                   _viewOffset.z + center.z-_cameraFront.z} ;
+
+            // set perspective projection matrix. vertical angle of view pi/4
+            _projection = glm::perspective(glm::radians(45.0f), float(width())/float(height()), 0.1f, float(_cameraAngle.z*2));
+
+
         }
+        // set view matrix for given camera coordinate system
+         _view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
     }
 
-    set_camera();
+
     _mutex->unlock();
 
 
@@ -1352,6 +1328,7 @@ void OGLWidget::mousePressEvent(QMouseEvent* event)
 
 		if (event->button() == Qt::RightButton)
         {
+            // Selection is only allowed without rotation or in orthogonal projection.
             if (_orthoView |(_cameraAngle.x==0 & _cameraAngle.y==0)){
                 if (_rubberBand != NULL)
                 {
@@ -1425,12 +1402,13 @@ void OGLWidget::wheelEvent(QWheelEvent *event)
     _viewY *=factor;
 
 	event->accept();
-    set_camera();
+    adjust_camera();
 	repaint();
 }
 
 void OGLWidget::mouseMoveEvent(QMouseEvent * event)
 {
+    // move the camera relative to lattice center. in directions of camera system (left mouse button)
     if (event->buttons() & Qt::LeftButton & not QApplication::keyboardModifiers())
     {
 		QPoint point = event->pos();
@@ -1438,9 +1416,10 @@ void OGLWidget::mouseMoveEvent(QMouseEvent * event)
         _viewOffset -= glm::float32(mousePosition.y - _mousePosition.y)*glm::normalize(_cameraUp) ;
         _viewOffset += glm::float32(mousePosition.x - _mousePosition.x)*glm::normalize(glm::cross(_cameraUp,_cameraFront));
         _mousePosition = mousePosition;
-        set_camera();
+        adjust_camera();
         repaint();
-	}
+    }
+    //rotate camera around lattice (left mouse button + Ctrl)
     if (event->buttons() & Qt::LeftButton &  QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
     {
         QPoint point = event->pos();
@@ -1448,7 +1427,7 @@ void OGLWidget::mouseMoveEvent(QMouseEvent * event)
         _cameraAngle.x += glm::float32(mousePosition.x - _mousePosition.x);
         _cameraAngle.y += glm::float32(mousePosition.y - _mousePosition.y);
         _mousePosition = mousePosition;
-        set_camera();
+        adjust_camera();
         repaint();
     }
     if (event->buttons() & Qt::RightButton )

@@ -214,7 +214,7 @@ void CameraWindow::push_button_apply(void)
 
 
 
-    _oglWidget->set_camera();
+    _oglWidget->adjust_camera();
     _oglWidget->repaint();
 
 }
