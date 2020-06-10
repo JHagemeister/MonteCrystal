@@ -1424,8 +1424,8 @@ void OGLWidget::mouseMoveEvent(QMouseEvent * event)
     {
         QPoint point = event->pos();
         Twodim mousePosition = pixel_to_lattice_coordinates(point);
-        _cameraAngle.x += glm::float32(mousePosition.x - _mousePosition.x);
-        _cameraAngle.y += glm::float32(mousePosition.y - _mousePosition.y);
+        _cameraAngle.x += glm::float32(mousePosition.x - _mousePosition.x)/_cameraAngle.z*50;
+        _cameraAngle.y += glm::float32(mousePosition.y - _mousePosition.y)/_cameraAngle.z*50;
         _mousePosition = mousePosition;
         adjust_camera();
         repaint();
