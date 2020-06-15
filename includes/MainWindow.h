@@ -28,6 +28,7 @@ class QKeyEvent;
 
 // forward declarations
 class AnisotropyWindow;
+class AtomsWindow;
 class ColorsWindow;
 class CameraWindow;
 class Experiment01Window;
@@ -81,7 +82,10 @@ public:
 public slots:
 	void start_stop_simulation(void); ///< start new simulation or stop currently running simulation 
 
-	void push_button_colors(void);
+    void push_button_atoms(void);
+    void atoms_window_destroyed();
+
+    void push_button_colors(void);
 	void colors_window_destroyed();
 
     void push_button_camera(void);
@@ -113,7 +117,7 @@ protected:
 	Ui::QtMainWindow* _ui; ///< auto generated setup of GUI elements from Form file
 	ToolBarWidget* _toolbar;
 	OpenGLWidget* _opengl_widget;
-
+    AtomsWindow* _atomsWindow;
 	ColorsWindow* _colorsWindow; ///< window to specify graphical output to GUI
     CameraWindow* _cameraWindow;
 	Experiment01Window* _experiment01Window;

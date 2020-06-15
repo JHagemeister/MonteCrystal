@@ -45,14 +45,17 @@ void SpinMesh::update(SpinMeshParams params)
 void SpinMesh::adjust_parameters(SpinMeshParams params)
 {
 	_n = params.n;
-	_r1 = 0.25;
-	_r2 = params.r2divr1*_r1;
-	_l1 = params.r2divr1*params.l1divl2*_r1 / params.r2divl2;
-	if (_l1 < 0.05)
+    _l2=1/(1+params.l1divl2);
+    _l1=1-_l2       ;
+    _r2 = params.r2divl;
+    _r1 = _r2/params.r2divr1;
+    /*
+    if (_l1 < 0.05)
 	{
 		_l1 = 0;
 	}
 	_l2 = params.r2divr1*_r1 / params.r2divl2;
+
 
 	_zg = (-0.5*pow(_l1, 2)*pow(_r1, 2) + (1. / 12.)*pow(_l2, 2)*pow(_r2, 2)) /
 		(_l1*pow(_r1, 2) + (1. / 3.)*_l2*pow(_r2, 2));
@@ -78,6 +81,7 @@ void SpinMesh::adjust_parameters(SpinMeshParams params)
 		_l2 /= _r2;
 		_zg /= _r2;
 	}
+    */
 }
 
 void SpinMesh::generate_mesh_data(void)
@@ -85,28 +89,31 @@ void SpinMesh::generate_mesh_data(void)
 	_vertices.clear();
 	_indices.clear();
 	
+
+
+
 	// Cone
 	
 	// Vertices
-	for (int i = 0; i < _n; ++i)
+    for (int i = 0; i < _n; ++i)
 	{
 		double alpha = i * 2 * Pi / _n;
-		Threedim vec1 = MyMath::normalize({ _l2*cos(alpha), _l2*sin(alpha), _r2 });
+        Threedim vec1 = MyMath::normalize({ _r2*cos(alpha), _r2*sin(alpha),_l2});
 		alpha = (i+1) * 2 * Pi / _n;
-		Threedim vec2 = MyMath::normalize({ _l2*cos(alpha), _l2*sin(alpha), _r2 });
-		Threedim vec = MyMath::normalize(MyMath::add(vec1, vec2));
+        Threedim vec2 = MyMath::normalize({ _r2*cos(alpha), _r2*sin(alpha), _l2 });
+		Threedim vec =  MyMath::normalize(MyMath::add(vec1, vec2));
 		
-		_vertices.push_back(Vertex{ {0, 0, _l2-_zg },
+        _vertices.push_back(Vertex{ {0, 0, 0.5},
 		{ (float)vec.x, (float)vec.y, (float)vec.z } });
-		_vertices.push_back(Vertex{ { _r2*cos(alpha), _r2*sin(alpha), -_zg },
+        _vertices.push_back(Vertex{ { _r2*cos(alpha), _r2*sin(alpha),(_l2-_l1)/2},
 		{ (float)vec1.x, (float)vec1.y, (float)vec1.z } });
 	}
 
-	_vertices.push_back(Vertex{ { 0,0,-_zg },{ 0,0,-1 } });
+    _vertices.push_back(Vertex{ { 0,0,(_l2-_l1)/2 },{ 0,0,-1 } });
 	for (int i = 0; i < _n; ++i)
 	{
 		double alpha = i*2*Pi / _n;
-		_vertices.push_back(Vertex{ { _r2*cos(alpha), _r2*sin(alpha), -_zg },
+        _vertices.push_back(Vertex{ { _r2*cos(alpha), _r2*sin(alpha),(_l2-_l1)/2 },
 		{ 0,0,-1 } });
 	}
 	
@@ -138,11 +145,11 @@ void SpinMesh::generate_mesh_data(void)
 	{
 		// bottom
 		int index = _vertices.size();
-		_vertices.push_back(Vertex{ { 0,0, -_l1-_zg },{ 0,0,-1 } });
+        _vertices.push_back(Vertex{ { 0,0, -0.5 },{ 0,0,-1 } });
 		for (int i = 0; i < _n; ++i)
 		{
 			double alpha = i*2*Pi / _n;
-			_vertices.push_back(Vertex{ { _r1*cos(alpha),_r1*sin(alpha),-_l1-_zg },{ 0,0,-1 } });
+            _vertices.push_back(Vertex{ { _r1*cos(alpha),_r1*sin(alpha),-0.5},{ 0,0,-1 } });
 		}
 
 		for (GLuint i = 1; i < (GLuint)_n; ++i)
@@ -160,12 +167,12 @@ void SpinMesh::generate_mesh_data(void)
 		for (int i = 0; i < _n; ++i)
 		{
 			double alpha = i*2*Pi / _n;
-			_vertices.push_back(Vertex{ { _r1*cos(alpha),_r1*sin(alpha),-_l1-_zg },{ cos(alpha),sin(alpha),0 } });
+            _vertices.push_back(Vertex{ { _r1*cos(alpha),_r1*sin(alpha),(_l2-_l1)/2  },{ cos(alpha),sin(alpha),(_l2-_l1)/2 } });
 		}
 		for (int i = 0; i < _n; ++i)
 		{
 			double alpha = i*2*Pi / _n;
-			_vertices.push_back(Vertex{ { _r1*cos(alpha),_r1*sin(alpha), -_zg },{ cos(alpha),sin(alpha),0 } });
+            _vertices.push_back(Vertex{ { _r1*cos(alpha),_r1*sin(alpha), -0.5},{ cos(alpha),sin(alpha),-0.5 } });
 		}
 
 		for (GLuint i = 0; i < (GLuint)_n - 1; ++i)
@@ -185,5 +192,6 @@ void SpinMesh::generate_mesh_data(void)
 		_indices.push_back((GLuint)index);
 		_indices.push_back((GLuint)index + 2 * _n - 1);
 		_indices.push_back((GLuint)index + _n);
-	}
+
+    }
 }

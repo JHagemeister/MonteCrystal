@@ -23,7 +23,7 @@ private:
 	float _l1;
 	float _l2;
 	
-	float _zg;
+
 };
 
 #endif // SPINMODEL_H

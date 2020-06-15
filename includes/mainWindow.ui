@@ -125,6 +125,7 @@ border: none;
   <slot>on_push_button_workfolder()</slot>
   <slot>on_push_button_random_spin()</slot>
   <slot>on_push_button_camera()</slot>
+  <slot>on_push_button_atoms()</slot>
   <slot>on_push_button_colors()</slot>
  </slots>
 </ui>

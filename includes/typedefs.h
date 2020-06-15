@@ -245,7 +245,7 @@ struct SpinMeshParams
 	int n;
 	float r2divr1;
 	float l1divl2;
-	float r2divl2;
+    float r2divl;
 	float scale;
 };
 

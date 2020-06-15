@@ -74,9 +74,9 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 		spin_model_file.write(QString{"n %1\n"
 							  "r2divr1 %2\n"
 							  "l1divl2 %3\n"
-							  "r2divl2 %4\n"
+                              "r2divl %4\n"
 							  "scale %5"}.arg(params.n).arg(params.r2divr1)
-			                             .arg(params.l1divl2).arg(params.r2divl2)
+                                         .arg(params.l1divl2).arg(params.r2divl)
 			                             .arg(params.scale).toStdString().c_str());
 		spin_model_file.close();
 	}
@@ -95,8 +95,8 @@ void Functions::get_spin_model_params(SpinMeshParams &params, std::string fname)
 			else if (parameter[0].compare("l1divl2") == 0) {
 				params.l1divl2 = parameter[1].toFloat();
 			}
-			else if (parameter[0].compare("r2divl2") == 0) {
-				params.r2divl2 = parameter[1].toFloat();
+            else if (parameter[0].compare("r2divl") == 0) {
+                params.r2divl = parameter[1].toFloat();
 			}
 			else if (parameter[0].compare("scale") == 0) {
 				params.scale = parameter[1].toFloat();
@@ -119,7 +119,7 @@ void Functions::save_spin_model_params(SpinMeshParams params, std::string fname)
 	sstream << "n " << params.n << " #" << std::endl;
 	sstream << "r2divr1 " << params.r2divr1 << " #" << std::endl;
 	sstream << "l1divl2 " << params.l1divl2 << " #" << std::endl;
-	sstream << "r2divl2 " << params.r2divl2 << " #" << std::endl;
+    sstream << "r2divl " << params.r2divl << " #" << std::endl;
 	sstream << "scale " << params.scale << " #" << std::endl;
 	sstream.close();
 }
@@ -302,7 +302,7 @@ void Functions::save(Threedim* array, int size, std::string fname)
 	*/
 
 	std::fstream filestr;
-	filestr.open(fname, std::fstream::out);
+    filestr.open(fname, std::fstream::out);
 	for (int i = 0; i < size; ++i)
 	{
 		filestr << i << " " << array[i].x << " " << array[i].y << " " << array[i].z;

@@ -263,7 +263,7 @@ void ColorsWindow::change_in_spin_model_table(int row, int column)
 			case 3:
 				if (parameter.toFloat() > 0)
 				{
-					params.r2divl2 = parameter.toFloat();
+                    params.r2divl = parameter.toFloat();
 				}
 				else
 				{
@@ -316,7 +316,7 @@ void ColorsWindow::check_state_changed_checkBoxSpinVectorSingleColor(int state)
 		if (state == 0)
 		{
 			_ui.checkBoxSpinVectors->setChecked(1);
-			_ui.checkBoxSpinVectorRGB->setCheckState(Qt::Checked);
+            _ui.checkBoxSpinVectorRGB->setCheckState(Qt::Checked);
 		}
 		else
 		{
@@ -1159,7 +1159,7 @@ void ColorsWindow::set_spin_model_params(SpinMeshParams params)
 	{
 		_ui.tableWidget_SpinMesh->setItem(0, 3, new QTableWidgetItem());
 	}
-	_ui.tableWidget_SpinMesh->item(0, 3)->setText(QString::number(params.r2divl2));
+    _ui.tableWidget_SpinMesh->item(0, 3)->setText(QString::number(params.r2divl));
 
 	if (!_ui.tableWidget_SpinMesh->item(0, 4))
 	{
@@ -1394,7 +1394,7 @@ void ColorsWindow::setup_spin_model(void)
 	_ui.tableWidget_SpinMesh->setRowCount(1);
 	_ui.tableWidget_SpinMesh->verticalHeader()->hide();
 	_ui.tableWidget_SpinMesh->horizontalHeader()->setVisible(1);
-	_ui.tableWidget_SpinMesh->setHorizontalHeaderLabels(QString("n;r2/r1;l1/l2;r2/l2;scale").split(";"));
+    _ui.tableWidget_SpinMesh->setHorizontalHeaderLabels(QString("n;r2/r1;l1/l2;r2/lg;scale").split(";"));
 	_ui.tableWidget_SpinMesh->custom_resize();
 
 	SpinMeshParams spinMeshParams = _oglWidget->_spinMeshParams;

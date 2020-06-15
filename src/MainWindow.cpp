@@ -25,6 +25,7 @@
 // forward declared
 #include "AnisotropyWindow.h"
 #include "ColorsWindow.h"
+#include "AtomsWindow.h"
 #include "CameraWindow.h"
 #include "Experiment01Window.h"
 #include "ExcitationFrequencyWindow.h"
@@ -81,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
 	_blockSimulationStart = FALSE;
 
 	_colorsWindow = NULL;
+    _atomsWindow =NULL;
     _cameraWindow =NULL;
 	_experiment01Window = NULL;
 	_excitationFreqWindow = NULL;
@@ -108,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent)
 	_simulationThread = NULL; // thread in which simulation will run
 	_terminateThread = new int(0); // variable to abort simulation
 
-    _workfolder =""; // folder to store simulation results
+    _workfolder.setPath(""); // folder to store simulation results
 
 	// output of color map information to the GUI
 	_opengl_widget->textEditColorMap->setFontPointSize(12);
@@ -116,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent)
 		&QTextEdit::setText, Qt::DirectConnection);
 	connect(_opengl_widget->pushButtonColor, &QAbstractButton::released, this, &MainWindow::push_button_colors);
     connect(_opengl_widget->pushButtonCamera, &QAbstractButton::released, this, &MainWindow::push_button_camera);
+    connect(_opengl_widget->pushButtonAtoms, &QAbstractButton::released, this, &MainWindow::push_button_atoms);
 	connect(_toolbar->pushButtonWorkfolder, &QAbstractButton::released, this, &MainWindow::push_button_workfolder);
 	connect(_toolbar->about_pushButton, &QAbstractButton::released, this, &MainWindow::show_about_box);
 	connect(_toolbar->pushButtonStartStop, &QAbstractButton::released, this, &MainWindow::start_stop_simulation);
@@ -381,6 +384,22 @@ void MainWindow::push_button_colors(void)
 }
 
 
+void MainWindow::push_button_atoms(void)
+{
+    /**
+    Open window to specify Camera Position and Orientation.
+    */
+
+    if (_simulationThread == NULL && _atomsWindow == NULL)
+    {
+        _atomsWindow = new AtomsWindow(_opengl_widget->openGLWidget, this);
+        _atomsWindow->setAttribute(Qt::WA_DeleteOnClose, true);
+
+        connect(_atomsWindow, &AtomsWindow::destroyed, this, &MainWindow::atoms_window_destroyed);
+        _atomsWindow->open();
+    }
+}
+
 void MainWindow::push_button_camera(void)
 {
     /**
@@ -408,6 +427,16 @@ void MainWindow::colors_window_destroyed()
 
 	_colorsWindow = NULL;
 }
+void MainWindow::atoms_window_destroyed()
+{
+
+    /**
+    Reset member pointer to zero after window deletion.
+    */
+
+    _atomsWindow = NULL;
+}
+
 
 void MainWindow::camera_window_destroyed()
 {

@@ -123,12 +123,12 @@ CameraWindow::CameraWindow(OGLWidget* oglWidget, QWidget * parent) : QDialog(par
 
 
 
+    connect(_ui.checkBase, &QCheckBox::stateChanged, this, &CameraWindow::check_base);
 
 
     connect(_ui.pushButtonApply, &QAbstractButton::released, this, &CameraWindow::push_button_apply);
     connect(_ui.pushButtonOk, &QAbstractButton::released, this, &QDialog::close);
 
-    connect(_ui.checkBase, &QCheckBox::stateChanged, this, &CameraWindow::check_base);
 }
 
 
@@ -214,7 +214,7 @@ void CameraWindow::push_button_apply(void)
 
 
 
-    _oglWidget->adjust_camera();
+    _oglWidget->set_camera();
     _oglWidget->repaint();
 
 }
