@@ -871,7 +871,7 @@ void OGLWidget::paint_spheres(){
             values[i] = _hamiltonian->single_part_energy(index, i);
         }
         cmap->mapColors(_numberAtoms, values,_atomeColors);
-    }if (_atomColorValue=="E"){
+    }else if (_atomColorValue=="E"){
         for (int i = 0; i < _numberAtoms; i++)
         {
             values[i] = _hamiltonian->total_energy(i);

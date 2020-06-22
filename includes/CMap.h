@@ -22,7 +22,7 @@ public:
     double realMinVal; double realMaxVal;    
     void getMinMax(double* values,int _numElements);
     void mapColors(int numElements,double* values,glm::vec3* colors);
-
+    void mapColors(int w,int h ,double** values,uchar*  imgBuff);
 };
 
 #endif // COLORMAP_H

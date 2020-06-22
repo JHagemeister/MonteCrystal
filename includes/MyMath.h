@@ -45,9 +45,10 @@ public:
 
 	static void min_max_threedim(Threedim* threedimArray, const int &size, Threedim &min, Threedim &max);
 	static void min_max_double(double* a, const int &size, double &min, double &max);
-	
-	static std::vector<double> linspace(const double &a, const double &b, const int &n);
+    static void min_max_2d_double(double ** a, const int &sizeX,const int &sizeY, double &min, double &max);
+    static std::vector<double> get_layer_heigts(int &_numberAtoms, Threedim *_latticeCoordArray);
 
+	static std::vector<double> linspace(const double &a, const double &b, const int &n);
 	static int contains_value(int* array, const int &size, const int &value);
 	static void remove_value(int* &array, int &size, const int &value);
 	static void add_value(int* &array, int &size, const int &value);

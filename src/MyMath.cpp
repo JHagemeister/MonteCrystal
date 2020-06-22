@@ -458,7 +458,57 @@ void MyMath::min_max_double(double * a, const int &size, double &min, double &ma
 		}
 	}
 }
+void MyMath::min_max_2d_double(double ** a, const int &sizeX,const int &sizeY, double &min, double &max)
+{
+    /**
+    * Determines minimal and maximal number in an 2d array of double values.
+    */
+    std::vector<double> h;
+    min = a[0][0];
+    max = a[0][0];
+    for (int x = 0; x < sizeX; x++)
+    {
+        for (int y= 0;y<sizeY;y++){
 
+            //std::cout<<a[x][y] <<std::endl;
+            if (a[x][y] < min)
+            {
+                min = a[x][y];
+            }
+            if (a[x][y] > max)
+            {
+                max = a[x][y];
+            }
+
+        }
+    }
+}
+
+
+std::vector<double> MyMath::get_layer_heigts(int &_numberAtoms, Threedim *_latticeCoordArray){
+    /**
+    * Determines z-positions of different layers.
+    * @param[in] _numberAtoms
+    * @param[in] _latticeCoordArray
+
+    * @return Vactor with layer heights
+    */
+
+    std::vector<double> layers;
+    layers.push_back(_latticeCoordArray[0].z);
+    for (int i = 1; i < _numberAtoms;i++){
+     for(uint it=0; it < layers.size(); ++it) {
+            if(layers[it]==_latticeCoordArray[i].z){
+                break;
+            }else{
+                if(it == layers.size()-1){
+                    layers.push_back(_latticeCoordArray[i].z);
+                }
+            }
+        }
+    }
+    return layers;
+}
 std::vector<double> MyMath::linspace(const double &a, const double &b, const int &n)
 {
 	/**

@@ -30,6 +30,7 @@ class QOpenGLFunctions_3_3_Core;
 #include "Mesh.h"
 #include "SpinMesh.h"
 #include "SphereMesh.h"
+#include "Stm.h"
 
 #include <typedefs.h>
 #include "CMap.h"
@@ -38,7 +39,7 @@ class ColorMapper;
 class MarkedSpinsHandler;
 class Lattice;
 class CMap;
-
+class STM;
 /// OpenGL widget for graphical output of spin configurations
 /** The graphical output is done with openGL to which an excellent tutorial is given by Joey de Vries:
 https://learnopengl.com/
@@ -139,6 +140,8 @@ public:
     CMap* cmap;
 
 
+
+    STM * _stm;
 
 
 

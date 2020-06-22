@@ -97,3 +97,57 @@ void CMap::mapColors(int numElements,double *values,glm::vec3* colors){
         }
     }
 }
+
+
+
+
+void CMap::mapColors(int w,int h ,double** values,uchar*  imgBuff){
+
+    MyMath::min_max_2d_double(values,w,h,realMinVal,realMaxVal);
+    for(int y=0;y<h;y++){
+        for (int x =0;x<w;x++){
+            if (3*(y*w+x)+2 > 3*w*h ){break;}
+            float scaled =0;
+            if (realMaxVal>realMinVal){
+                if(_maxSet && _minSet){
+                    if (values[x][y]>=_cutMax){
+                        values[x][y]=_cutMax;
+                    }
+                    else if (values[x][y]<=_cutMin){
+                        values[x][y]=_cutMin;
+                    }
+                    scaled=(values[x][y]-_cutMin)/(_cutMax-_cutMin);
+                }else   if(_maxSet && !_minSet){
+                    if (values[x][y]>=_cutMax){
+                        values[x][y]=_cutMax;
+                    }
+
+                    scaled=(values[x][y]-realMinVal)/(_cutMax-realMinVal);
+                }else  if(!_maxSet && _minSet){
+                    if (values[x][y]<=_cutMin){
+                        values[x][y]=_cutMin;
+                    }
+
+                    scaled=(values[x][y]-_cutMin)/(realMaxVal-_cutMin);
+                }else{
+                scaled= (values[x][y]-realMinVal)/(realMaxVal-realMinVal);
+                }
+            }
+
+            for (int step =cGrad.size()-1; step >-1  ;step--){
+
+                if(scaled >=steps[step]){
+                    Threedim c=MyMath::add( cMin[step] , MyMath::mult(cGrad[step],(scaled-steps[step]))) ;
+                    imgBuff[3*(y*w+x)]=char(c.x*255);
+                    imgBuff[3*(y*w+x)+1]=char(c.y*255);
+                    imgBuff[3*(y*w+x)+2]=char(c.z*255);
+                    break;
+                }
+            }
+
+        }
+    }
+
+}
+
+
