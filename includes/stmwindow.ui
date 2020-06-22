@@ -79,7 +79,7 @@ background-color: rgba(235, 241, 255, 255);
    </item>
 
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1,1,2,1,2,2,2,2,1,1">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1,1,2,1,2,2,2,2,1,1,1">
 
     <item>
       <widget class="QLabel" name="ColorMap">
@@ -274,6 +274,26 @@ background-color: rgba(235, 241, 255, 255);
        </property>
       </widget>
      </item>
+
+        <item>
+         <widget class="QPushButton" name="pushButtonSaveIMG">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>save IMG</string>
+          </property>
+         </widget>
+        </item>
 
      <item>
       <spacer name="verticalSpacer">

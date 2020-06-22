@@ -38,7 +38,7 @@
       <number>0</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="12,12,12,12,2,2,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="12,12,12,12,2,2,2,2">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -103,6 +103,13 @@ p, li { white-space: pre-wrap; }
         <widget class="QPushButton" name="pushButtonAtoms">
          <property name="text">
           <string>Atoms</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonSTM">
+         <property name="text">
+          <string>STM</string>
          </property>
         </widget>
        </item>
